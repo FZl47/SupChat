@@ -1,0 +1,1384 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+
+
+        @font-face {
+            font-family: 'Shabnam';
+            src: url("/assets/supchat/font/Shabnam.woff");
+        }
+
+        @font-face {
+            font-family: 'KalameBlack';
+            src: url("/assets/supchat/font/Kalameh_Black.woff");
+        }
+
+        @font-face {
+            font-family: 'MjBeirutMd';
+            src: url("/assets/supchat/font/MjBeirutMd.woff");
+        }
+
+        @font-face {
+            font-family: 'MjCasablancaHeavy';
+            src: url("/assets/supchat/font/Mj-Casablanca-Heavy.woff");
+        }
+
+        @font-face {
+            font-family: 'Koodak';
+            src: url("/assets/supchat/font/Koodak.woff");
+        }
+
+
+        @font-face {
+            font-family: 'Vazir';
+            src: url("/assets/supchat/font/Vazir-Regular.woff");
+        }
+
+
+        #containerSupChat {
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+            text-align: right;
+            direction: rtl;
+            z-index: 1;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            transition: all .15s;
+            box-shadow: 0 0 10px #aaa;
+        }
+
+        #containerSupChat[state='open'] {
+            width: 390px !important;
+            height: 560px !important;
+        }
+
+        #containerSupChat[state='open'] + #btnOpenSupChat {
+            display: none;
+        }
+
+        #contentSupChat {
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        #btnOpenSupChat {
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+            margin: 5px;
+            border: none;
+            outline: none;
+            font-size: 190%;
+            background: #d2ffe8;
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: -1;
+            box-shadow: 0 0 15px rgba(160, 213, 178, 0.8);
+        }
+
+        #contentSupChat > header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px;
+            border-radius: 5px 5px 0 0;
+            height: 12%;
+            box-shadow: 0 5px 7px #eee;
+        }
+
+        #contentSupChat main {
+            position: relative;
+            width: 100%;
+            height: 78%;
+            z-index: 1;
+        }
+
+        #containerSupChat > footer {
+            box-shadow: 0 -5px 6px #aaa;
+            height: 10%;
+        }
+
+        #contentFooterSup {
+            padding: 0 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #inputMessageSup {
+            padding: 10px 0;
+            width: 88%;
+            border: none;
+            outline: none;
+            font-size: 105%;
+        }
+
+        #inputMessageSup::placeholder {
+            font-family: 'Vazir';
+        }
+
+        #btnSendMessageSup {
+            width: 10%;
+            border: none;
+            outline: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        #btnSendMessageSup svg {
+            font-size: 180%;
+            transform: rotateY(180deg);
+            color: #666666;
+        }
+
+        #backgroundSupChat {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            bottom: 0;
+            opacity: .5;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        #btnCloseSupChat {
+            color: red;
+            font-size: 115%;
+            cursor: pointer;
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            padding: 4px;
+            width: 25px;
+            height: 25px;
+            text-align: center;
+            border-radius: 50%;
+            border-top-left-radius: 2px;
+            z-index: 15;
+            background: rgba(255, 90, 88, 0.2);
+        }
+
+        #titleSupChat {
+            padding: 0;
+            margin: 0;
+            font-family: 'KalameBlack';
+        }
+
+        #labelSection {
+            padding: 0;
+            margin: 0;
+            color: #666;
+            font-family: 'Vazir';
+            font-size: 80%;
+        }
+
+        .sectionForChat {
+            background: red;
+            display: inline-block;
+            margin: 7px;
+            padding: 9px;
+            width: 60%;
+            border: none;
+            outline: none;
+        }
+
+        #containerSelectSection {
+            position: absolute;
+            width: 100%;
+            height: 0;
+            padding: 0;
+            background: #f0f0f0;
+            z-index: 2;
+            text-align: center;
+            overflow: auto;
+        }
+
+        #containerSelectSection[state='open'] {
+            height: 100%;
+            border: 1px solid #666666;
+        }
+
+        #containerSelectSection > header {
+            position: sticky;
+            background: #fff;
+            width: 100%;
+            top: 0;
+            left: 0;
+            padding: 7px 0;
+            background: #fff;
+            font-size: 130%;
+            font-family: 'KalameBlack';
+            color: #666666;
+        }
+
+        #containerSelectSection > main {
+            margin: 10px 0;
+        }
+
+        #supChatMessageAlert {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            left: 0;
+            bottom: 0;
+            background: #fff;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #supChatMessageAlert p {
+            font-size: 150%;
+            font-family: 'KalameBlack';
+        }
+
+        #messagesSup {
+            margin: 8px 0;
+            max-height: 98%;
+            width: 100%;
+            overflow: auto;
+        }
+
+        .messageSup {
+
+        }
+
+
+        .messageSup > div p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .message-sup-recive {
+            text-align: left;
+        }
+
+        .message-sup-send {
+            text-align: right;
+        }
+
+        .messageSupInfo {
+            display: none;
+            padding: 4px 7px;
+        }
+
+        .messageSupInfo img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .messageSup > div {
+            display: inline-block;
+            background: #eee;
+            margin: 5px 7px;
+            padding: 10px;
+            min-width: 150px;
+            max-width: 75%;
+            border-radius: 15px;
+        }
+
+        .messageSup header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .messageSup header > * {
+            margin: 4px;
+            color: #555555;
+            font-size: 90%;
+        }
+
+        .messageSup main {
+            margin: 10px 0;
+            word-wrap: break-word;
+        }
+
+        .messageSup footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 85%;
+        }
+
+        .messageSup footer p {
+            color: #888888;
+        }
+
+        .messageSup footer i {
+            color: #888888;
+        }
+
+        .messageSup footer .fa-check-double {
+            color: rgba(47, 179, 255, 1);
+        }
+
+
+        .messageSupInfo > div > div div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+
+        .DisabledAllElementsExceptLoadingNotification *:not( .LoadingNotification ):not(.LoadingNotification_Icon):not(.LoadingNotification_Text):not(.NotificationMessage):not(.NotificationMessage *) {
+            filter: brightness(80%) blur(2px);
+        }
+
+
+        .BlurAllElementsExceptMessage_Alert > :not(.ContainerMessage_Alert) {
+            filter: blur(8px);
+        }
+
+        .BtnStyle_1 {
+            padding: 6px;
+            width: 85px;
+            border-radius: 4px;
+            background: var(--ColorBase);
+            color: #ffffff;
+            transition: box-shadow .1s, background-color .15s;
+            margin: 5px;
+            border: none;
+        }
+
+        .BtnStyle_1:focus {
+            background: #00e1c0;
+            color: white;
+        }
+
+        .BtnStyle_1:active {
+            box-shadow: none;
+            transform: scale(.95);
+        }
+
+        .BtnStyle_1:hover {
+            background: #00e1c0;
+            color: white;
+        }
+
+        .BtnStyle_1_OutLine {
+            padding: 6px;
+            width: 85px;
+            border-radius: 4px;
+            background: inherit;
+            color: var(--ColorBase);
+            border: 1px solid var(--ColorBase);
+            transition: box-shadow .1s, background-color .15s;
+            margin: 5px;
+        }
+
+        .BtnStyle_1_OutLine:focus {
+            background: #00e1c0;
+            color: white;
+        }
+
+        .BtnStyle_1_OutLine:active {
+            box-shadow: none;
+            transform: scale(.95);
+        }
+
+        .BtnStyle_1_OutLine:hover {
+            background: #00e1c0;
+            color: white;
+        }
+
+        .ContainerMessage_Alert {
+            display: inline-block;
+            box-shadow: 0 0 0 100000px rgba(0, 0, 0, .5);
+            background: #ffffff;
+            position: fixed !important;
+            top: 20%;
+            z-index: 12;
+            text-align: center;
+            padding: 90px;
+            padding-bottom: 110px;
+            border-radius: 5px;
+            animation: AnimationShowMessageAlert .5s;
+        }
+
+        @keyframes AnimationShowMessageAlert {
+            0% {
+                transform: translateY(-120px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .TextMessage_Alert {
+            font-size: 90%;
+            border-bottom: 1px solid #e7e7e7;
+            padding-bottom: 15px;
+        }
+
+        .TextMessage_Alert p {
+            text-align: center;
+            width: 100%;
+            color: #ffb44e !important;
+            margin-top: 5px;
+            word-break: break-word;
+            font-size: 90%;
+        }
+
+        .BtnClose1_Alert {
+            position: absolute;
+            right: 1%;
+            top: 1%;
+            color: #ff4c51;
+            font-size: 110%;
+            cursor: pointer;
+        }
+
+        .BtnClose1_Alert:hover {
+            color: #ff282c;
+        }
+
+        .BtnClose_Alert {
+            font-weight: bold;
+            background: rgba(255, 102, 108, 0.7);
+            position: absolute;
+            right: 1%;
+            bottom: 2%;
+            color: #464646;
+        }
+
+        .BtnClose_Alert:hover {
+            background: rgba(255, 102, 108, 0.85) !important;
+        }
+
+        .BtnClose_Alert:focus {
+            background: rgba(255, 102, 108, 0.9) !important;
+            color: #ffffff;
+        }
+
+        .BtnOk_Alert {
+            font-weight: bold;
+            background: rgb(81, 255, 163);
+            position: absolute;
+            left: 1%;
+            bottom: 2%;
+            color: #464646;
+        }
+
+        .BtnOk_Alert:hover {
+            background: rgb(25, 232, 145) !important;
+            color: #ffffff;
+        }
+
+        .BtnOk_Alert:focus {
+            background: rgb(12, 232, 146) !important;
+            color: #ffffff;
+        }
+
+        .ContainerMessage_Alert button {
+            border: none;
+            padding: 7px;
+        }
+
+        .ContainerMessage_Alert button:focus {
+            outline: none;
+        }
+
+
+        #ContainerNotificationsMessage {
+            position: fixed;
+            top: 1%;
+            right: 1%;
+            z-index: 9999999;
+            max-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .NotificationMessage {
+            position: relative;
+            padding: 4px;
+            margin: 15px 10px;
+            width: 300px;
+            box-shadow: 0 5px 8px rgba(148, 148, 148, 0.1);
+            direction: rtl;
+            text-align: center;
+            border-radius: 4px;
+            transition: all 1s;
+            background: #ffffff;
+            animation: ShowNotification_Animation_1 .3s;
+        }
+
+        .Notification_Removed {
+            animation: Animation_Notification_Removed .25s forwards;
+        }
+
+        @keyframes Animation_Notification_Removed {
+            100% {
+                transform: translateX(-300px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes ShowNotification_Animation_1 {
+            0% {
+                transform: translateX(100px);
+            }
+            100% {
+                transform: translateX(0) translateY(0);
+            }
+        }
+
+        .LevelOfNecessity_1 {
+            width: 250px;
+        }
+
+        .LevelOfNecessity_1 p {
+            font-size: 90%;
+        }
+
+        .LevelOfNecessity_2 {
+            width: 280px;
+        }
+
+        .LevelOfNecessity_2 p {
+            font-size: 95%;
+        }
+
+        .LevelOfNecessity_3 {
+            width: 330px;
+        }
+
+        .LevelOfNecessity_3 p {
+            font-size: 100%;
+        }
+
+        .LevelOfNecessity_4 {
+            width: 350px;
+        }
+
+        .LevelOfNecessity_4 p {
+            font-size: 110%;
+        }
+
+        .LevelOfNecessity_5 {
+            width: 400px;
+        }
+
+        .LevelOfNecessity_5 p {
+            font-size: 120%;
+        }
+
+
+        .NotificationMessage p {
+            margin: 0;
+            margin-top: 2px;
+            padding-bottom: 20px;
+        }
+
+        .IconNotification {
+            position: absolute;
+            left: 7px;
+            top: 7px;
+            font-size: 110%;
+        }
+
+        .IconNotification_Success {
+            color: #1af196;
+        }
+
+        .IconNotification_Error {
+            color: #f15368;
+        }
+
+        .IconNotification_Warning {
+            color: #ffaf07;
+        }
+
+        .BtnCloseNotification {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: none;
+            text-align: right;
+            display: block !important;
+            font-size: 95%;
+            cursor: pointer;
+            transform: rotate(0) !important;
+            color: #ff7e79;
+        }
+
+        .BtnCloseNotification:hover {
+            color: #ff0c00;
+        }
+
+        .NotificationSuccess {
+            box-shadow: 0 3px 1px #1af196;
+        }
+
+        .NotificationSuccess p {
+            color: #17c3b2;
+        }
+
+        .NotificationError {
+            box-shadow: 0 3px 1px #f15368;
+        }
+
+        .NotificationError p {
+            color: #ff4558;
+        }
+
+        .NotificationWarning {
+            border: 1px solid rgba(255, 209, 51, 0.35);
+            box-shadow: 0 3px 1px #ffaf07;
+        }
+
+        .NotificationWarning p {
+            color: #ffaf07;
+        }
+
+        .Success {
+            box-shadow: 0 0 3px #17c3b2;
+            color: #17c3b2;
+        }
+
+        .Success p {
+            color: #17c3b2;
+        }
+
+        .Alert {
+            box-shadow: 0 0 3px #ff4558;
+            color: #ff4558;
+        }
+
+        .Alert p {
+            color: #ff4558;
+        }
+
+        .Error {
+            box-shadow: 0 0 3px #ff4558;
+            color: #ff4558;
+        }
+
+        .Error p {
+            color: #ff4558;
+        }
+
+        .Warning {
+            box-shadow: 0 0 3px #ffd070;
+        }
+
+        .Warning p {
+            color: #e0bc5e;
+        }
+
+        @media screen and (min-width: 1201px) {
+            .ContainerMessage_Alert {
+                width: 35%;
+                left: 32.5%;
+            }
+
+            .TextMessage_Alert {
+                font-size: 100%;
+            }
+
+            .ContainerBlur[Size='Medium'] {
+                width: 70%;
+                right: 15%;
+            }
+
+        }
+
+        @media screen and (max-width: 1200px) {
+            .ContainerMessage_Alert {
+                width: 45%;
+                left: 27.5%;
+            }
+
+            .TextMessage_Alert {
+                font-size: 95%;
+            }
+
+        }
+
+        @media screen and (max-width: 992px) {
+            .ContainerMessage_Alert {
+                width: 50%;
+                left: 25%;
+            }
+
+            .TextMessage_Alert {
+                font-size: 90%;
+            }
+
+            .ContainerBlur[Size='Small'] {
+                width: 70%;
+                right: 15%;
+            }
+
+        }
+
+        @media screen and (max-width: 768px) {
+
+            .ContainerMessage_Alert {
+                width: 60%;
+                left: 20%;
+                padding: 80px 30px;
+            }
+
+            .TextMessage_Alert {
+                font-size: 85%;
+            }
+
+            .TextMessage_Alert {
+                width: 100%;
+            }
+
+            .ContainerBlur {
+                width: 80%;
+                right: 10%;
+            }
+
+            .ItemFormInput i {
+                text-align: center;
+                width: 10%;
+                vertical-align: middle;
+                font-size: 120%;
+            }
+
+            .ContainerBlur[Size='Small'] {
+                width: 75%;
+                right: 12.5%;
+            }
+        }
+
+        @media screen and (max-width: 550px) {
+            .ContainerMessage_Alert {
+                width: 80%;
+                left: 10%;
+            }
+
+            .TextMessage_Alert {
+                font-size: 90%;
+            }
+
+            .ContainerBlur[Size='Medium'] {
+                width: 85%;
+                right: 7.5%;
+            }
+
+            .ContainerBlur[Size='Small'] {
+                width: 88%;
+                right: 6%;
+            }
+        }
+
+        @media screen and (max-width: 400px) {
+
+            .ContainerMessage_Alert {
+                width: 90%;
+                left: 5%;
+            }
+
+            .TextMessage_Alert {
+                font-size: 95%;
+            }
+
+            .ContainerBlur[Size='Medium'] {
+                width: 98%;
+                right: 1%;
+            }
+
+            .ContainerBlur[Size='Small'] {
+                width: 98%;
+                right: 1%;
+            }
+
+        }
+
+        @media screen and (max-width: 350px) {
+
+            .ContainerMessage_Alert {
+                width: 95%;
+                left: 2.5%;
+            }
+
+            .TextMessage_Alert {
+                font-size: 88%;
+            }
+
+        }
+
+
+        .ContainerLoadingAJAX {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            left: 0;
+            bottom: 0;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 99999999;
+        }
+
+
+        .LoadingCircle {
+            display: block;
+            height: 80px;
+            width: 80px;
+            animation: Animation_LoadingCircle-1 3s linear infinite;
+        }
+
+        @keyframes Animation_LoadingCircle-1 {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .LoadingCircle span {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            height: inherit;
+            width: inherit;
+            clip: rect(40px, 80px, 80px, 0);
+            animation: Animation_LoadingCircle-2 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+        }
+
+
+        @keyframes Animation_LoadingCircle-2 {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .LoadingCircle span::before {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            height: inherit;
+            width: inherit;
+            border: 3px solid transparent;
+            border-top: 6px solid rgb(35, 227, 159);
+            border-radius: 50%;
+            animation: Animation_LoadingCircle-3 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+        }
+
+
+        @keyframes Animation_LoadingCircle-3 {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .LoadingCircle span::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            height: inherit;
+            width: inherit;
+            border: 6px solid rgb(39, 245, 171);
+            border-radius: 50%;
+        }
+
+        [messages-section="hide"] {
+            display: none;
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+<div id="containerSupChat" state="close">
+</div>
+<button id="btnOpenSupChat">
+    <i class="fa fa-comments"></i>
+</button>
+
+<h1>Fazel</h1>
+</body>
+<script>
+    window.CSRF_TOKEN = '{{ csrf_token }}'
+</script>
+<script>
+
+
+    let LIST_ALL_NOTIFICATIONS_INSTANCE = []
+    let COUNTER_CREATE_NOTIFICATIONS = 0
+
+    class ShowNotificationMessage_Model {
+        constructor(Text, Type, Timer = 5000, LevelOfNecessity = 3) {
+            COUNTER_CREATE_NOTIFICATIONS += 1
+            LIST_ALL_NOTIFICATIONS_INSTANCE.push(this)
+            this.ID_Notification = COUNTER_CREATE_NOTIFICATIONS
+            this.Index_Notification = LIST_ALL_NOTIFICATIONS_INSTANCE.length - 1
+
+            let ContainerNotifications = document.getElementById('ContainerNotificationsMessage')
+            if (ContainerNotifications == undefined) {
+                ContainerNotifications = document.createElement('div')
+                ContainerNotifications.id = 'ContainerNotificationsMessage'
+            }
+            let ContainerMessage = document.createElement('div')
+            let Message = document.createElement('p')
+            let BtnClose = document.createElement('i')
+            let Icon = document.createElement('i')
+
+            ContainerMessage.setAttribute('ID_Notification', this.ID_Notification)
+            BtnClose.setAttribute('Index_Notification', this.Index_Notification)
+
+            ContainerMessage.classList.add('NotificationMessage')
+            ContainerMessage.classList.add(`LevelOfNecessity_${LevelOfNecessity}`)
+            ContainerMessage.classList.add(`Notification${Type}`)
+            Message.innerText = Text
+            BtnClose.className = 'fa fa-times BtnCloseNotification'
+            if (Type == 'Success') {
+                Icon.className = 'fa fa-check-circle IconNotification IconNotification_Success'
+            } else if (Type == 'Error') {
+                Icon.className = 'fa fa-times-hexagon IconNotification IconNotification_Error '
+            } else if (Type == 'Warning') {
+                Icon.className = 'fa fa-exclamation-triangle IconNotification IconNotification_Warning'
+            }
+            ContainerMessage.appendChild(Icon)
+            ContainerMessage.appendChild(BtnClose)
+            ContainerMessage.appendChild(Message)
+            ContainerNotifications.appendChild(ContainerMessage)
+            document.body.appendChild(ContainerNotifications)
+            this.ContainerMessage = ContainerMessage
+            let Index_Notification = this.Index_Notification
+            setTimeout(function () {
+                RemoveNotification_Func(Index_Notification)
+            }, Timer)
+
+            BtnClose.onclick = function (e) {
+                let Index_Notification = e.target.getAttribute('Index_Notification')
+                RemoveNotification_Func(Index_Notification)
+            }
+        }
+
+    }
+
+    function RemoveNotification_Func(Index) {
+        LIST_ALL_NOTIFICATIONS_INSTANCE[Index].ContainerMessage.remove()
+    }
+
+    function ShowNotificationMessage(Text, Type, Timer = 5000, LevelOfNecessity = 3) {
+        new ShowNotificationMessage_Model(Text, Type, Timer, LevelOfNecessity)
+    }
+
+
+    class TextMessage {
+        constructor(data, loaded = false) {
+            // if loaded == true => message load at database else messsage created now
+            // if senderMe == true => is my message
+
+
+            this.data = data
+            this.sender = data.sender
+            this.text = data.text
+            let sectionID = data.section.id
+            this.messages = document.getElementById(`messages-section-${sectionID}`)
+            this.inputMessage = document.getElementById('inputMessageSup')
+            this.btnSendMessage = document.getElementById('btnSendMessageSup')
+
+            if (this.sender == 'user') {
+                this.createMessageSend()
+            }
+
+        }
+
+        createMessageSend() {
+            let message = document.createElement('div')
+            message.classList.add('messageSup')
+            message.classList.add('message-sup-send')
+            let elements = `
+                <div>
+                    <div class="messageSupInfo">
+                        <div>
+                            <div>
+                                <p>${SUP_CHAT.user.get_full_name}</p>
+                                <img src="/assets/supchat/images/default/iconUser.png" alt="${SUP_CHAT.user.get_full_name} picture">
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <p>تغییر</p>
+                                <i class="fa fa-edit"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <p>حذف</p>
+                                <i class="fa fa-trash"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <header>
+                        <p><b>You</b></p>
+                        <i class="fa fa-ellipsis-v" btn-more-info-message></i>
+                    </header>
+                    <main>
+                        ${this.text}
+                    </main>
+                    <footer>
+                            <p>${this.data.time_send}</p>
+                            <i class="fa fa-check"></i>
+                    </footer>
+                </div>
+            `
+            message.innerHTML = elements
+            this.message = message
+            this.messages.appendChild(message)
+        }
+    }
+
+
+    class SupChat {
+        // "This" == "this" : use in event btn
+
+        CREATED = false
+
+        constructor(config, sections) {
+            if (!this.CREATED) {
+                this.CREATED = true
+                this.INFO_SEND = {}
+                this.config = config
+                this.sections = sections
+                this.user = null
+                this.containerSupChat = document.getElementById('containerSupChat')
+                this.btnOpenSup = document.getElementById('btnOpenSupChat')
+                this.createElements()
+            }
+        }
+
+        setInfoSectionForChat(btn) {
+            let sectionIndex = btn.getAttribute('sec-index')
+            let section = this.sections[sectionIndex]
+            this.INFO_SEND['id-section'] = section.id
+            this.labelSection.innerText = section.title
+            this.hideAllMessagesSection()
+            this.showMessagesSection(section)
+            let stateGetInfo = btn.getAttribute('geted-info') || 'false'
+            if (stateGetInfo == 'false') {
+                this.getInfoChat()
+                btn.setAttribute('geted-info','true')
+            }
+        }
+
+        hideAllMessagesSection() {
+            let elements = document.querySelectorAll('[messages-section]')
+            for (let el of elements) {
+                el.setAttribute('messages-section', 'hide')
+            }
+        }
+
+        showMessagesSection(section) {
+            let messagesSection = document.getElementById(`messages-section-${section.id}`)
+            messagesSection.setAttribute('messages-section', 'show')
+        }
+
+        setDefaultInfoSectionForChat() {
+            let btnSection = document.querySelector('[btn-select-section-for-chat]')
+            this.setInfoSectionForChat(btnSection)
+        }
+
+        toggleContainerSelectSection(type) {
+            if (type == 'open') {
+                this.containerSelectSection.setAttribute('state', 'open')
+            } else {
+                this.containerSelectSection.setAttribute('state', 'close')
+            }
+        }
+
+        toggleSupChat(type) {
+            if (type == 'open') {
+                this.containerSupChat.setAttribute('state', 'open')
+            } else {
+                this.containerSupChat.setAttribute('state', 'close')
+            }
+        }
+
+        supChatMessage(message, type, fade = true) {
+            let element = document.createElement('div')
+            element.id = 'supChatMessageAlert'
+            element.innerHTML = `<p>${message}</p>`
+            element.setAttribute('fade', fade)
+            element.classList.add(type)
+            this.containerSupChat.appendChild(element)
+        }
+
+        deleteMessageAlert() {
+            // if message with fade true => delete
+            try {
+                document.querySelector('#supChatMessageAlert[fade=true]').remove()
+            } catch (e) {
+            }
+        }
+
+        createElements() {
+            let This = this
+            let nodeElement = `
+                <div id="containerSelectSection">
+                    <header>
+                        لطفا بخش مورد نظر را انتخاب کنید
+                    </header>
+                    <main>
+                    </main>
+                </div>
+                <div id="contentSupChat">
+                    <header>
+                        <div>
+                            <h2 id="titleSupChat">پشتیبانی</h2>
+                            <p id="labelSection">
+                                نامشخص
+                            </p>
+                        </div>
+                        <div>
+                            <i class="fa fa-times" id="btnCloseSupChat"></i>
+                        </div>
+                    </header>
+                    <main>
+                        <img src="${this.config.imageBackground}" alt="Background" id="backgroundSupChat">
+                        <div id="messagesSup"></div>
+                    </main>
+                      <footer>
+                          <div></div>
+                            <div id="contentFooterSup">
+                                <input type="text" id="inputMessageSup" placeholder="پیام . . .">
+                                <button id="btnSendMessageSup" message="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1"><path d="M41.353846 876.307692l86.646154-320.984615h366.276923c9.846154 0 19.692308-9.846154 19.692308-19.692308v-39.384615c0-9.846154-9.846154-19.692308-19.692308-19.692308H128l-84.676923-315.076923C41.353846 157.538462 39.384615 151.630769 39.384615 145.723077c0-13.784615 13.784615-27.569231 29.538462-25.6 3.938462 0 5.907692 1.969231 9.846154 1.969231l886.153846 364.307692c11.815385 3.938462 19.692308 15.753846 19.692308 27.569231s-7.876923 21.661538-17.723077 25.6L78.769231 913.723077c-3.938462 1.969231-7.876923 1.969231-11.815385 1.969231-15.753846-1.969231-27.569231-13.784615-27.569231-29.538462 0-3.938462 0-5.907692 1.969231-9.846154z"/></svg>
+                                </button>
+                            </div>
+                      </footer>
+                </div>
+
+            `
+
+            this.containerSupChat.innerHTML = nodeElement
+            this.containerSelectSection = document.getElementById('containerSelectSection')
+            this.containerSelectSectionMain = this.containerSelectSection.querySelector('main')
+            this.labelSection = document.getElementById('labelSection')
+            this.inputMessage = document.getElementById('inputMessageSup')
+            this.btnSendMessage = document.getElementById('btnSendMessageSup')
+
+            this.inputMessage.addEventListener('input', function () {
+                let value = String(this.value)
+                if (value.trim() != '') {
+                    This.btnSendMessage.setAttribute('message', 'true')
+                } else {
+                    This.btnSendMessage.setAttribute('message', 'false')
+                }
+            })
+            this.btnSendMessage.addEventListener('click', function () {
+                let message = this.getAttribute('message') || 'false'
+                if (message == 'true') {
+                    new TextMessage(
+                        {
+                            'text': This.inputMessage.value,
+                            'sender':'section',
+                        }
+                    )
+                    This.resetContentInputChat()
+                }
+            })
+
+            this.btnCloseSup = document.getElementById('btnCloseSupChat')
+            this.btnCloseSup.addEventListener('click', function () {
+                This.toggleSupChat('close')
+                This.deleteMessageAlert()
+            })
+            this.btnOpenSup.addEventListener('click', function () {
+                let stateSupChat = This.containerSupChat.getAttribute('state') || 'close'
+                let countSection = This.sections.length
+                if (stateSupChat == 'close') {
+                    This.toggleSupChat('open')
+                    if (countSection > 1) {
+                        This.toggleContainerSelectSection('open')
+                    } else if (countSection == 1) {
+                        This.setDefaultInfoSectionForChat()
+                    } else {
+                        This.supChatMessage('ساپ چت غیر فعال است', 'Error')
+                    }
+                }
+            })
+            This.createSection()
+        }
+
+        createSection() {
+            let This = this
+            for (let i = 0; i < this.sections.length; i++) {
+                let section = this.sections[i]
+                this.containerSelectSectionMain.innerHTML += `<button class="sectionForChat" btn-select-section-for-chat sec-index="${i}">${section.title}</button>`
+                let messagesSup = document.getElementById('messagesSup')
+                let messageSection = document.createElement('div')
+                messageSection.id = `messages-section-${section.id}`
+                messageSection.setAttribute('messages-section', 'hide')
+                messagesSup.appendChild(messageSection)
+            }
+            let btnsSelectSection = document.querySelectorAll('[btn-select-section-for-chat]')
+            for (let btn of btnsSelectSection) {
+                btn.addEventListener('click', function () {
+                    This.setInfoSectionForChat(this)
+                    This.toggleContainerSelectSection('close')
+                })
+            }
+        }
+
+        resetContentInputChat() {
+            this.inputMessage.value = ''
+            this.btnSendMessage.setAttribute('message', 'false')
+        }
+
+        loadMessages(data) {
+            let messages = data.chat.messages
+            for (let i = 0; i < messages.length; i++) {
+                let message = messages[i]
+                if (message.type == 'text') {
+                    let textMessage = new TextMessage(message)
+                }
+            }
+        }
+
+        getInfoChat() {
+            let This = this
+            this.sendAjax('/sup-chat/getInfoChat', this.INFO_SEND, 'POST', function (response) {
+                let status = response.status
+                if (status == '200') {
+                    let user = response.user
+                    This.user = user
+                    This.loadMessages(response)
+                } else {
+                    This.supChatMessage('مشکلی پیش امده است', 'Error', false)
+                }
+            })
+        }
+
+        loadingEffect(State) {
+            if (State == 'Show') {
+                let ContainerLoading = document.createElement('div')
+                ContainerLoading.id = 'ContainerLoadingAJAX'
+                ContainerLoading.classList.add('ContainerLoadingAJAX')
+                ContainerLoading.innerHTML = `
+                        <div class="LoadingCircle"><span></span></div>
+                    `
+                this.containerSupChat.appendChild(ContainerLoading)
+            } else {
+                try {
+                    document.getElementById('ContainerLoadingAJAX').remove()
+                } catch (e) {
+                }
+            }
+        }
+
+        sendAjax(Url, Data = {}, Method = 'POST', Success, Failed) {
+            let This = this
+
+            function __Redirect__(response) {
+                if (response.__Redirect__ == 'True') {
+                    setTimeout(function () {
+                        window.location.href = response.__RedirectURL__
+                    }, parseInt(response.__RedirectAfter__ || 0))
+                }
+            }
+
+            if (Success == undefined) {
+                Success = function (response) {
+                    __Redirect__(response)
+                }
+            }
+            if (Failed == undefined) {
+                Failed = function (response) {
+                    This.supChatMessage('ارتباط با سرور برقرار نشد لطفا دقایقی دیگر امتحان کنید', 'Alert', true)
+                }
+            }
+            this.loadingEffect('Show')
+            $.ajax(
+                {
+                    url: Url,
+                    data: JSON.stringify(Data),
+                    type: Method,
+                    headers: {
+                        'X-CSRFToken': window.CSRF_TOKEN
+                    },
+                    success: function (response) {
+                        __Redirect__(response)
+                        This.loadingEffect('Hide')
+                        Success(response)
+                    },
+                    failed: function (response) {
+                        __Redirect__(response)
+                        This.loadingEffect('Hide')
+                        Failed(response)
+                    },
+                    error: function (response) {
+                        __Redirect__(response)
+                        This.loadingEffect('Hide')
+                        Failed(response)
+                    }
+                }
+            )
+        }
+
+    }
+
+    const SUP_CHAT = new SupChat({
+        'imageBackground': '/assets/supchat/images/default/backgroundChat.png'
+    }, [
+        {'id': 1, 'title': 'پشتیبانی مالی'},
+        {'id': 2, 'title': 'پشتیبانی هاست'},
+    ])
+
+
+</script>
+</html>

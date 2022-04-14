@@ -15,5 +15,4 @@ websocket_urlpatterns = [
 
 urlpatterns = [
     path('getInfoChat',views.getInfoChat),
-    path('chat',views.view),
 ]

@@ -1,0 +1,119 @@
+{% load static %}
+{% load render_partial %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+
+
+        .header{
+            background: #eee;
+            padding: 20px;
+            text-align: right;
+        }
+
+        .header a{
+            padding: 10px;
+        }
+
+
+    </style>
+</head>
+<body>
+<header class="header">
+    <a href="#">خانه</a>
+    <a href="#">درباره ما</a>
+    <a href="#">تماس با ما</a>
+</header>
+{% render_partial 'Chat.views.index' %}
+</body>
+<script>
+    window.CSRF_TOKEN = '{{ csrf_token }}'
+</script>
+<script>
+
+
+    let LIST_ALL_NOTIFICATIONS_INSTANCE = []
+    let COUNTER_CREATE_NOTIFICATIONS = 0
+
+    class ShowNotificationMessage_Model {
+        constructor(Text, Type, Timer = 5000, LevelOfNecessity = 3) {
+            COUNTER_CREATE_NOTIFICATIONS += 1
+            LIST_ALL_NOTIFICATIONS_INSTANCE.push(this)
+            this.ID_Notification = COUNTER_CREATE_NOTIFICATIONS
+            this.Index_Notification = LIST_ALL_NOTIFICATIONS_INSTANCE.length - 1
+
+            let ContainerNotifications = document.getElementById('ContainerNotificationsMessage')
+            if (ContainerNotifications == undefined) {
+                ContainerNotifications = document.createElement('div')
+                ContainerNotifications.id = 'ContainerNotificationsMessage'
+            }
+            let ContainerMessage = document.createElement('div')
+            let Message = document.createElement('p')
+            let BtnClose = document.createElement('i')
+            let Icon = document.createElement('i')
+
+            ContainerMessage.setAttribute('ID_Notification', this.ID_Notification)
+            BtnClose.setAttribute('Index_Notification', this.Index_Notification)
+
+            ContainerMessage.classList.add('NotificationMessage')
+            ContainerMessage.classList.add(`LevelOfNecessity_${LevelOfNecessity}`)
+            ContainerMessage.classList.add(`Notification${Type}`)
+            Message.innerText = Text
+            BtnClose.className = 'fa fa-times BtnCloseNotification'
+            if (Type == 'Success') {
+                Icon.className = 'fa fa-check-circle IconNotification IconNotification_Success'
+            } else if (Type == 'Error') {
+                Icon.className = 'fa fa-times-hexagon IconNotification IconNotification_Error '
+            } else if (Type == 'Warning') {
+                Icon.className = 'fa fa-exclamation-triangle IconNotification IconNotification_Warning'
+            }
+            ContainerMessage.appendChild(Icon)
+            ContainerMessage.appendChild(BtnClose)
+            ContainerMessage.appendChild(Message)
+            ContainerNotifications.appendChild(ContainerMessage)
+            document.body.appendChild(ContainerNotifications)
+            this.ContainerMessage = ContainerMessage
+            let Index_Notification = this.Index_Notification
+            setTimeout(function () {
+                RemoveNotification_Func(Index_Notification)
+            }, Timer)
+
+            BtnClose.onclick = function (e) {
+                let Index_Notification = e.target.getAttribute('Index_Notification')
+                RemoveNotification_Func(Index_Notification)
+            }
+        }
+
+    }
+
+    function RemoveNotification_Func(Index) {
+        LIST_ALL_NOTIFICATIONS_INSTANCE[Index].ContainerMessage.remove()
+    }
+
+    function ShowNotificationMessage(Text, Type, Timer = 5000, LevelOfNecessity = 3) {
+        new ShowNotificationMessage_Model(Text, Type, Timer, LevelOfNecessity)
+    }
+
+
+
+
+</script>
+</html>

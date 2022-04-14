@@ -1,14 +1,32 @@
 from django.shortcuts import render
 from django.http import JsonResponse, Http404
 from django.core.exceptions import PermissionDenied
-from .models import Section, ChatGroup
+from .models import Section, ChatGroup, SupChat
 from .serializers import SerializerChat, SerializerSection
 from django.db.models import Q
 import json
 # Create your views here.
 
-def view(request):
-    return render(request,'Chat/index.html')
+
+def index(request):
+    context = {}
+    sections = Section.objects.filter(isActive=True).all()
+    supchat = SupChat.objects.first()
+    context['Sections'] = sections
+    context['SupChat'] = supchat
+    return render(request, 'Chat/index.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
 
 def getInfoChat(request):
     if request.method == 'POST' and request.is_ajax():
@@ -22,7 +40,9 @@ def getInfoChat(request):
             lookupChat = Q(user=user,section=section)
             chat = ChatGroup.objects.filter(lookupChat).first()
             chat = SerializerChat(chat)
-            context['user'] = user.get_full_name()
+            context['user'] = {
+                'name':user.get_full_name()
+            }
             context['chat'] = chat
             context['status'] = '200'
             return JsonResponse(context)

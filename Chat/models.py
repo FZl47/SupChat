@@ -48,6 +48,7 @@ class SupChatConfig(models.Model):
 
 class Section(models.Model):
     title = models.CharField(max_length=150)
+    isActive = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
@@ -99,6 +100,7 @@ class MessageBase(models.Model):
 
     def get_time_full(self):
         return self.dateTimeSend.strftime('%Y/%d/%m %H:%M:%S')
+
 
 class Message(MessageBase):
     objects = InheritanceManager()

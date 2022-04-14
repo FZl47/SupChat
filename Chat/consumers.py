@@ -49,18 +49,14 @@ class Chat(ChatBase, WebsocketConsumer):
     @user_authenticated
     def connect(self):
         self.accept()
-        self.ALL_MESSAGE = []
-        self.MESSAGES_DELETED = []
-        self.MESSAGES_EDITED = []
+
 
 
     def disconnect(self, code):
         if self.is_accepted:
             async_to_sync(self.channel_layer.group_discard)(self._group, self._name)
             self.is_accepted = False
-        self.ALL_MESSAGE = []
-        self.MESSAGES_DELETED = []
-        self.MESSAGES_EDITED = []
+
 
     def receive(self, text_data=None, bytes_data=None):
         if text_data:

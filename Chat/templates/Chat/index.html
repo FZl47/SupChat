@@ -1,3 +1,5 @@
+{% load FilterTagsSupChat %}
+
 <style>
 
 
@@ -720,7 +722,7 @@
         border: 1px solid #eee !important;
     }
 
-    #ContainerChatMessagesSupChat header {
+    #ContainerChatMessagesSupChat > header {
         text-align: right;
         background: #eee;
         padding: 5px 8px;
@@ -740,9 +742,8 @@
         font-family: 'Vazir';
     }
 
-    #ContainerChatMessagesSupChat main {
+    #ContainerChatMessagesSupChat > main {
         height: 75%;
-        background: black;
     }
 
     .MessagesSupChat {
@@ -751,12 +752,27 @@
         display: none;
     }
 
+    .MessagesSupChat::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .MessagesSupChat::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .MessagesSupChat::-webkit-scrollbar-thumb {
+        background: #999999;
+    }
+
+    .MessagesSupChat::-webkit-scrollbar-thumb:hover {
+        background: #666666;
+    }
 
     [ContainerMessagesShow] {
         display: block;
     }
 
-    #ContainerChatMessagesSupChat footer {
+    #ContainerChatMessagesSupChat > footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -810,6 +826,114 @@
         fill: #0861ff;
     }
 
+    /*   Message  */
+
+    .MessageSupChat {
+    }
+
+    .MessageSupChat .ContentMessage {
+        background: #fff;
+        border: 1px solid #ddd;
+        margin: 10px;
+        border-radius: 12px;
+        padding: 5px 7px;
+        max-width: 75%;
+        position: relative;
+    }
+
+    .ContentMessage > header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    [message-seen='false'] {
+        color: #aaa;
+        font-size: 90%;
+    }
+
+    [message-seen='true'] {
+        color: #2a42ff;
+        font-size: 100%;
+    }
+
+    .NameSenderMessage {
+        color: #999;
+    }
+
+    .ContentMessage > main {
+        margin: 5px;
+        text-align: right;
+        display: block;
+        width: 100%;
+    }
+
+    .ContentMessage > footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .MessageSupChat pre {
+        white-space: pre-wrap;
+        font-family: 'Vazir';
+        padding: 1px;
+        height: auto;
+    }
+
+    .TimeSentMessage {
+        font-size: 75%;
+        color: #888888;
+    }
+
+    .BtnShowMoreOptionMessage:hover + div {
+        display: block;
+    }
+
+    .BtnShowMoreOptionMessage:focus + div {
+        display: block;
+    }
+
+    .MoreOptionMessage {
+        display: none;
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        z-index: 3;
+        width: 75%;
+        background: #fff;
+        box-shadow: 0 0 6px rgba(170, 170, 170, 0.5);
+        border-radius: 5px;
+        transition: all .15s;
+    }
+
+    .MoreOptionMessage:hover {
+        display: block;
+    }
+
+    .OptionMessage {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 10px;
+        margin: 3px 0;
+        border-bottom: 1px solid #eee !important;
+    }
+
+    button.OptionMessage:hover {
+        background: #eee !important;
+    }
+
+    .OptionMessage:last-of-type {
+        border-bottom: none !important;
+    }
+
+    .OptionMessage img {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+    }
 
 </style>
 <button id="ButtonOpenSupChat">
@@ -839,6 +963,54 @@
                 {% for Section in Sections %}
                     <div id="MessagesSupChat-{{ Section.id }}" section-id="{{ Section.id }}"
                          section-title="{{ Section.title }}" class="MessagesSupChat">
+                        {% for Message in Section|get_messages_sup_chat_by_user:request %}
+                            <div class="MessageSupChat">
+                                <div class="ContentMessage">
+                                    <header>
+                                        <div>
+                                            <b class="NameSenderMessage">You</b>
+                                        </div>
+                                        <div>
+                                            <button class="BtnShowMoreOptionMessage">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </button>
+                                            <div class="MoreOptionMessage">
+                                                <div class="OptionMessage">
+                                                    <p class="NameSenderMessage">{{ Message.chat.user.get_full_name }}</p>
+                                                    <img src="{{ Message.chat.user.get_image }}"
+                                                         alt="{{ Message.chat.user.get_full_name }}">
+                                                </div>
+                                                <button class="OptionMessage">
+                                                    <p>ویرایش</p>
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button class="OptionMessage">
+                                                    <p>حذف</p>
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </header>
+                                    <main>
+                                        {% if Message.type == 'text' %}
+                                            <pre>{{ Message.text }}</pre>
+                                        {% endif %}
+                                    </main>
+                                    <footer>
+                                        <div class="TimeSentMessage">
+                                            {{ Message.get_time }}
+                                        </div>
+                                        <div>
+                                            {% if Message.seen == True %}
+                                                <i class="fa fa-dobule-check" message-seen="true"></i>
+                                            {% else %}
+                                                <i class="fa fa-check" message-seen="false"></i>
+                                            {% endif %}
+                                        </div>
+                                    </footer>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                 {% endfor %}
             </main>
@@ -862,7 +1034,9 @@
     </div>
 </div>
 
-
+<script>
+    window.CSRF_TOKEN = '{{ csrf_token }}'
+</script>
 <script>
 
     let ButtonOpenSupChat = document.getElementById('ButtonOpenSupChat')
@@ -879,7 +1053,7 @@
     ButtonSendMessageTextSupChat.addEventListener('click', function () {
         let stateActive = this.getAttribute('active') || 'false'
         if (stateActive == 'true') {
-
+            SUP_CHAT.sendMessageText(InputTextMessageSupChat.value)
         }
     })
 
@@ -892,6 +1066,26 @@
             ButtonSendMessageTextSupChat.setAttribute('active', 'false')
         }
     })
+
+    //  - - - Models - - -
+
+    class TextMessage {
+        constructor(text) {
+            InputTextMessageSupChat.disabled = true
+            ButtonSendMessageTextSupChat.setAttribute('active', 'false')
+            InputTextMessageSupChat.value = ''
+            SUP_CHAT.INFO_SEND['text'] = text
+            SUP_CHAT.INFO_SEND['type_send'] = 'send_message_text'
+            SUP_CHAT.Socket.send(JSON.stringify(SUP_CHAT.INFO_SEND))
+            SUP_CHAT.Socket.onmessage = function (e) {
+                console.log(e)
+                SUP_CHAT.setEventonMessageSocket()
+                InputTextMessageSupChat.disabled = false
+            }
+        }
+
+    }
+
 
     let ALL_SECTIONS_SUP_CHAT = []
 
@@ -917,36 +1111,68 @@
             if (!this.CREATED) {
                 this.CREATED = true
                 this.INFO_SEND = {}
+                this.User = null
                 // Get Elements
                 this.ContainerSupChat = document.getElementById('SupChat')
                 this.ContainerButtonsSection = document.getElementById('ContainerSectionsButton')
                 this.ContainerChat = document.getElementById('ContainerChatMessagesSupChat')
                 this.NameSectionChat = document.getElementById('NameSectionChat')
-
+                // Get User
+                this.getInfoUser()
             }
         }
 
+        // Get User
+        getInfoUser() {
+            let This = this
+            this.SendAjax('/sup-chat/get-info-user', {}, 'POST', function (response) {
+                This.User = response.user
+                if (response.user_created == true) {
+                    SetCookie('session_key_user_sup_chat', response.user.session_key, 9999999999999999)
+                }
+            })
+        }
+
         // Create a Connection for Chat
-        createConnection() {
+        createConnection(loading = true) {
             // This === this : To avoid conflict with events
             let This = this
             // Socket
-            this.loadingEffect('Show')
-            this.Socket = new WebSocket('ws://' + window.location.host + '/ws/chat/')
+            if (loading) {
+                this.loadingEffect('Show')
+            }
+            this.Socket = new WebSocket('ws://' + window.location.host + '/ws/chat/user/')
 
             this.Socket.onopen = function () {
                 setTimeout(function () {
                     This.loadingEffect('Hide')
-                },100)
+                }, 100)
             }
-            this.Socket.onclose = function () {
-                This.loadingEffect('Show')
+            this.Socket.onclose = function (e) {
+                let status = e.code
+               // if (status != 1000 && status != 1011 && status != 1006) {
+                    //This.tryCreateConnection()
+               // }
             }
+        }
+
+        setEventonMessageSocket() {
+            this.Socket.onmessage = function (event) {
+
+            }
+        }
+
+        tryCreateConnection() {
+            let This = this
+            This.loadingEffect('Show')
+            setTimeout(function () {
+                This.createConnection(false)
+            }, 2000)
         }
 
         closeConnection() {
             try {
-                this.Socket.close()
+                //this.Socket.close(1000)
             } catch (e) {
             }
         }
@@ -954,7 +1180,7 @@
         // Send Message Text
         sendMessageText(text) {
             if (this.Socket.readyState == 1) {
-                // TextMessage() Model
+                new TextMessage(text)
             }
         }
 
@@ -979,7 +1205,6 @@
             }
         }
 
-
         // Toggle Container Buttons Section
         toggleContainerButtonsSection(state) {
             if (state == 'open') {
@@ -989,7 +1214,6 @@
                 this.ContainerButtonsSection.removeAttribute('ContainerSupChatShow')
             }
         }
-
 
         // Toggle Container Chat
         toggleContainerChat(state) {
@@ -1027,12 +1251,11 @@
             this.INFO_SEND['section-id'] = null
             this.INFO_SEND['section-title'] = null
             this.toggleContainerChat('close')
-            this.hideAllContainerMessages()
         }
-
 
         // Show - Hide Container Messages
         showContainerMessages(section) {
+            this.hideAllContainerMessages()
             section.container.setAttribute('ContainerMessagesShow', '')
         }
 
@@ -1042,7 +1265,6 @@
                 ContainerMessages.removeAttribute('ContainerMessagesShow')
             }
         }
-
 
         // Loading Effect
         loadingEffect(State) {
@@ -1061,7 +1283,9 @@
                 })
             } else {
                 try {
-                    document.getElementById('ContainerLoadingEffect').remove()
+                    for (let i of document.querySelectorAll('.ContainerLoadingEffect')) {
+                        i.remove()
+                    }
                 } catch (e) {
                 }
             }
@@ -1069,6 +1293,8 @@
 
         // Send Ajax
         SendAjax(Url, Data = {}, Method = 'POST', Success, Failed) {
+            let This = this
+
             function __Redirect__(response) {
                 if (response.__Redirect__ == 'True') {
                     setTimeout(function () {
@@ -1084,7 +1310,8 @@
             }
             if (Failed == undefined) {
                 Failed = function (response) {
-                    ShowNotificationMessage('ارتباط با سرور بر قرار نشد ', 'Error', 30000, 2)
+                    // ShowNotificationMessage('ارتباط با سرور بر قرار نشد ', 'Error', 30000, 2)
+                    This.loadingEffect('Show')
                 }
             }
             this.loadingEffect('Show')
@@ -1093,19 +1320,22 @@
                     url: Url,
                     data: JSON.stringify(Data),
                     type: Method,
+                    headers: {
+                        'X-CSRFToken': window.CSRF_TOKEN
+                    },
                     success: function (response) {
                         __Redirect__(response)
-                        this.loadingEffect('Hide')
+                        This.loadingEffect('Hide')
                         Success(response)
                     },
                     failed: function (response) {
                         __Redirect__(response)
-                        this.loadingEffect('Hide')
+                        This.loadingEffect('Hide')
                         Failed(response)
                     },
                     error: function (response) {
                         __Redirect__(response)
-                        this.loadingEffect('Hide')
+                        This.loadingEffect('Hide')
                         Failed(response)
                     }
                 }
@@ -1127,6 +1357,34 @@
             'container': Container
         })
     }
+
+
+    //////////////////////////////////        Cookie          ////////////////////////////////////////
+
+    function GetCookieByName(Name) {
+        let Res = null
+        let Cookie = document.cookie
+        for (let i of Cookie.split(';')) {
+            let S1 = i.split('=')[0]
+            let S2 = i.split('=')[1]
+            if (S1 == Name || S1 == ` ${Name}` | S1 == `${Name} `) {
+                Res = S2
+            }
+        }
+        return Res
+    }
+
+    function SetCookie(Name, Value, ExpireDay = 30, Path = '/') {
+        let T = new Date()
+        T.setTime(T.getTime() + (ExpireDay * 24 * 60 * 60 * 1000))
+        T = T.toUTCString()
+        if (ExpireDay == 'Session') {
+            T = ''
+        }
+        document.cookie = `${Name}=${Value};expires=${T};path=${Path}`
+    }
+
+
 </script>
 
 

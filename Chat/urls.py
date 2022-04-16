@@ -10,9 +10,12 @@ def pathWs(url,handler):
 
 
 websocket_urlpatterns = [
-    pathWs('chat/',consumers.Chat.as_asgi()),
+    pathWs('chat/user/',consumers.ChatUser.as_asgi()),
+    pathWs('chat/admin/<id_section>',consumers.ChatAdmin.as_asgi()),
 ]
 
 urlpatterns = [
-    path('getInfoChat',views.getInfoChat),
+    # path('getInfoChat',views.getInfoChat),
+    path('admin',views.adminView),
+    path('get-info-user',views.getUserView),
 ]

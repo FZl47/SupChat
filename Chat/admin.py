@@ -1,11 +1,12 @@
 from django.contrib import admin
-from .models import SupChat, SupChatStyle, SupChatConfig, Admin, Section, Message, TextMessage, ChatGroup
+from .models import *
 
 
 admin.site.register(SupChat)
 admin.site.register(SupChatStyle)
 admin.site.register(SupChatConfig)
 admin.site.register(Admin)
+admin.site.register(User)
 admin.site.register(Section)
 admin.site.register(TextMessage)
 admin.site.register(ChatGroup)

@@ -1,0 +1,922 @@
+
+.DisabledAllElementsExceptLoadingNotification *:not( .LoadingNotification ):not(.LoadingNotification_Icon):not(.LoadingNotification_Text):not(.NotificationMessage):not(.NotificationMessage *) {
+    filter: brightness(80%) blur(2px);
+}
+
+
+.BlurAllElementsExceptMessage_Alert > :not(.ContainerMessage_Alert) {
+    filter: blur(8px);
+}
+
+.BtnStyle_1 {
+    padding: 6px;
+    width: 85px;
+    border-radius: 4px;
+    background: var(--ColorBase);
+    color: #ffffff;
+    transition: box-shadow .1s, background-color .15s;
+    margin: 5px;
+    border: none;
+}
+
+.BtnStyle_1:focus {
+    background: #00e1c0;
+    color: white;
+}
+
+.BtnStyle_1:active {
+    box-shadow: none;
+    transform: scale(.95);
+}
+
+.BtnStyle_1:hover {
+    background: #00e1c0;
+    color: white;
+}
+
+.BtnStyle_1_OutLine {
+    padding: 6px;
+    width: 85px;
+    border-radius: 4px;
+    background: inherit;
+    color: var(--ColorBase);
+    border: 1px solid var(--ColorBase);
+    transition: box-shadow .1s, background-color .15s;
+    margin: 5px;
+}
+
+.BtnStyle_1_OutLine:focus {
+    background: #00e1c0;
+    color: white;
+}
+
+.BtnStyle_1_OutLine:active {
+    box-shadow: none;
+    transform: scale(.95);
+}
+
+.BtnStyle_1_OutLine:hover {
+    background: #00e1c0;
+    color: white;
+}
+
+.ContainerMessage_Alert {
+    display: inline-block;
+    box-shadow: 0 0 0 100000px rgba(0, 0, 0, .5);
+    background: #ffffff;
+    position: fixed !important;
+    top: 20%;
+    z-index: 12;
+    text-align: center;
+    padding: 90px;
+    padding-bottom: 110px;
+    border-radius: 5px;
+    animation: AnimationShowMessageAlert .5s;
+}
+
+@keyframes AnimationShowMessageAlert {
+    0% {
+        transform: translateY(-120px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.TextMessage_Alert {
+    font-size: 90%;
+    border-bottom: 1px solid #e7e7e7;
+    padding-bottom: 15px;
+}
+
+.TextMessage_Alert p {
+    text-align: center;
+    width: 100%;
+    color: #ffb44e !important;
+    margin-top: 5px;
+    word-break: break-word;
+    font-size: 90%;
+}
+
+.BtnClose1_Alert {
+    position: absolute;
+    right: 1%;
+    top: 1%;
+    color: #ff4c51;
+    font-size: 110%;
+    cursor: pointer;
+}
+
+.BtnClose1_Alert:hover {
+    color: #ff282c;
+}
+
+.BtnClose_Alert {
+    font-weight: bold;
+    background: rgba(255, 102, 108, 0.7);
+    position: absolute;
+    right: 1%;
+    bottom: 2%;
+    color: #464646;
+}
+
+.BtnClose_Alert:hover {
+    background: rgba(255, 102, 108, 0.85) !important;
+}
+
+.BtnClose_Alert:focus {
+    background: rgba(255, 102, 108, 0.9) !important;
+    color: #ffffff;
+}
+
+.BtnOk_Alert {
+    font-weight: bold;
+    background: rgb(81, 255, 163);
+    position: absolute;
+    left: 1%;
+    bottom: 2%;
+    color: #464646;
+}
+
+.BtnOk_Alert:hover {
+    background: rgb(25, 232, 145) !important;
+    color: #ffffff;
+}
+
+.BtnOk_Alert:focus {
+    background: rgb(12, 232, 146) !important;
+    color: #ffffff;
+}
+
+.ContainerMessage_Alert button {
+    border: none;
+    padding: 7px;
+}
+
+.ContainerMessage_Alert button:focus {
+    outline: none;
+}
+
+
+#ContainerNotificationsMessage {
+    position: fixed;
+    top: 1%;
+    right: 1%;
+    z-index: 9999999;
+    max-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.NotificationMessage {
+    position: relative;
+    padding: 4px;
+    margin: 15px 10px;
+    width: 300px;
+    box-shadow: 0 5px 8px rgba(148, 148, 148, 0.1);
+    direction: rtl;
+    text-align: center;
+    border-radius: 4px;
+    transition: all 1s;
+    background: #ffffff;
+    animation: ShowNotification_Animation_1 .3s;
+}
+
+.Notification_Removed {
+    animation: Animation_Notification_Removed .25s forwards;
+}
+
+@keyframes Animation_Notification_Removed {
+    100% {
+        transform: translateX(-300px);
+        opacity: 0;
+    }
+}
+
+@keyframes ShowNotification_Animation_1 {
+    0% {
+        transform: translateX(100px);
+    }
+    100% {
+        transform: translateX(0) translateY(0);
+    }
+}
+
+.LevelOfNecessity_1 {
+    width: 250px;
+}
+
+.LevelOfNecessity_1 p {
+    font-size: 90%;
+}
+
+.LevelOfNecessity_2 {
+    width: 280px;
+}
+
+.LevelOfNecessity_2 p {
+    font-size: 95%;
+}
+
+.LevelOfNecessity_3 {
+    width: 330px;
+}
+
+.LevelOfNecessity_3 p {
+    font-size: 100%;
+}
+
+.LevelOfNecessity_4 {
+    width: 350px;
+}
+
+.LevelOfNecessity_4 p {
+    font-size: 110%;
+}
+
+.LevelOfNecessity_5 {
+    width: 400px;
+}
+
+.LevelOfNecessity_5 p {
+    font-size: 120%;
+}
+
+
+.NotificationMessage p {
+    margin: 0;
+    margin-top: 2px;
+    padding-bottom: 20px;
+}
+
+.IconNotification {
+    position: absolute;
+    left: 7px;
+    top: 7px;
+    font-size: 110%;
+}
+
+.IconNotification_Success {
+    color: #1af196;
+}
+
+.IconNotification_Error {
+    color: #f15368;
+}
+
+.IconNotification_Warning {
+    color: #ffaf07;
+}
+
+.BtnCloseNotification {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    text-align: right;
+    display: block !important;
+    font-size: 95%;
+    cursor: pointer;
+    transform: rotate(0) !important;
+    color: #ff7e79;
+}
+
+.BtnCloseNotification:hover {
+    color: #ff0c00;
+}
+
+.NotificationSuccess {
+    box-shadow: 0 3px 1px #1af196;
+}
+
+.NotificationSuccess p {
+    color: #17c3b2;
+}
+
+.NotificationError {
+    box-shadow: 0 3px 1px #f15368;
+}
+
+.NotificationError p {
+    color: #ff4558;
+}
+
+.NotificationWarning {
+    border: 1px solid rgba(255, 209, 51, 0.35);
+    box-shadow: 0 3px 1px #ffaf07;
+}
+
+.NotificationWarning p {
+    color: #ffaf07;
+}
+
+.Success {
+    box-shadow: 0 0 3px #17c3b2;
+    color: #17c3b2;
+}
+
+.Success p {
+    color: #17c3b2;
+}
+
+.Alert {
+    box-shadow: 0 0 3px #ff4558;
+    color: #ff4558;
+}
+
+.Alert p {
+    color: #ff4558;
+}
+
+.Error {
+    box-shadow: 0 0 3px #ff4558;
+    color: #ff4558;
+}
+
+.Error p {
+    color: #ff4558;
+}
+
+.Warning {
+    box-shadow: 0 0 3px #ffd070;
+}
+
+.Warning p {
+    color: #e0bc5e;
+}
+
+@media screen and (min-width: 1201px) {
+    .ContainerMessage_Alert {
+        width: 35%;
+        left: 32.5%;
+    }
+
+    .TextMessage_Alert {
+        font-size: 100%;
+    }
+
+    .ContainerBlur[Size='Medium'] {
+        width: 70%;
+        right: 15%;
+    }
+
+}
+
+@media screen and (max-width: 1200px) {
+    .ContainerMessage_Alert {
+        width: 45%;
+        left: 27.5%;
+    }
+
+    .TextMessage_Alert {
+        font-size: 95%;
+    }
+
+}
+
+@media screen and (max-width: 992px) {
+    .ContainerMessage_Alert {
+        width: 50%;
+        left: 25%;
+    }
+
+    .TextMessage_Alert {
+        font-size: 90%;
+    }
+
+    .ContainerBlur[Size='Small'] {
+        width: 70%;
+        right: 15%;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+
+    .ContainerMessage_Alert {
+        width: 60%;
+        left: 20%;
+        padding: 80px 30px;
+    }
+
+    .TextMessage_Alert {
+        font-size: 85%;
+    }
+
+    .TextMessage_Alert {
+        width: 100%;
+    }
+
+    .ContainerBlur {
+        width: 80%;
+        right: 10%;
+    }
+
+    .ItemFormInput i {
+        text-align: center;
+        width: 10%;
+        vertical-align: middle;
+        font-size: 120%;
+    }
+
+    .ContainerBlur[Size='Small'] {
+        width: 75%;
+        right: 12.5%;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .ContainerMessage_Alert {
+        width: 80%;
+        left: 10%;
+    }
+
+    .TextMessage_Alert {
+        font-size: 90%;
+    }
+
+    .ContainerBlur[Size='Medium'] {
+        width: 85%;
+        right: 7.5%;
+    }
+
+    .ContainerBlur[Size='Small'] {
+        width: 88%;
+        right: 6%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+
+    .ContainerMessage_Alert {
+        width: 90%;
+        left: 5%;
+    }
+
+    .TextMessage_Alert {
+        font-size: 95%;
+    }
+
+    .ContainerBlur[Size='Medium'] {
+        width: 98%;
+        right: 1%;
+    }
+
+    .ContainerBlur[Size='Small'] {
+        width: 98%;
+        right: 1%;
+    }
+
+}
+
+@media screen and (max-width: 350px) {
+
+    .ContainerMessage_Alert {
+        width: 95%;
+        left: 2.5%;
+    }
+
+    .TextMessage_Alert {
+        font-size: 88%;
+    }
+
+}
+
+.ContainerLoadingEffect {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9;
+}
+
+
+.LoadingCircle {
+    display: block;
+    height: 50px;
+    width: 50px;
+    animation: Animation_LoadingCircle-1 3s linear infinite;
+}
+
+@keyframes Animation_LoadingCircle-1 {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.LoadingCircle span {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    height: inherit;
+    width: inherit;
+    clip: rect(25px, 50px, 50px, 0);
+    animation: Animation_LoadingCircle-2 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+}
+
+
+@keyframes Animation_LoadingCircle-2 {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.LoadingCircle span::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    height: inherit;
+    width: inherit;
+    border: 3px solid transparent;
+    border-top: 5px solid rgb(35, 227, 159);
+    border-radius: 50%;
+    animation: Animation_LoadingCircle-3 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+}
+
+
+@keyframes Animation_LoadingCircle-3 {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.LoadingCircle span::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    height: inherit;
+    width: inherit;
+    border: 2px solid rgb(39, 245, 171);
+    border-radius: 50%;
+}
+
+
+#SupChat {
+    direction: rtl;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border: 1px solid #ddd;
+    z-index: 2;
+    background: #fff;
+    transition: all .2s;
+}
+
+#SupChat[state='close'] {
+    overflow: hidden;
+}
+
+#SupChat[state='open'] #ContainerBaseSupChat {
+    width: 350px;
+    height: 480px;
+}
+
+#ContainerBaseSupChat {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    transition: inherit;
+}
+
+#SupChat button {
+    background: none;
+    border: none;
+    outline: none;
+}
+
+
+.ContainerSupChat {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    display: none;
+}
+
+[ContainerSupChatShow] {
+    z-index: 5;
+    display: block;
+}
+
+#BtnCloseSupChat {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: rgba(255, 88, 96, 0.15) !important;
+    border-radius: 2px 15px 15px 15px;
+    z-index: 10;
+}
+
+#BtnCloseSupChat > * {
+    color: #ff5860;
+    font-size: 140%;
+}
+
+#ButtonOpenSupChat {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    border-radius: 50%;
+    background: #1f96bc;
+    color: #fff;
+    border: none;
+    outline: none;
+    z-index: 1;
+}
+
+#ButtonOpenSupChat i {
+    font-size: 170%;
+}
+
+
+#ContainerSectionsButton {
+    background: transparent;
+}
+
+
+#ContainerSectionsButton header {
+    text-align: center;
+    padding: 7px;
+    margin-bottom: 20px;
+    font-size: 130%;
+    font-family: 'KalameBlack';
+    border-bottom: 1px solid #eee;
+}
+
+[section-button] {
+    display: block;
+    padding: 7px 5px;
+    margin: 10px auto;
+    width: 200px;
+    font-family: 'Vazir';
+    border: 1px solid #eee !important;
+}
+
+#ContainerChatMessagesSupChat > header {
+    text-align: right;
+    background: #eee;
+    padding: 5px 8px;
+}
+
+.TitleSupportChat {
+    font-family: 'KalameBlack';
+}
+
+#ContainerChatMessagesSupChat p {
+    margin: 0;
+    margin-right: 4px;
+    margin-top: -5px;
+    padding: 0;
+    font-size: 85%;
+    color: #666666;
+    font-family: 'Vazir';
+}
+
+#ContainerChatMessagesSupChat > main {
+    height: 75%;
+}
+
+.MessagesSupChat {
+    height: 100%;
+    overflow: auto;
+    display: none;
+}
+
+.MessagesSupChat::-webkit-scrollbar {
+    width: 4px;
+}
+
+.MessagesSupChat::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.MessagesSupChat::-webkit-scrollbar-thumb {
+    background: #999999;
+}
+
+.MessagesSupChat::-webkit-scrollbar-thumb:hover {
+    background: #666666;
+}
+
+[ContainerMessagesShow] {
+    display: block;
+}
+
+#ContainerChatMessagesSupChat > footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    bottom: 0;
+    height: 10%;
+    padding: 5px;
+    background: orange;
+}
+
+#InputTextMessageSupChat {
+    width: 75%;
+    height: 100%;
+    font-family: 'Vazir';
+    border: none;
+    outline: none;
+    resize: none;
+}
+
+#InputTextMessageSupChat::-webkit-scrollbar {
+    width: 4px;
+    height: 3px;
+}
+
+#InputTextMessageSupChat::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#InputTextMessageSupChat::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+
+#InputTextMessageSupChat::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    cursor: default;
+}
+
+#ButtonRecordVoiceSupChat {
+    font-size: 115%;
+}
+
+#ButtonSendMessageTextSupChat svg {
+    fill: #3e3e3e;
+    width: 24px;
+    height: 24px;
+    transform: rotateY(180deg);
+}
+
+#ButtonSendMessageTextSupChat[active='true'] svg {
+    fill: #0861ff;
+}
+
+/*   Message  */
+
+.MessageSupChat {
+}
+
+.MessageSupChat .ContentMessage {
+    background: #fff;
+    border: 1px solid #ddd;
+    margin: 10px;
+    border-radius: 12px;
+    padding: 5px 7px;
+    max-width: 75%;
+    min-width: 170px;
+    position: relative;
+    display: inline-block;
+}
+
+.ContentMessage > header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+[message-seen='false'] {
+    color: #aaa;
+    font-size: 90%;
+}
+
+[message-seen='true'] {
+    color: #66bdff;
+    font-size: 90%;
+}
+
+.NameSenderMessage {
+    color: #bbb;
+    font-size: 80%!important;
+}
+
+.ContentMessage header > div > .NameSenderMessage {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ContentMessage > main {
+    margin: 5px;
+    text-align: right;
+    display: block;
+    width: 100%;
+}
+
+.ContentMessage > footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.MessageSupChat pre {
+    white-space: pre-wrap;
+    font-family: 'Vazir';
+    padding: 1px;
+    height: auto;
+}
+
+.TimeSentMessage {
+    font-size: 75%;
+    color: #888888;
+}
+
+.BtnShowMoreOptionMessage:hover + div {
+    display: block;
+}
+
+.BtnShowMoreOptionMessage:focus + div {
+    display: block;
+}
+
+.MoreOptionMessage {
+    display: none;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    z-index: 3;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(170, 170, 170, 0.4);
+    border-radius: 5px;
+    transition: all .15s;
+    overflow: auto;
+    cursor: pointer;
+}
+
+.MoreOptionMessage:hover {
+    display: block;
+}
+
+.OptionMessage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    margin: 3px 0;
+    border-bottom: 1px solid #eee !important;
+    cursor: default;
+}
+
+button.OptionMessage:hover {
+    background: #eee !important;
+}
+
+.OptionMessage:last-of-type {
+    border-bottom: none !important;
+}
+
+.OptionMessage img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+[sender-message="you"] {
+    text-align: right !important;
+}
+
+[sender-message="other"] {
+    text-align: left !important;
+}

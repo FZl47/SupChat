@@ -2,6 +2,7 @@ from django.db import models
 from .tools import RandomString
 from django.contrib.auth.models import User as UserDjango
 from django.db.models import F
+from django.urls import reverse
 from model_utils.managers import InheritanceManager
 from .serializers import SerializerMessageText
 
@@ -26,14 +27,20 @@ class SupChat(models.Model):
 
 
 class SupChatStyle(models.Model):
-    backgroundChat = models.ImageField(upload_to=upload_image_background_chat,
-                                       default='assets/supchat/images/default/backgroundChat.png')
+    backgroundChat = models.ImageField(upload_to=upload_image_background_chat,null=True,blank=True)
+
 
     def __str__(self):
         try:
             return self.supchat_set.first().title
         except:
             return 'SupChat Style'
+
+    def get_background_chat(self):
+        try:
+            return self.backgroundChat.url
+        except:
+            return '/assets/supchat/images/default/backgroundChat.png'
 
 
 class SupChatConfig(models.Model):
@@ -53,31 +60,39 @@ class Section(models.Model):
     def __str__(self):
         return self.title
 
-
     def get_chats(self):
         return self.chatgroup_set.all()
 
-
-    def get_messages_by_user(self,user):
+    def get_messages_by_user(self, user):
         chat = self.chatgroup_set.filter(user=user).first()
         if chat:
             return chat.get_messages_by_user()
         return []
 
-
-    def get_messages_by_admin(self,section):
+    def get_messages_by_admin(self, section):
         chat = self.chatgroup_set.filter(section=section).first()
         if chat:
             return chat.get_messages_by_admin()
         return []
 
+    def get_title_as_slug(self):
+        return str(self.title).replace(' ', '-')
+
+    def get_absolute_url_admin(self):
+        return reverse('SupChat:admin_panel_section', args=(self.id, self.get_title_as_slug()))
 
 
 class Admin(models.Model):
+    STATUS_ONLINE = (
+        ('online', 'Online'),
+        ('offline', 'Offline'),
+    )
+
     user = models.OneToOneField(UserDjango, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=upload_image_admin_chat)
     sections = models.ManyToManyField('Chat.Section')
     lastSeen = models.DateTimeField(null=True, blank=True)
+    status_online = models.CharField(max_length=10, choices=STATUS_ONLINE)
 
     def __str__(self):
         return self.get_full_name()
@@ -93,8 +108,15 @@ class Admin(models.Model):
 
 
 class User(models.Model):
+    STATUS_ONLINE = (
+        ('online', 'Online'),
+        ('offline', 'Offline'),
+    )
+
     user = models.OneToOneField(UserDjango, on_delete=models.SET_NULL, null=True)
     session_key = models.CharField(max_length=50, default=RandomString)
+    lastSeen = models.DateTimeField(null=True, blank=True)
+    status_online = models.CharField(max_length=10, choices=STATUS_ONLINE)
 
     def __str__(self):
         return self.get_full_name()
@@ -107,7 +129,6 @@ class User(models.Model):
             return self.user.get_full_name() or 'Unknown'
         except:
             return 'Unknown'
-
 
 
 class ChatGroup(models.Model):
@@ -128,6 +149,12 @@ class ChatGroup(models.Model):
     def get_last_message(self):
         message = self.message_set.select_subclasses().last()
         return message
+
+    def get_messages_without_seen(self):
+        return self.message_set.filter(seen=False).all()
+
+    def get_count_messages_without_seen(self):
+        return self.get_messages_without_seen().count()
 
 
 class MessageBase(models.Model):

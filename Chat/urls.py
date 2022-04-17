@@ -16,6 +16,8 @@ websocket_urlpatterns = [
 
 urlpatterns = [
     # path('getInfoChat',views.getInfoChat),
-    path('admin',views.adminView),
+    path('admin/panel',views.adminViewPanel,name='admin_panel'),
+    path('admin/panel/section/<int:id>/<title>',views.adminViewSection,name='admin_panel_section'),
+    path('admin/panel/chat/<int:id>/<name>',views.adminViewChat,name='admin_panel_chat'),
     path('get-info-user',views.getUserView),
 ]

@@ -10,7 +10,6 @@ import json
 
 # Create your views here.
 
-
 def index(request, UserAs):
     context = {}
     sections = Section.objects.filter(isActive=True).all()
@@ -21,19 +20,55 @@ def index(request, UserAs):
     return render(request, 'Chat/index.html', context)
 
 
-def adminView(request):
-    context = {}
-    user = request.user
-    if user.is_authenticated:
-        admin = Admin.objects.filter(user_id=user.id).first()
-        if admin:
-            sections = Section.objects.filter(isActive=True).all()
-            supchat = SupChat.objects.first()
-            context['Admin'] = admin
-            context['Sections'] = sections
-            context['SupChat'] = supchat
-            return render(request, 'Chat/admin.html', context)
-    raise PermissionDenied
+def admin_authenticated(func):
+    """
+        admin authenticated and add admin to request
+    """
+
+    def wrapper(request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated:
+            admin = Admin.objects.filter(user=user).first()
+            if admin:
+                request.admin = admin
+                return func(request, *args, **kwargs)
+        raise PermissionDenied
+
+    return wrapper
+
+
+@admin_authenticated
+def adminViewPanel(request):
+    context = {
+        'Admin': request.admin
+    }
+    sections = Section.objects.filter(isActive=True).all()
+    supchat = SupChat.objects.first()
+    context['Sections'] = sections
+    return render(request, 'Chat/Admin/admin-panel.html', context)
+
+
+@admin_authenticated
+def adminViewSection(request, id, title):
+    context = {
+        'Admin': request.admin
+    }
+    section = Section.objects.get(id=id)
+    context['Section'] = section
+    return render(request, 'Chat/Admin/admin-section.html', context)
+
+
+@admin_authenticated
+def adminViewChat(request, id, name):
+    context = {
+        'Admin': request.admin
+    }
+    chat = ChatGroup.objects.get(id=id, section__admin__in=[request.admin.id])
+    chat.get_messages_without_seen().update(seen=True)
+    context['Chat'] = chat
+    supchat = SupChat.objects.first()
+    context['SupChat'] = supchat
+    return render(request, 'Chat/Admin/admin-chat.html',context)
 
 
 def getUserSession(request):

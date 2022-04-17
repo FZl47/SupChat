@@ -1,0 +1,13 @@
+{% extends 'Chat/Base/BaseTemplateSupChat.html' %}
+
+
+{% block Title %}
+    Admin Panel
+{% endblock %}
+
+
+{% block Content %}
+    {% for Section in Sections %}
+        <a href="{{ Section.get_absolute_url_admin }}" class="SectionLink">{{ Section.title }}</a>
+    {% endfor %}
+{% endblock %}

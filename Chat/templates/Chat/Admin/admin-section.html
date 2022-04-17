@@ -1,0 +1,190 @@
+{% extends 'Chat/Base/BaseTemplateSupChat.html' %}
+
+{% block Title %}
+    Admin
+{% endblock %}
+{% block Css %}
+    <style>
+
+        .MenuAside {
+            max-width: 100vh;
+            overflow: auto;
+            width: 25%;
+            background: #fff;
+            border-radius: 7px;
+            padding: 10px;
+        }
+
+        .TitleSection {
+            text-align: center;
+            color: #888;
+            font-family: 'KalameBlack';
+        }
+
+        .ChatSection {
+            direction: rtl;
+            background: #fefff9;
+            margin: 5px 0;
+            padding: 5px 12px;
+            border-bottom: 1px solid #e5e5e5;
+            cursor: pointer;
+        }
+
+        .ChatSection p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .ChatSection img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+        }
+
+        .ChatSection header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .ChatSection main {
+            text-align: right;
+            margin-bottom: 7px;
+        }
+
+        .ChatSection footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .MessageTextChatSection {
+            width: 100%;
+            font-size: 90%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .TimeSentMessage {
+            font-size: 75%;
+            color: #888888;
+            text-align: left;
+        }
+
+        .NameUserSenderMessage {
+            color: #666666;
+        }
+
+        .CountMessageWithoutSeen{
+            color: #888888;
+            text-align: center;
+            font-size: 85%;
+            border-radius: 50%;
+        }
+
+    </style>
+{% endblock %}
+
+{% block Content %}
+    <h1>Admin {{ Admin.user.get_full_name }}</h1>
+    <div class="bg-primary col-12 p-5 text-center">
+        <h1 class="TitleSection">{{ Section.title }}</h1>
+    </div>
+
+    <main></main>
+    <aside class="MenuAside">
+            <div class="ChatsSection">
+                {% for Chat in Section.get_chats %}
+                    {% with Chat.get_last_message as Message %}
+                        {% if Message.sender == 'section' %}
+                            <div class="ChatSection">
+                                <header>
+                                    <div>
+                                        <p class="NameUserSenderMessage">{{ Message.sender_user.get_full_name }}</p>
+                                    </div>
+                                    <div>
+                                        <img src="{{ Message.sender_user.get_image }}"
+                                             alt="{{ Message.sender_user.get_full_name }}">
+                                    </div>
+                                </header>
+                                <main>
+                                    <p class="MessageTextChatSection">{{ Message.text }}</p>
+                                </main>
+                                <footer>
+                                    <div>
+                                        <p class="TimeSentMessage">{{ Message.get_time }}</p>
+                                    </div>
+                                    <div>
+                                        {% if Message.seen %}
+                                            <i class="fa fa-check-double" message-seen="true"></i>
+                                        {% else %}
+                                            <i class="fa fa-check" message-seen="false"></i>
+                                        {% endif %}
+                                    </div>
+                                </footer>
+                            </div>
+                        {% else %}
+                            <div class="ChatSection" onclick="GoToUrl('{% url 'SupChat:admin_panel_chat' id=Message.chat.id name=Message.chat.user.get_full_name %}')">
+                                <header>
+                                    <div>
+                                        <p class="NameUserSenderMessage">{{ Message.chat.user.get_full_name }}</p>
+                                    </div>
+                                    <div>
+                                        <img src="{{ Message.chat.user.get_image }}"
+                                             alt="{{ Message.chat.user.get_full_name }}">
+                                    </div>
+                                </header>
+                                <main>
+                                    <p class="MessageTextChatSection">{{ Message.text }}</p>
+                                </main>
+                                <footer>
+                                    <div>
+                                        <p class="TimeSentMessage">{{ Message.get_time }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="CountMessageWithoutSeen">{{ Chat.get_count_messages_without_seen }}</p>
+                                    </div>
+                                </footer>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endfor %}
+            </div>
+
+    </aside>
+
+{% endblock %}
+
+{% block Js %}
+    <script>
+
+        function GoToUrl(href){
+            window.location.href = href
+        }
+
+        let Socket
+
+        function createConnection(id_section) {
+            try {
+                Socket.close()
+            } catch (e) {
+            }
+            Socket = new WebSocket('ws://' + window.location.host + `/ws/chat/admin/${id_section}`)
+            Socket.onopen = function (e) {
+                console.log(e)
+            }
+
+            Socket.onmessage = function (e) {
+                console.log(e)
+            }
+
+            Socket.onclose = function (e) {
+                console.log(e)
+            }
+        }
+
+
+    </script>
+{% endblock %}

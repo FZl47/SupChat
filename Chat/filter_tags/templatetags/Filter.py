@@ -81,3 +81,32 @@ def get_messages_sup_chat_by_user(section, request):
 @register.simple_tag()
 def get_messages_sup_chat_by_admin(section, request):
     return section.get_messages_by_admin(section)
+
+
+@register.filter
+@register.simple_tag()
+def ValZeroNone(Val):
+    if Val == 0:
+        return ''
+    return Val
+
+
+@register.filter
+@register.simple_tag()
+def convertTimeAudioToStringFormat(time):
+    time = int(time)
+    sec = time % 60
+    min = time // 60 % 60
+    return f"{min}:{sec}"
+
+
+@register.filter
+@register.simple_tag()
+def get_chats_by_admin(section,admin):
+    return section.get_chats_by_admin(admin)
+
+
+@register.filter
+@register.simple_tag()
+def get_count_chats_by_admin(section,admin):
+    return section.get_chats_by_admin(admin).count()

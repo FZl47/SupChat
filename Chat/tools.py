@@ -1,10 +1,13 @@
-import datetime
-import pytz
 from django.conf import settings
 from django.http import HttpResponse
+from django.utils import timezone
+from django.conf import settings
+import datetime
+import pytz
 import re
 import json
 import random, string
+
 
 
 Dict_Char_Persian_English = {
@@ -79,7 +82,7 @@ def Set_Cookie_Functionality(Text,Type,Timer='7000',LevelOfNecessity='3',Redirec
         Res = HttpResponse('<script>window.location=document.referrer;</script>')
     else:
         Res =  HttpResponse(f"<script>location.href='{RedirectTo}';</script>")
-    Set_Cookie(Res,'Functionality_N',f"{Text}~{Type}~{Timer}~{LevelOfNecessity}",1)
+    Set_Cookie(Res,'Functionality_N',f"{ConvertPersianCharToEnglish(Text)}~{Type}~{Timer}~{LevelOfNecessity}",1)
     return Res
 
 
@@ -92,11 +95,14 @@ def GetTimeIran():
 
 
 def GetDifferenceTime(Time):
-    TimeIranZone = pytz.timezone('Asia/Tehran')
-    TimeServer = datetime.datetime.now(TimeIranZone)
-    DifferenceTime = datetime.datetime(TimeServer.year, TimeServer.month, TimeServer.day, TimeServer.hour,
-                                       TimeServer.minute) - datetime.datetime(Time.year, Time.month, Time.day, Time.hour,
-                                                                            Time.minute)
+    # TimeZone = settings.TIME_ZONE or 'UTC'
+    # TimeZone = pytz.timezone(TimeZone)
+    # TimeServer = datetime.datetime.now(TimeZone)
+    # DifferenceTime = datetime.datetime(TimeServer.year, TimeServer.month, TimeServer.day, TimeServer.hour,
+    #                                    TimeServer.minute) - datetime.datetime(Time.year, Time.month, Time.day, Time.hour,
+    #                                                                         Time.minute)
+
+    DifferenceTime = timezone.now() - datetime.datetime(Time.year,Time.month,Time.day,Time.hour,Time.minute)
     DifferenceTimeSecond = DifferenceTime.seconds
     Second = DifferenceTimeSecond % 60
     Minute = DifferenceTimeSecond // 60 % 60
@@ -114,7 +120,8 @@ def GetDifferenceTime(Time):
     if Day > 0:
         Str = f'{Day} Days'
 
-    return Str
+    return Str , DifferenceTimeSecond
+
 
 
 def GetDifferenceDate(Time):

@@ -1,0 +1,76 @@
+{% load FilterTagsSupChat %}
+{% with Chat.get_last_message as Message %}
+    {% if Message.sender == 'admin' %}
+        <div class="ChatSection"
+             id="ChatSection-{{ Chat.id }}"
+             onclick="GoToUrl('{{ Chat.get_url_absolute_admin }}{{ UrlFilterBy }}')">
+            <header>
+                <div>
+                    <p class="NameUserSenderMessage">
+                        <b>You</b></p>
+                </div>
+                <div>
+                    <img src="{{ Chat.user.get_image }}"
+                         alt="{{ Chat.user.get_full_name }}">
+                </div>
+            </header>
+            <main>
+                {% if Message.type == 'text' %}
+                    <p class="MessageTextChatSection">{{ Message.text }}</p>
+                {% elif Message.type == 'audio' %}
+                    <div class="MessageAudioChatSection">
+                        <p>
+                            صدای ضبط شده</p>
+                        <i class="fa fa-microphone-alt"></i>
+                    </div>
+                {% endif %}
+            </main>
+            <footer>
+                <div>
+                    <p class="TimeSentMessage">{{ Message.get_time }}</p>
+                </div>
+                <div>
+                    {% if Message.seen %}
+                        <i class="fa fa-check-double"
+                           message-seen="true"></i>
+                    {% else %}
+                        <i class="fa fa-check"
+                           message-seen="false"></i>
+                    {% endif %}
+                </div>
+            </footer>
+        </div>
+    {% else %}
+        <div class="ChatSection" id="ChatSection-{{ Chat.id }}"
+             onclick="GoToUrl('{{ Chat.get_url_absolute_admin }}{{ UrlFilterBy }}')">
+            <header>
+                <div>
+                    <p class="NameUserSenderMessage">{{ Chat.user.get_full_name }}</p>
+                </div>
+                <div>
+                    <img src="{{ Chat.user.get_image }}"
+                         alt="{{ Chat.user.get_full_name }}">
+                </div>
+            </header>
+            <main>
+                {% if Message.type == 'text' %}
+                    <p class="MessageTextChatSection">{{ Message.text }}</p>
+                {% elif Message.type == 'audio' %}
+                    <div class="MessageAudioChatSection">
+                        <p>
+                            صدای ضبط شده</p>
+                        <i class="fa fa-microphone-alt"></i>
+                    </div>
+                {% endif %}
+            </main>
+            <footer>
+                <div>
+                    <p class="TimeSentMessage">{{ Message.get_time }}</p>
+                </div>
+                <div>
+                    <p class="CountMessageWithoutSeen">{{ Chat.get_count_messages_without_seen|ValZeroNone }}</p>
+                </div>
+            </footer>
+        </div>
+    {% endif %}
+{% endwith %}

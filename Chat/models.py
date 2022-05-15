@@ -1,10 +1,12 @@
 from django.db import models
-from .tools import RandomString
-from django.contrib.auth.models import User as UserDjango
-from django.db.models import F
-from django.urls import reverse
+from django.db.models import F, Max, Count, Sum
+from django.urls import reverse, resolve, reverse_lazy
+from django.utils import timezone
+from django.templatetags.static import static
 from model_utils.managers import InheritanceManager
+from .tools import RandomString, GetDifferenceTime
 from .serializers import SerializerMessageText
+from .config import USER
 
 
 def upload_image_background_chat(instance, path):
@@ -19,16 +21,15 @@ def upload_image_admin_chat(instance, path):
 
 class SupChat(models.Model):
     title = models.CharField(max_length=30, default='ساپ چت')
-    style = models.ForeignKey('Chat.SupChatStyle', on_delete=models.CASCADE)
-    config = models.ForeignKey('Chat.SupChatConfig', on_delete=models.CASCADE)
+    style = models.ForeignKey('SupChatStyle', on_delete=models.CASCADE)
+    config = models.ForeignKey('SupChatConfig', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
 
 
 class SupChatStyle(models.Model):
-    backgroundChat = models.ImageField(upload_to=upload_image_background_chat,null=True,blank=True)
-
+    backgroundChat = models.ImageField(upload_to=upload_image_background_chat, null=True, blank=True)
 
     def __str__(self):
         try:
@@ -40,11 +41,11 @@ class SupChatStyle(models.Model):
         try:
             return self.backgroundChat.url
         except:
-            return '/assets/supchat/images/default/backgroundChat.png'
+            return static('supchat/images/default/backgroundChat.png')
 
 
 class SupChatConfig(models.Model):
-    pass
+    transferChatIsActive = models.BooleanField(default=True)
 
     def __str__(self):
         try:
@@ -61,7 +62,15 @@ class Section(models.Model):
         return self.title
 
     def get_chats(self):
-        return self.chatgroup_set.all()
+        """
+            sort chats by last message
+        """
+        chats = self.chatgroup_set.filter(isActive=True).annotate(last_message=Max('message__id')).order_by(
+            '-last_message')
+        return chats
+
+    def get_chats_by_admin(self, admin):
+        return self.get_chats().filter(admin=admin,message__deleted=False)
 
     def get_messages_by_user(self, user):
         chat = self.chatgroup_set.filter(user=user).first()
@@ -75,11 +84,28 @@ class Section(models.Model):
             return chat.get_messages_by_admin()
         return []
 
+    def get_messages_unread_count_by_admin(self,admin):
+        return self.chatgroup_set.filter(isActive=True,message__seen=False,message__deleted=False,message__sender='user',admin=admin).aggregate(count=Count('message'))['count']
+
+    def get_messages_count_by_admin(self,admin):
+        return self.chatgroup_set.filter(isActive=True,message__deleted=False,admin=admin).aggregate(
+            count=Count('message'))['count']
+
     def get_title_as_slug(self):
         return str(self.title).replace(' ', '-')
 
     def get_absolute_url_admin(self):
         return reverse('SupChat:admin_panel_section', args=(self.id, self.get_title_as_slug()))
+
+    def get_admins(self):
+        return self.admin_set.all()
+
+    def get_last_two_admins(self):
+        return self.get_admins()[:2]
+
+
+def RandomStringGroupNameAdmin():
+    return f"Group_Admin_{RandomString(25)}"
 
 
 class Admin(models.Model):
@@ -88,11 +114,21 @@ class Admin(models.Model):
         ('offline', 'Offline'),
     )
 
-    user = models.OneToOneField(UserDjango, on_delete=models.CASCADE)
+    GENDER_LIST = (
+        ('male','مرد'),
+        ('female','زن'),
+    )
+
+    user = models.OneToOneField(USER, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=upload_image_admin_chat)
-    sections = models.ManyToManyField('Chat.Section')
-    lastSeen = models.DateTimeField(null=True, blank=True)
-    status_online = models.CharField(max_length=10, choices=STATUS_ONLINE)
+    sections = models.ManyToManyField('Section')
+    lastSeen = models.DateTimeField(default=timezone.now)
+    status_online = models.CharField(max_length=10, choices=STATUS_ONLINE,default='offline')
+    gender = models.CharField(max_length=10,choices=GENDER_LIST)
+    """
+        for use group name in consumer ChatAdmin must use method "get_group_name_admin" in model ChatGroup :return GroupNameAdmin_GroupNameUser
+    """
+    group_name = models.CharField(max_length=40, default=RandomStringGroupNameAdmin,editable=False)
 
     def __str__(self):
         return self.get_full_name()
@@ -106,6 +142,50 @@ class Admin(models.Model):
     def get_image(self):
         return self.image.url
 
+    def get_last_seen_status(self):
+        difference_str, difference_second = GetDifferenceTime(self.lastSeen)
+        return {
+            'chat_is_exists': True,
+            'last_seen': difference_str,
+            'last_seen_second': difference_second,
+            'is_online': (self.status_online == 'online')
+        }
+
+    def get_group_name_admin_in_section(self, section):
+        """
+            for use in consumer ChatAdminSection
+            return : group name admin in section
+        """
+        if section:
+            return f"{self.group_name}_Section_ID_{section.id}"
+        return None
+
+    def can_get_chat_transfered(self,chat):
+        sections = self.sections.all()
+        for section in sections:
+            if section.id == chat.section_id:
+                return True
+        return False
+
+    def get_sections(self):
+        return self.sections.filter(isActive=True)
+
+
+
+    def has_log_message(self):
+        logs = self.logmessageadmin_set.filter(seen=False).count()
+        return True if logs > 0 else False
+
+    def get_log_messages(self):
+        return self.logmessageadmin_set.filter()
+
+    def seen_log_messages(self):
+        self.logmessageadmin_set.update(seen=True)
+
+
+def RandomStringGroupNameUser():
+    return f"Group_User_{RandomString(25)}"
+
 
 class User(models.Model):
     STATUS_ONLINE = (
@@ -113,16 +193,18 @@ class User(models.Model):
         ('offline', 'Offline'),
     )
 
-    user = models.OneToOneField(UserDjango, on_delete=models.SET_NULL, null=True)
+    user = models.OneToOneField(USER, on_delete=models.SET_NULL, null=True)
     session_key = models.CharField(max_length=50, default=RandomString)
-    lastSeen = models.DateTimeField(null=True, blank=True)
-    status_online = models.CharField(max_length=10, choices=STATUS_ONLINE)
+    lastSeen = models.DateTimeField(null=True, blank=True, default=timezone.now)
+    status_online = models.CharField(max_length=10, choices=STATUS_ONLINE, default='offline')
+    group_name = models.CharField(max_length=40, default=RandomStringGroupNameUser())
 
     def __str__(self):
         return self.get_full_name()
 
     def get_image(self):
-        return '/assets/supchat/images/default/iconUser.png'
+        """ You can set url image user at user field : self.user.image or anythings """
+        return static('supchat/images/default/iconUser.png')
 
     def get_full_name(self):
         try:
@@ -130,50 +212,91 @@ class User(models.Model):
         except:
             return 'Unknown'
 
+    def get_last_seen_status(self):
+        try:
+            difference_str, difference_second = GetDifferenceTime(self.lastSeen)
+        except:
+            difference_str, difference_second = '', 0
+        return {
+            'chat_is_exists': True,
+            'last_seen': difference_str,
+            'last_seen_second': difference_second,
+            'is_online': (self.status_online == 'online')
+        }
+
 
 class ChatGroup(models.Model):
-    user = models.ForeignKey('Chat.User', on_delete=models.CASCADE)
-    section = models.ForeignKey('Chat.Section', on_delete=models.CASCADE)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    admin = models.ForeignKey('Admin', on_delete=models.CASCADE)
+    section = models.ForeignKey('Section', on_delete=models.CASCADE)
+    isActive = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"Chat Group {self.user.get_full_name()} - {self.section.title}"
+        return f"Chat Group {self.user.get_full_name()} - {self.admin.get_full_name()}"
+
 
     def get_messages_by_user(self):
         messages = self.message_set.filter(deleted=False).select_subclasses().all()
         return messages
 
     def get_messages_by_admin(self):
-        messages = self.message_set.select_subclasses().all()
+        """ Can use the code below the line to display the deleted message on the admin page """
+        # messages = self.message_set.select_subclasses().all()
+
+        messages = self.message_set.filter(deleted=False).select_subclasses().all()
         return messages
 
     def get_last_message(self):
-        message = self.message_set.select_subclasses().last()
+        message = self.message_set.filter(deleted=False).select_subclasses().last()
         return message
 
     def get_messages_without_seen(self):
-        return self.message_set.filter(seen=False).all()
+        return self.message_set.filter(seen=False,deleted=False).all()
 
     def get_count_messages_without_seen(self):
         return self.get_messages_without_seen().count()
 
+    def get_count_messages(self):
+        return self.message_set.filter(deleted=False).count()
+
+    def get_messages_without_seen_user(self):
+        return self.get_messages_without_seen().filter(sender='user')
+
+    def get_messages_without_seen_admin(self):
+        return self.get_messages_without_seen().filter(sender='admin')
+
+    def seen_messages_user(self):
+        self.message_set.filter(sender='user', seen=False).update(seen=True)
+
+    def seen_messages_admin(self):
+        self.message_set.filter(sender='admin', seen=False).update(seen=True)
+
+    def get_url_absolute_admin(self):
+        return reverse_lazy('SupChat:admin_panel_chat', args=(self.id, self.user.get_full_name()))
+
+    @property
+    def get_group_name_admin(self):
+        """
+            must use this in consumer chat
+        """
+        return f"{self.admin.group_name}_{self.user.group_name}_Chat_ID_{self.id}"
+
 
 class MessageBase(models.Model):
-    # TYPE_MESSAGE = ['text','audio','file']
+    # TYPE_MESSAGE = ['text','audio']
+    SENDER_MESSAGE = (
+        ('admin', 'Admin'),
+        ('user', 'User'),
+    )
+    chat = models.ForeignKey('ChatGroup', on_delete=models.CASCADE)
+    dateTimeSend = models.DateTimeField(auto_now_add=True)
+    sender = models.CharField(max_length=10, choices=SENDER_MESSAGE)
+    seen = models.BooleanField(default=False)
+    edited = models.BooleanField(default=False)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
-
-    SENDER_MESSAGE = (
-        ('section', 'Section'),
-        ('user', 'User'),
-    )
-
-    chat = models.ForeignKey('Chat.ChatGroup', on_delete=models.CASCADE)
-    dateTimeSend = models.DateTimeField(auto_now_add=True)
-    sender = models.CharField(max_length=10, choices=SENDER_MESSAGE)
-    section_user = models.ForeignKey('Chat.Admin', on_delete=models.CASCADE, null=True, blank=True)
-    seen = models.BooleanField(default=False)
-    deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Message - {self.chat.__str__()}"
@@ -192,3 +315,36 @@ class Message(MessageBase):
 class TextMessage(Message):
     type = models.CharField(max_length=10, default='text', editable=False)
     text = models.TextField()
+
+
+def upload_audio_message(instance, path):
+    path = str(path).split('.')[-1]
+    return f"supchat/audios/chat/{instance.chat.id}/{RandomString(25)}.{path}"
+
+
+class AudioMessage(Message):
+    type = models.CharField(max_length=10, default='audio', editable=False)
+    audio = models.FileField(upload_to=upload_audio_message)
+    audio_time = models.CharField(max_length=5, default="0")
+
+
+
+class SuggestedMessage(models.Model):
+    message = models.CharField(max_length=200)
+    section = models.ManyToManyField('Section')
+    def __str__(self):
+        return self.message[:30]
+
+
+class LogMessageAdmin(models.Model):
+    title = models.CharField(max_length=120)
+    message = models.TextField()
+    admin = models.ForeignKey('Admin',on_delete=models.CASCADE)
+    dateTimeSubmit = models.DateTimeField(auto_now_add=True)
+    seen = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ('-id',)
+
+    def __str__(self):
+        return self.title

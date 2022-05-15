@@ -1,0 +1,187 @@
+{% load FilterTagsSupChat %}
+{% load static %}
+<style>
+    @font-face {
+        font-family: 'KalameBlack';
+        src: url("{% static 'supchat/font/Kalameh_Black.woff' %}");
+    }
+
+    @font-face {
+        font-family: 'MjCasablancaHeavy';
+        src: url("{% static 'supchat/font/Mj-Casablanca-Heavy.woff' %}");
+    }
+
+    @font-face {
+        font-family: 'Vazir';
+        src: url("{% static 'supchat/font/Vazir-Regular.woff' %}");
+    }
+
+</style>
+<link rel="stylesheet" href="{% static 'supchat/font_awesome/css/all.css' %}">
+<link rel="stylesheet" href="{% static 'supchat/css/base.css' %}">
+<link rel="stylesheet" href="{% static 'supchat/audio_simple/style.css' %}">
+<script src="{% static 'supchat/audio_simple/js.js' %}"></script>
+<button id="ButtonOpenSupChat">
+    <i class="fa fa-comments"></i>
+</button>
+<div id="SupChat" state="close">
+    <div id="ContainerBaseSupChat">
+        <button id="BtnCloseSupChat">
+            <i class="fa fa-times"></i>
+        </button>
+        <div id="ContainerSectionsButton" class="ContainerSupChat">
+            <header>
+                لطفا بخش مورد نظر خود را انتخاب کنید
+            </header>
+            <main>
+                {% for Section in Sections %}
+                    <button id="SectionButton-{{ Section.id }}" section-button="{{ forloop.counter0 }}">
+                        {{ Section.title }}
+                    </button>
+                {% endfor %}
+            </main>
+            <footer>
+                <svg class="SvgSupChat">
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">
+                        SupChat
+                    </text>
+                </svg>
+            </footer>
+        </div>
+        <div id="ContainerChatMessagesSupChat" class="ContainerSupChat">
+            <header id="HeaderSupChat">
+                <div>
+                    <h2 class="TitleSupportChat">{{ SupChat.title }}</h2>
+                    <div class="ContainerInfoSectionChat">
+                        <p id="NameSectionChat"></p>
+                        {% for Section in Sections %}
+                            <div id="ImagesListAdminSection-{{ Section.id }}" class="d-none ImagesListAdminSection">
+                                <span class="ImageAdminSection" style="z-index: 0;"></span>
+                                {% for Admin in Section.get_last_two_admins %}
+                                    <span class="ImageAdminSection"
+                                          style="background-image: url('{{ Admin.get_image }}')"
+                                          title="{{ Admin.get_full_name }}"></span>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="ContainerStatusUser" status="default">
+                    <p id="StatusUserChat">-</p>
+                    <span></span>
+                </div>
+            </header>
+            <main id="MainSupChat" style="background: url('{{ SupChat.style.get_background_chat }}')">
+                {% for Section in Sections %}
+                    <div id="MessagesSupChat-{{ Section.id }}" section-id="{{ Section.id }}"
+                         section-title="{{ Section.title }}" class="MessagesSupChat">
+                        {% for Message in Section|get_messages_sup_chat_by_user:request %}
+                            {% include 'Chat/User/message-chat-for-user.html' with Message=Message %}
+                        {% endfor %}
+                        {% with Section.suggestedmessage_set.all as SuggesMessages %}
+                            {% if SuggesMessages|ListIsNone == False %}
+                                <div class="SuggestedMessagesSupChat" id="SuggestedMessagesSupChat-{{ Section.id }}">
+                                    <button class="ButtonToggleSuggestedMessages"
+                                            id="ButtonToggleSuggestedMessages-{{ Section.id }}"
+                                            onclick="SUP_CHAT.toggleContainerSuggestedMessages('{{ Section.id }}')">
+                                        <i class="fa fa-angle-double-left"></i>
+                                    </button>
+                                    <div>
+                                        {% for SuggesMes in SuggesMessages %}
+                                            <button class="SuggestedMessage" data-message="{{ SuggesMes.message }}"
+                                                    onclick="SUP_CHAT.sendSuggestedMessage('{{ SuggesMes.message }}')">{{ SuggesMes.message }}</button>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                {% endfor %}
+            </main>
+            <footer id="FooterSupChat">
+                <div id="TextEditedFooterSupChat">
+                    <p></p>
+                    <i class="fa fa-times" onclick="SUP_CHAT.editMessageTextCanceled()"></i>
+                </div>
+                <textarea id="InputTextMessageSupChat" type="text"
+                          placeholder="پیام . . ."></textarea>
+                <div id="VoiceIsRecordingSupChat">
+                    <p class="TitleVoiceIsRecording">
+                        در حال ضبط صدا ...
+                    </p>
+                    <p id="ValueVoiceIsRecordingSupChat">0.0</p>
+                </div>
+                <div id="VoiceSendOrCancelSupChat">
+                    <div>
+                        <p>صدای ضبط شده</p>
+                        <p id="ValueVoiceIsRecordedSupChat">0.0</p>
+                    </div>
+                    <div>
+                        <button button-cancel-voice-supchat
+                                onclick="SUP_CHAT.voiceRecordedCancel()"><i
+                                class="fa fa-times"></i></button>
+                        <button button-send-voice-supchat
+                                onclick="SUP_CHAT.sendVoiceRecorded()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20px"
+                                 height="20px" viewBox="0 0 32 32">
+                                <path d="M27.45,15.11l-22-11a1,1,0,0,0-1.08.12,1,1,0,0,0-.33,1L7,16,4,26.74A1,1,0,0,0,5,28a1,1,0,0,0,.45-.11l22-11a1,1,0,0,0,0-1.78Zm-20.9,10L8.76,17H18V15H8.76L6.55,6.89,24.76,16Z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="VoiceInSendingSupChat">
+                    <p class="TitleVoiceIsRecording">
+                        در حال ارسال
+                    </p>
+                    <div class="VoiceInSendingSupChatLoading"><span></span>
+                    </div>
+                </div>
+                <div id="BtnsSendMessageFooterSupChat">
+                    <button id="ButtonSendMessageTextSupChat">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20px"
+                             height="20px" viewBox="0 0 32 32">
+                            <path d="M27.45,15.11l-22-11a1,1,0,0,0-1.08.12,1,1,0,0,0-.33,1L7,16,4,26.74A1,1,0,0,0,5,28a1,1,0,0,0,.45-.11l22-11a1,1,0,0,0,0-1.78Zm-20.9,10L8.76,17H18V15H8.76L6.55,6.89,24.76,16Z"/>
+                        </svg>
+                    </button>
+                    <button id="ButtonRecordVoiceSupChat">
+                        <i class="fa fa-microphone-alt"></i>
+                    </button>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.CSRF_TOKEN = '{{ csrf_token }}'
+</script>
+<script src="{% static 'supchat/jq/jquery.min.js' %}"></script>
+<script src="{% static 'supchat/js/base.js' %}"></script>
+<script>
+    let SUP_CHAT = new ChatUser()
+    let AllMessagesSupChat = document.getElementsByClassName('MessagesSupChat')
+    for (let Container of AllMessagesSupChat) {
+        let idSection = Container.getAttribute('section-id')
+        let titleSection = Container.getAttribute('section-title')
+        new Section({
+            'id': idSection,
+            'title': titleSection,
+            'container': Container
+        })
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

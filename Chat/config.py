@@ -1,8 +1,9 @@
 """ Config SupChat """
 
-# You must set name settings project
-# By Default is Config.settings
-PROJECT_SETTINGS = 'Config.settings'
+
+"""  Note!  """
+#You must set name settings project in file "asgi.py"
+
 
 # User Default is Django User
 # if you want change user you must edit "getUser" and "getUserConsumer" function in auth.view and auth.consumer

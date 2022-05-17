@@ -38,7 +38,7 @@
   path('sup-chat/',include('Chat.urls',namespace='SupChat'))
 ```
 
-- Set **name project** to **config file**
+- Set **name project settings** to **asgi file**
 ```python
 # By Default is 'Config.settings'
   PROJECT_SETTINGS = 'Config.settings'

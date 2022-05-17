@@ -740,7 +740,6 @@
 }
 
 .ContainerInfoSectionChat {
-    min-width: 140px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -750,6 +749,7 @@
     position: relative;
     height: 30px;
     left: 0;
+    margin-right: 40px;
 }
 
 .ImageAdminSection {
@@ -920,6 +920,7 @@
     display: flex;
     justify-content: space-between;
     width: 85px;
+    margin-left: 10px;
 }
 
 #BtnsSendMessageFooterSupChat>button {

@@ -54,4 +54,9 @@
 ```python
   python manage.py migrate
 ```
+- ## Deploy
+ run with daphne
+ ```python
+  daphne -b YOUR_IP -b YOUR_PORT Chat.asgi:application
+ ```
 - Done!

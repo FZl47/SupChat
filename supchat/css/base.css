@@ -577,6 +577,7 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
+    max-height : 95vh;
     border: 1px solid #eee;
     box-shadow: 0 3px 12px rgba(170, 170, 170, 0.2);
     background: #fff;

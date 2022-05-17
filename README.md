@@ -8,8 +8,7 @@
 ```python
   pip install -r requirments.txt or pip install -r requirments_ubuntu.txt
 ```
-- Add apps 
-- -**django_render_partial**  -**channels**  -**Chat** to **INSTALLED_APPS** your project
+- Add apps **django_render_partial** , **channels** , **Chat** to **INSTALLED_APPS** your project
 
 - Set **asgi** instead **wsgi** in settings
 ```python

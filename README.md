@@ -6,7 +6,7 @@
 
 - Install requirments
 ```python
-  pip install -r requirments.txt
+  pip install -r requirments.txt or pip install -r requirments_ubuntu.txt
 ```
 - Add apps **django_render_partial** , **channels** , **Chat** to **INSTALLED_APPS** your project
 

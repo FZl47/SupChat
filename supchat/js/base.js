@@ -952,7 +952,9 @@ class SupChat {
 
         let ButtonRecordVoice = document.getElementById('ButtonRecordVoiceSupChat')
         ButtonRecordVoice.addEventListener("mousedown", mouseDown);
+        ButtonRecordVoice.addEventListener("touchstart", mouseDown);
         document.body.addEventListener("mouseup", mouseUp);
+        document.body.addEventListener("touchend", mouseUp);
     }
 
     setElementFooterSupChat(state = 'default') {

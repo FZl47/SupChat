@@ -40,7 +40,6 @@
 
 - Set **name project settings** to **asgi file**
 ```python
-# By Default is 'Config.settings'
   PROJECT_SETTINGS = 'Config.settings'
 ```
 

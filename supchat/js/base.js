@@ -706,7 +706,7 @@ class SupChat {
                         status_result = `${suffix} ${hour} ساعت پیش `
                     }
                     if (day > 0) {
-                        status_result = `${suffix} ${hour} روز پیش `
+                        status_result = `${suffix} ${day} روز پیش `
                     }
                     This.StatusUserChat.innerHTML = status_result
                     TimeSecond += 60

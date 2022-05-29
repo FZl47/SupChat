@@ -44,7 +44,14 @@
 ```
 
 - Copy folder **supchat** to **static folder** 
+- Load **FilterTagsSupChat** in your page
+```python
+  {% load FilterTagsSupChat %}
+```
 - Load **render_partial** in your page
+```python
+  {% load render_partial %}
+```
 - Include **SupChat** view in your page
 ```python
   {% render_partial 'Chat.views.index' %}

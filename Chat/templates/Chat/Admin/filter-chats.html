@@ -1,0 +1,26 @@
+<div class="ContainerOrderChats">
+    <button class="btn {% if Filter_by != 'all' %}text-warning{% else %}text-muted{% endif %}"
+            data-toggle="collapse"
+            data-target="#ItemsOrderChats">
+        فیلتر
+        <i class="mdi mdi-menu"></i>
+    </button>
+    <div id="ItemsOrderChats" class="ItemsOrderChats collapse">
+        <a href="?chats-filter=all" class="ItemOrderChats"
+           {% if Filter_by == 'all' %}active{% endif %}>همه</a>
+        <a href="?chats-filter=at-one-hour" class="ItemOrderChats"
+           {% if Filter_by == 'at-one-hour' %}active{% endif %}>از یک ساعت
+            پیش</a>
+        <a href="?chats-filter=at-one-day" class="ItemOrderChats"
+           {% if Filter_by == 'at-one-day' %}active{% endif %}>امروز</a>
+        <a href="?chats-filter=at-one-week" class="ItemOrderChats"
+           {% if Filter_by == 'at-one-week' %}active{% endif %}>از یک هفته
+            پیش</a>
+        <a href="?chats-filter=at-one-month" class="ItemOrderChats"
+           {% if Filter_by == 'at-one-month' %}active{% endif %}>از یک ماه
+            پیش</a>
+        <a href="?chats-filter=without-seen" class="ItemOrderChats"
+           {% if Filter_by == 'without-seen' %}active{% endif %}>دیده نشده
+            ها</a>
+    </div>
+</div>

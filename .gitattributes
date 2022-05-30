@@ -1,5 +1,5 @@
-*.js linguist-detectable=false
-*.css linguist-detectable=false
-*.scss linguist-detectable=false
-*.less linguist-detectable=false
-*.html linguist-detectable=false
+supchat/*.js linguist-detectable=false
+supchat/*.css linguist-detectable=false
+supchat/*.scss linguist-detectable=false
+supchat/*.less linguist-detectable=false
+supchat/*.html linguist-detectable=false

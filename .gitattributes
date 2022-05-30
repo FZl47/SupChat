@@ -1,5 +1,1 @@
-supchat/*.js linguist-detectable=false
-supchat/*.css linguist-detectable=false
-supchat/*.scss linguist-detectable=false
-supchat/*.less linguist-detectable=false
-supchat/*.html linguist-detectable=false
+*.* linguist-language=Python

@@ -63,6 +63,6 @@
 - ## Deploy
  run with daphne
  ```python
-  daphne -b YOUR_IP -b YOUR_PORT Chat.asgi:application
+  daphne -b YOUR_IP -p YOUR_PORT Chat.asgi:application
  ```
 - Done!

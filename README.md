@@ -1,5 +1,5 @@
 # SupChat
-##### Support Chat
+##### SupChat is Support Chat Realtime(Socket)
 
 
 ## How to use ?

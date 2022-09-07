@@ -1,1 +1,5 @@
 *.* linguist-language=Python
+.idea
+.idea/
+__pycache__
+__pycache__/

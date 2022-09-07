@@ -1,6 +1,6 @@
 # {% load FilterTags %} For Use => Set This in Template
 from django import template
-from Chat.views import getUser
+from Chat.core.auth.view import getUser
 
 register = template.Library()
 

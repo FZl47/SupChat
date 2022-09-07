@@ -1,4 +1,4 @@
-from ..models import User
+from Chat.models import User
 
 def getUserSessionConsumer(scope):
     session_key_user = str(scope['cookies'].get('session_key_user_sup_chat'))

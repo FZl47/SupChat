@@ -1,6 +1,6 @@
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
-from .models import Admin, ChatGroup
+from Chat.models import Admin, ChatGroup
 
 def delete_all_chat_in_section_admin(sender,**kwargs):
     instance = kwargs.get('instance')

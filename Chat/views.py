@@ -1,3 +1,5 @@
+import json
+import random
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import HttpResponse, JsonResponse, Http404
 from django.core.exceptions import PermissionDenied
@@ -5,13 +7,12 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import logout, authenticate, login
 from django.db.models import Q, Count, F, Max
 from django.utils import timezone
-from .tools import Set_Cookie_Functionality
-from .decorators.view import admin_authenticated
-from .models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin
-from .serializers import SerializerChat, SerializerSection, SerializerUser, SerializerAdminUser, SerializerMessageAudio
-from .auth.view import getUser, getUserSession, createUser
-import json
-import random
+from Chat.core.tools import Set_Cookie_Functionality
+from Chat.core.decorators.view import admin_authenticated
+from Chat.models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin
+from Chat.core.serializers import SerializerChat, SerializerSection, SerializerUser, SerializerAdminUser, SerializerMessageAudio
+from Chat.core.auth.view import getUser, getUserSession, createUser
+
 
 
 def getSupChat():

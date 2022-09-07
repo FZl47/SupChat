@@ -1,5 +1,5 @@
 from django.shortcuts import redirect
-from ..models import Admin
+from Chat.models import Admin
 
 def admin_authenticated(func):
     """

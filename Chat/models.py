@@ -4,8 +4,8 @@ from django.urls import reverse, resolve, reverse_lazy
 from django.utils import timezone
 from django.templatetags.static import static
 from model_utils.managers import InheritanceManager
-from .tools import RandomString, GetDifferenceTime
-from .serializers import SerializerMessageText
+from Chat.core.tools import RandomString, GetDifferenceTime
+from Chat.core.serializers import SerializerMessageText
 from .config import USER
 
 

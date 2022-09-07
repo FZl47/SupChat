@@ -95,14 +95,13 @@ def GetTimeIran():
 
 
 def GetDifferenceTime(Time):
-    # TimeZone = settings.TIME_ZONE or 'UTC'
-    # TimeZone = pytz.timezone(TimeZone)
-    # TimeServer = datetime.datetime.now(TimeZone)
-    # DifferenceTime = datetime.datetime(TimeServer.year, TimeServer.month, TimeServer.day, TimeServer.hour,
-    #                                    TimeServer.minute) - datetime.datetime(Time.year, Time.month, Time.day, Time.hour,
-    #                                                                         Time.minute)
+    TimeZone = settings.TIME_ZONE or 'UTC'
+    TimeZone = pytz.timezone(TimeZone)
+    TimeServer = datetime.datetime.now(TimeZone)
+    DifferenceTime = datetime.datetime(TimeServer.year, TimeServer.month, TimeServer.day, TimeServer.hour,
+                                       TimeServer.minute) - datetime.datetime(Time.year, Time.month, Time.day, Time.hour,
+                                                                            Time.minute)
 
-    DifferenceTime = timezone.now() - datetime.datetime(Time.year,Time.month,Time.day,Time.hour,Time.minute)
     DifferenceTimeSecond = DifferenceTime.total_seconds()
     Second = DifferenceTimeSecond % 60
     Minute = DifferenceTimeSecond // 60 % 60

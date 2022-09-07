@@ -1,4 +1,4 @@
-from ..models import User
+from Chat.models import User
 
 def getUserSession(request):
     session_key_user = request.COOKIES.get('session_key_user_sup_chat') or ''

@@ -1,4 +1,4 @@
-from ..models import Admin
+from Chat.models import Admin
 
 def user_authenticated(func):
     def wrapper(self):

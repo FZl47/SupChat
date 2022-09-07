@@ -17,6 +17,7 @@
     }
 
 </style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="{% static 'supchat/font_awesome/css/all.css' %}">
 <link rel="stylesheet" href="{% static 'supchat/css/base.css' %}">
 <link rel="stylesheet" href="{% static 'supchat/audio_simple/style.css' %}">
@@ -27,7 +28,7 @@
 <div id="SupChat" state="close">
     <div id="ContainerBaseSupChat">
         <button id="BtnCloseSupChat">
-            <i class="fa fa-times"></i>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z"/></svg>
         </button>
         <div id="ContainerSectionsButton" class="ContainerSupChat">
             <header>
@@ -111,21 +112,19 @@
                     </p>
                     <p id="ValueVoiceIsRecordingSupChat">0.0</p>
                 </div>
-                <div id="VoiceSendOrCancelSupChat" class="col-12">
+                <div id="VoiceSendOrCancelSupChat">
                     <div>
                         <p>صدای ضبط شده</p>
                         <p id="ValueVoiceIsRecordedSupChat">0.0</p>
                     </div>
                     <div>
                         <button button-cancel-voice-supchat
-                                onclick="SUP_CHAT.voiceRecordedCancel()"><i
-                                class="fa fa-times"></i></button>
+                                onclick="SUP_CHAT.voiceRecordedCancel()">
+                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z"/></svg>
+                        </button>
                         <button button-send-voice-supchat
                                 onclick="SUP_CHAT.sendVoiceRecorded()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20px"
-                                 height="20px" viewBox="0 0 32 32">
-                                <path d="M27.45,15.11l-22-11a1,1,0,0,0-1.08.12,1,1,0,0,0-.33,1L7,16,4,26.74A1,1,0,0,0,5,28a1,1,0,0,0,.45-.11l22-11a1,1,0,0,0,0-1.78Zm-20.9,10L8.76,17H18V15H8.76L6.55,6.89,24.76,16Z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"/></svg>
                         </button>
                     </div>
                 </div>
@@ -138,13 +137,10 @@
                 </div>
                 <div id="BtnsSendMessageFooterSupChat">
                     <button id="ButtonSendMessageTextSupChat">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20px"
-                             height="20px" viewBox="0 0 32 32">
-                            <path d="M27.45,15.11l-22-11a1,1,0,0,0-1.08.12,1,1,0,0,0-.33,1L7,16,4,26.74A1,1,0,0,0,5,28a1,1,0,0,0,.45-.11l22-11a1,1,0,0,0,0-1.78Zm-20.9,10L8.76,17H18V15H8.76L6.55,6.89,24.76,16Z"/>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"/></svg>
                     </button>
                     <button id="ButtonRecordVoiceSupChat">
-                        <i class="fa fa-microphone-alt"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,15a4,4,0,0,0,4-4V5A4,4,0,0,0,8,5v6A4,4,0,0,0,12,15ZM10,5a2,2,0,0,1,4,0v6a2,2,0,0,1-4,0Zm10,6a1,1,0,0,0-2,0A6,6,0,0,1,6,11a1,1,0,0,0-2,0,8,8,0,0,0,7,7.93V21H9a1,1,0,0,0,0,2h6a1,1,0,0,0,0-2H13V18.93A8,8,0,0,0,20,11Z"/></svg>
                     </button>
                 </div>
             </footer>

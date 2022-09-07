@@ -103,7 +103,7 @@ def GetDifferenceTime(Time):
     #                                                                         Time.minute)
 
     DifferenceTime = timezone.now() - datetime.datetime(Time.year,Time.month,Time.day,Time.hour,Time.minute)
-    DifferenceTimeSecond = DifferenceTime.seconds
+    DifferenceTimeSecond = DifferenceTime.total_seconds()
     Second = DifferenceTimeSecond % 60
     Minute = DifferenceTimeSecond // 60 % 60
     Hour = DifferenceTimeSecond // 3600

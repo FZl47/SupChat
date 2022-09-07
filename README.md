@@ -1,5 +1,5 @@
 # SupChat
-##### Support Chat
+##### SupChat is Support Chat Realtime(Socket)
 
 
 ## How to use ?
@@ -40,12 +40,18 @@
 
 - Set **name project settings** to **asgi file**
 ```python
-# By Default is 'Config.settings'
   PROJECT_SETTINGS = 'Config.settings'
 ```
 
 - Copy folder **supchat** to **static folder** 
+- Load **FilterTagsSupChat** in your page
+```python
+  {% load FilterTagsSupChat %}
+```
 - Load **render_partial** in your page
+```python
+  {% load render_partial %}
+```
 - Include **SupChat** view in your page
 ```python
   {% render_partial 'Chat.views.index' %}
@@ -57,6 +63,6 @@
 - ## Deploy
  run with daphne
  ```python
-  daphne -b YOUR_IP -b YOUR_PORT Chat.asgi:application
+  daphne -b YOUR_IP -p YOUR_PORT Chat.asgi:application
  ```
 - Done!

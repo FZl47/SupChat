@@ -696,7 +696,7 @@ class SupChat {
                     let second = Math.floor(TimeSecond % 60)
                     let minute = Math.floor(TimeSecond / 60 % 60)
                     let hour = Math.floor(TimeSecond / 3600)
-                    let day = Math.floor((second / (3600 * 24)))
+                    let day = Math.floor((TimeSecond / (3600 * 24)))
                     if (minute > 0) {
                         status_result = `${suffix} ${minute} دقیقه پیش `
                     } else {
@@ -706,7 +706,7 @@ class SupChat {
                         status_result = `${suffix} ${hour} ساعت پیش `
                     }
                     if (day > 0) {
-                        status_result = `${suffix} ${hour} روز پیش `
+                        status_result = `${suffix} ${day} روز پیش `
                     }
                     This.StatusUserChat.innerHTML = status_result
                     TimeSecond += 60

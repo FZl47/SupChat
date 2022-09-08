@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="87823259-0142-41f3-b17d-acbad3750530" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/consumers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/actions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/core/actions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/core/tools.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/admin-panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/templates/Chat/Admin/admin-panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/js/base.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/base.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-    </list>
+    <list default="true" id="87823259-0142-41f3-b17d-acbad3750530" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -215,7 +199,7 @@
       <workItem from="1652749016107" duration="3705000" />
       <workItem from="1662524570414" duration="453000" />
       <workItem from="1662525038425" duration="21756000" />
-      <workItem from="1662616002096" duration="17436000" />
+      <workItem from="1662616002096" duration="17812000" />
     </task>
     <servers />
   </component>

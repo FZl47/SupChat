@@ -2,10 +2,10 @@ from channels.generic.websocket import WebsocketConsumer
 from channels.exceptions import DenyConnection
 from django.utils import timezone
 from asgiref.sync import async_to_sync
-from .decorators.consumer import user_authenticated, admin_authenticated
-from .auth.consumer import getUserConsumer, getUserSessionConsumer
-from .tools import RandomString
-from .serializers import SerializerMessageText, SerializerChatJSON, SerializerMessageAudio, SerializerMessageTextEdited, SerializerMessageDeleted
+from Chat.core.decorators.consumer import user_authenticated, admin_authenticated
+from Chat.core.auth.consumer import getUserConsumer, getUserSessionConsumer
+from Chat.core.tools import RandomString
+from Chat.core.serializers import SerializerMessageText, SerializerChatJSON, SerializerMessageAudio, SerializerMessageTextEdited, SerializerMessageDeleted
 from .models import Message, TextMessage, Section, ChatGroup, User, Admin
 import json
 import random

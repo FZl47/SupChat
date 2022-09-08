@@ -57,7 +57,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="D:/Backupprojects/SupChat" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Config/settings.py" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.stylelint" value="true" />
@@ -72,13 +72,13 @@
   </component>
   <component name="RunManager">
     <configuration name="Unnamed" type="Python.DjangoServer" factoryName="Django server" nameIsGenerated="true">
-      <module name="SupChat" />
+      <module name="V2" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="F:\Project\SupChat\venv\Scripts\python.exe" />
+      <option name="SDK_HOME" value="F:\Project\SupChat\V2\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -197,6 +197,9 @@
       <workItem from="1652638017803" duration="22000" />
       <workItem from="1652638063180" duration="1144000" />
       <workItem from="1652749016107" duration="3705000" />
+      <workItem from="1662524570414" duration="453000" />
+      <workItem from="1662525038425" duration="21756000" />
+      <workItem from="1662616002096" duration="17812000" />
     </task>
     <servers />
   </component>
@@ -204,33 +207,21 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="414" y="175" width="1092" height="721" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1650144790630">
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1662525973985">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="414" y="175" width="1092" height="721" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1650144790630" />
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1652410689335">
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1662525973985" />
+    <state x="740" y="261" key="FileChooserDialogImpl" timestamp="1662524962850">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1652410689335" />
-    <state x="740" y="261" key="FileChooserDialogImpl" timestamp="1652761234619">
+    <state x="740" y="261" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1662524962850" />
+    <state x="461" y="162" key="SettingsEditor" timestamp="1662525989541">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="261" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1652761234619" />
-    <state x="461" y="162" key="SettingsEditor" timestamp="1650144788017">
+    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1662525989541" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1662621146294">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1650144788017" />
-    <state width="498" height="446" key="SwitcherDM" timestamp="1650047440025">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="498" height="446" key="SwitcherDM/0.0.1920.1040@0.0.1920.1040" timestamp="1650047440025" />
-    <state x="578" y="164" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1651485900576">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="578" y="164" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1651485900576" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1652420759737">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1652420759737" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1662621146294" />
   </component>
 </project>

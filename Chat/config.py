@@ -6,7 +6,7 @@
 
 
 # User Default is Django User
-# if you want change user you must edit "getUser" and "getUserConsumer" function in auth.view and auth.consumer
+# if you want change user you must edit "getUser" and "getUserConsumer" function in core.auth.view and core.auth.consumer
 from django.contrib.auth.models import User
 USER = User
 

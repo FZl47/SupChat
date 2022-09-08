@@ -6,15 +6,19 @@
     filter: blur(8px);
 }
 
+.cursor-pointer{
+    cursor: pointer;
+}
+
 .SvgSupChat {
     width: 100%;
     height: 100%;
 }
 
 .SvgSupChat text {
-    stroke: #2ffff2;
-    font-size: 20px;
-    stroke-width: 2px;
+    stroke: #18ebdc;
+    font-size: 21px;
+    stroke-width: 1.5px;
     fill: transparent;
     animation: SvgSupChatAnimation 5s forwards;
 }
@@ -26,7 +30,7 @@
     to {
         stroke-dasharray: 50% 0;
         stroke-dashoffset: 10%;
-        fill: #2ffff2;
+        fill: #18ebdc;
     }
 }
 
@@ -284,7 +288,7 @@
     height: inherit;
     width: inherit;
     border: 4px solid transparent;
-    border-top: 4px solid rgb(35, 227, 159);
+    border-top: 4px solid var(--Loading--color);
     border-radius: 50%;
     animation: Animation_LoadingCircle-3 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
 }
@@ -309,7 +313,7 @@
     margin: auto;
     height: inherit;
     width: inherit;
-    border: 4px solid rgb(39, 245, 171);
+    border: 4px solid var(--Loading--color);
     border-radius: 50%;
 }
 
@@ -320,8 +324,8 @@
     right: 20px;
     /*max-height: 95vh;*/
     font-size: 15.5px;
-    border: 1px solid #eee;
-    box-shadow: 0 3px 12px rgba(170, 170, 170, 0.2);
+    border: 1px solid var(--SupChat--border);
+    box-shadow: 0 3px 12px var(--SupChat--boxshadow);
     background: #fff;
     transition: all .2s;
     border-radius: 10px;
@@ -388,9 +392,9 @@
     height: 55px;
     padding: 10px;
     border-radius: 12px;
-    background: #19ffdd;
-    color: #fff;
-    box-shadow: 0 8px 12px rgba(175, 175, 175, 0.3);
+    background: var(--BtnOpenSupChat--background);
+    color: var(--BtnOpenSupChat--color);
+    box-shadow: 0 8px 12px var(--BtnOpenSupChat--boxshadow);
     border: none;
     outline: none;
     z-index: 1;
@@ -424,7 +428,8 @@
     padding: 15px 7px;
     font-size: 130%;
     font-family: 'KalameBlack';
-    border-bottom: 1px solid #eee;
+    color: var(--ContainerSectionButton__header--color);
+    border-bottom: 1px solid var(--ContainerSectionButton__header--borderbottom);
 }
 
 #ContainerSectionsButton main {
@@ -445,15 +450,15 @@
     min-width: 230px;
     font-family: 'Vazir';
     border-radius: 7px;
-    border: 1px solid #f96265 !important;
-    box-shadow: 0 2px 12px rgba(188, 188, 188, 0.2);
-    color: #f96265;
+    border: 1px solid var(--SectionButton--border) !important;
+    box-shadow: 0 2px 12px var(--SectionButton--boxshadow);
+    color: var(--SectionButton--color);
     transition: all .3s;
 }
 
 [section-button]:hover {
-    background: #f96265 !important;
-    color: #fff;
+    background: var(--SectionButton-hover--background) !important;
+    color: var(--SectionButton-hover--color);
 }
 
 #ContainerChatMessagesSupChat {
@@ -474,11 +479,11 @@
     justify-content: space-between;
     align-items: end;
     text-align: right;
-    background: linear-gradient(180deg, rgba(47, 255, 242, 0.2), #ffffff);
+    background: var(--HeaderSupChat--background);
     padding: 6px;
     height: 83px;
-    border-bottom: 1px solid #f4f4f4;
-    box-shadow: 0 3px 6px rgba(238, 238, 238, 0.6);
+    border-bottom: 1px solid var(--ContainerSectionButton__header--borderbottom);
+    box-shadow: 0 3px 6px var(--HeaderSupChat--boxshadow);
 }
 
 
@@ -530,7 +535,7 @@
 }
 
 .ContainerStatusUser {
-    background: #fff;
+    background: var(--ContainerStatusUser--background);
     text-align: center;
     border-radius: 10px;
     min-width: 70px;
@@ -538,14 +543,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 0 4px rgba(208, 224, 211, 0.2);
-    border: 1px solid #fafafa;
+    box-shadow: 0 0 4px var(--ContainerStatusUser--boxshadow);
+    border: 1px solid var(--ContainerStatusUser--border);
 }
 
 #StatusUserChat {
     font-size: 70% !important;
     margin: 0 0 0 10px !important;
-    color: #666666 !important;
+    color: var(--StatusUserChat--color) !important;
 }
 
 .ContainerStatusUser span {
@@ -556,7 +561,7 @@
 }
 
 .ContainerStatusUser[status='is_typing'] span {
-    background: #1af1ab;
+    background: var(--ContainerStatusUser__span--background_online);
 }
 
 .ContainerStatusUser[status='is_typing'] #StatusUserChat {
@@ -581,11 +586,11 @@
 }
 
 .ContainerStatusUser[status='online'] span {
-    background: #1af1ab;
+    background: var(--ContainerStatusUser__span--background_online);
 }
 
 .ContainerStatusUser[status='offline'] span {
-    background: #ff5751;
+    background: var(--ContainerStatusUser__span--background_offline);
 }
 
 .ContainerStatusUser[status='default'] span {
@@ -593,7 +598,7 @@
 }
 
 .TitleSupportChat {
-    color: #ff734a;
+    color: var(--TitleSupportChat--color);
     font-family: 'KalameBlack';
     padding-top: 5px;
 }
@@ -604,12 +609,12 @@
     margin-top: -5px;
     padding: 0;
     font-size: 85%;
-    color: #666666;
+    color: var(--ContainerChatMessagesSupChat__p--color);
     font-family: 'Vazir';
 }
 
 #ContainerChatMessagesSupChat > main {
-    height: calc(100% - 60px - 85px);
+    height: calc(100% - 60px - 83px);
     padding: 25px 0;
 }
 
@@ -626,18 +631,17 @@
 }
 
 .MessagesSupChat::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--MessageSupChat-webkit-scrollbar-track--background);
     border-radius: 50px;
-
 }
 
 .MessagesSupChat::-webkit-scrollbar-thumb {
-    background: rgb(48, 255, 238);
+    background: var(--MessageSupChat-webkit-scrollbar-thumb--background);
     border-radius: 50px;
 }
 
 .MessagesSupChat::-webkit-scrollbar-thumb:hover {
-    background: #1ed2c9;
+    background: var(--MessageSupChat-webkit-scrollbar-thumb--background-hover);
 }
 
 [ContainerMessagesShow] {
@@ -653,9 +657,9 @@
     z-index: 4;
     height: 60px;
     padding: 5px 10px;
-    background: linear-gradient(360deg, rgba(47, 255, 242, 0.2), #ffffff);
-    border-top: 1px solid #f0f0f0;
-    box-shadow: 0 -1px 4px rgba(238, 238, 238, 0.3);
+    background: var(--FooterSupChat--background);
+    border-top: 1px solid var(--FooterSupChat--bordertop);
+    box-shadow: 0 -1px 4px var(--FooterSupChat--boxshadow);
 }
 
 #FooterSupChat p {
@@ -692,7 +696,7 @@
 }
 
 #TextEditedFooterSupChat i {
-    color: #999999;
+    color: #ff8f81;
 }
 
 #TextEditedFooterSupChat p {
@@ -709,12 +713,12 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 12px;
-    width: 200px;
-    background: #fff;
-    box-shadow: 0 1px 3px rgba(170, 170, 170, 0.3);
+    width: 65%;
+    background: var(--VoiceIsRecordingSupChat--background);
+    border: 1px solid var(--VoiceIsRecordingSupChat--border);
     margin-top: 5px;
     font-size: 97%;
-    border-radius: 5px;
+    border-radius: 20px 5px 5px 20px;
     /*animation: AnimationVoiceIsRecording 8s infinite;*/
 }
 
@@ -773,7 +777,7 @@
 
 
 [button-cancel-voice-supchat] svg {
-    fill: orangered;
+    fill: var(--BtnCancelVoiceSupChat__svg--fill);
     width: 23px;
     height: 23px;
 }
@@ -785,7 +789,7 @@
 [button-send-voice-supchat] svg {
     width: 24px;
     height: 24px;
-    fill: #0861ff;
+    fill: var(--BtnSendVoiceSupChat__svg--fill);
 }
 
 @keyframes AnimationButtonVoiceIsRecording {
@@ -938,7 +942,7 @@
     height: 32px;
     width: 32px;
     clip: rect(0, 32px, 32px, 16px);
-    border: 3px solid rgb(39, 245, 171);
+    border: 3px solid var(--Loading--color);
     border-radius: 50%;
     -webkit-animation: loader-1-3 1.2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
     animation: loader-1-3 1.2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
@@ -995,17 +999,17 @@
 }
 
 #InputTextMessageSupChat::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #aaa;
 }
 
 #InputTextMessageSupChat::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #777;
     cursor: default;
 }
 
 
 #ButtonRecordVoiceSupChat svg {
-    fill: #00c7aa;
+    fill: var(--BtnRecordVoiceSupChat__svg--fill);
     width: 26px;
     height: 26px;
 }
@@ -1017,7 +1021,7 @@
 }
 
 #ButtonSendMessageTextSupChat svg {
-    fill: #a2a2a2;
+    fill: var(--BtnSendMessageTextSupChat_disable);
     width: 26px;
     height: 26px;
     transform: rotateY(180deg);
@@ -1028,20 +1032,19 @@
 }
 
 #ButtonSendMessageTextSupChat[active='true'] svg {
-    fill: #007b66;
+    fill: var(--BtnSendMessageTextSupChat_active);
 }
 
 
 /*   Message  */
 
-
 .MessageSupChat {
 }
 
 .MessageSupChat .ContentMessage {
-    background: #fff;
-    border: 1px solid rgba(240, 240, 240, 0.3);
-    box-shadow: 0 2px 3px rgba(170, 170, 170, 0.2);
+    background: var(--MessageSupChat__ContentMessage--background);
+    border: 1px solid var(--MessageSupChat__ContentMessage--border);
+    box-shadow: 0 2px 3px var(--MessageSupChat__ContentMessage--boxshadow);
     margin: 5px 10px;
     border-radius: 12px;
     padding: 5px 9px;
@@ -1073,12 +1076,12 @@
 }
 
 [message-seen='true'] {
-    color: #66bdff;
+    color: #46d8e9;
     font-size: 90%;
 }
 
 .NameSenderMessage {
-    color: #bbb;
+    color: var(--NameSenderMessage--color);
     font-size: 80% !important;
 }
 
@@ -1109,7 +1112,7 @@
 
 .DefaultMessage .NameSenderMessage {
     font-size: 110% !important;
-    color: #ff734a !important;
+    color: var(--TitleSupportChat--color) !important;
     margin-top: 5px !important;
     font-family: KalameBlack !important;
 }
@@ -1123,6 +1126,7 @@
 /* Content Message */
 
 .MessageSupChat pre {
+    color: var(--MessageSupChat__pre--color);
     border: none;
     font-size: 90%;
     line-height: 27px;
@@ -1140,11 +1144,11 @@
 
 .TimeSentMessage {
     font-size: 75%;
-    color: #888888;
+    color: var(--TimeSentMessage--color);
 }
 
 .BtnShowMoreOptionMessage i {
-    color: #bbbbbb;
+    color: var(--BtnShowMoreOptionMessage__i--color);
     font-size: 75%;
 }
 
@@ -1164,9 +1168,9 @@
     z-index: 3;
     width: 100%;
     max-width: 250px;
-    background: #fff;
-    box-shadow: 0 0 8px rgba(176, 176, 176, 0.4);
-    border: 1px solid #ddd;
+    background: var(--MoreOptionMessage--background);
+    box-shadow: 0 0 8px var(--MoreOptionMessage--boxshadow);
+    border: 1px solid var(--MoreOptionMessage--border);
     border-radius: 5px;
     transition: all .15s;
     overflow: auto;
@@ -1183,7 +1187,7 @@
     align-items: center;
     width: 100%;
     padding: 10px;
-    border-bottom: 1px solid #eee !important;
+    border-bottom: 1px solid var(--OptionMessage--borderbottom) !important;
     cursor: default;
 }
 
@@ -1196,7 +1200,7 @@
 }
 
 button.OptionMessage:hover {
-    background: #f7f7f7 !important;
+    background: var(--OptionMessage-hover--background) !important;
 }
 
 .OptionMessage:last-of-type {
@@ -1214,7 +1218,7 @@ button.OptionMessage:hover {
     font-size: 70% !important;
     text-align: center;
     width: 100%;
-    color: #aaa !important;
+    color: var(--OptionMessage__DateTimeSendMessage--color) !important;
 }
 
 [sender-message="you"] {
@@ -1248,7 +1252,7 @@ button.OptionMessage:hover {
 }
 
 .BtnScrollToBottomSection i {
-    color: #5d5d5d;
+    color: var(--BtnScrollToBottomSection__i--color);
     font-size: 155%;
 }
 
@@ -1295,21 +1299,20 @@ button.OptionMessage:hover {
     width: 100%;
     height: auto;
     white-space: nowrap;
-    background: #fff;
-    box-shadow: 0 -2px 7px rgba(85, 85, 85, 0.15);
+    background: var(--SuggestedMessagesSupChat__div_open--background);
+    box-shadow: 0 -2px 7px var(--SuggestedMessagesSupChat__div_open--boxshadow);
 }
 
 .ButtonToggleSuggestedMessages {
-    background: #ff8874 !important;
+    background: var(--BtnToggleSuggestedMessages--background) !important;
     border-radius: 8px 0 0 8px;
-    border: 1px solid #eee !important;
     padding-left: 7px;
     text-align: center;
     transition: all .2s;
 }
 
 .ButtonToggleSuggestedMessages i {
-    color: #fff;
+    color: var(--BtnToggleSuggestedMessages__i--color);
 }
 
 .ButtonToggleSuggestedMessages[state='close'] i {
@@ -1320,16 +1323,16 @@ button.OptionMessage:hover {
     border-radius: 14px;
     padding: 8px 30px;
     margin: 0 2px;
-    background: #fff !important;
+    background: var(--SuggestedMessage--background) !important;
     font-family: Vazir;
-    color: #f96265;
-    border: 1px solid #f96265 !important;
+    color: var(--SuggestedMessage--color);
+    border: 1px solid var(--SuggestedMessage--border) !important;
     font-size: 85%;
 }
 
 .SuggestedMessage:hover {
-    background: #f96265 !important;
-    color: #fff;
+    background: var(--SuggestedMessage--background-hover) !important;
+    color: var(--SuggestedMessage--color-hover);
 }
 
 

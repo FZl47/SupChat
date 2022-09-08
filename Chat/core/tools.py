@@ -301,3 +301,6 @@ def ListIsNone(List):
         return False
     except:
         return True
+
+def format_file(file):
+    return str(file).split('.')[-1]

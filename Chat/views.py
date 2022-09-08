@@ -8,10 +8,11 @@ from django.contrib.auth import logout, authenticate, login
 from django.db.models import Q, Count, F, Max
 from django.utils import timezone
 from Chat.core.tools import Send_Message_Notif
-from Chat.core.decorators.view import admin_authenticated
+from Chat.core.decorators.view import admin_authenticated, require_post_and_ajax
 from Chat.models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin
 from Chat.core.serializers import SerializerChat, SerializerSection, SerializerUser, SerializerAdminUser, SerializerMessageAudio
 from Chat.core.auth.view import getUser, getUserSession, createUser
+from Chat.core.tools import format_file
 
 
 
@@ -139,7 +140,7 @@ def adminViewSection(request, id, name):
     context['Chats'] = chats
     context['Filter_by'] = filter_by
     context['Url_Filter_by'] = urlFilterBy(filter_by)
-    context['ID_SECTION'] = section.id
+    # context['ID_SECTION'] = section.id
     context['SupChat'] = getSupChat()
     context['page_active'] = 'section'
     return render(request, 'Chat/Admin/admin-panel.html', context)
@@ -178,8 +179,9 @@ def transferChat(request):
         chat_id = data.get('chat-id') or 0
         admin_id = data.get('admin-id') or 0
         chat = ChatGroup.objects.filter(id=chat_id, admin_id=admin.id, isActive=True).first()
-        urlRedirect = reverse('SupChat:admin_panel_section', args=(chat.section_id, chat.section.title))
+        urlRedirectPanel = reverse('SupChat:admin_panel')
         if chat:
+            urlRedirectSection = reverse('SupChat:admin_panel_section', args=(chat.section_id, chat.section.title))
             admin_transfer = Admin.objects.filter(id=admin_id).first()
             if admin_transfer:
                 if admin_transfer.can_get_chat_transfered(chat):
@@ -192,11 +194,10 @@ def transferChat(request):
                     message_log_admin_transfer = " چتی از طرف ادمین با ایدی " + f"<b>{admin.id}</b>" + " و نام " + f"<b>{admin.get_full_name()}</b>" + " با ایدی " + f"<b>{chat.id}</b>" + " به شما انتقال پیدا کرد "
                     LogMessageAdmin.objects.create(title='انتقال چت به شما', message=message_log_admin_transfer,
                                                    admin=admin_transfer)
-                    return Send_Message_Notif('انتقال چت با موفقیت انجام شد', 'Success', RedirectTo=urlRedirect)
-
-            return Send_Message_Notif('ادمین برای انتقال چت یافت نشد', 'Error', RedirectTo=urlRedirect)
-        return Send_Message_Notif('چتی برای انتقال یافت نشد', 'Error', RedirectTo=urlRedirect)
-    return Send_Message_Notif('انتقال چت بسته است', 'Error', RedirectTo=urlRedirect)
+                    return Send_Message_Notif('انتقال چت با موفقیت انجام شد', 'Success', RedirectTo=urlRedirectSection)
+            return Send_Message_Notif('ادمین برای انتقال چت یافت نشد', 'Error', RedirectTo=urlRedirectSection)
+        return Send_Message_Notif('چتی برای انتقال یافت نشد', 'Error', RedirectTo=urlRedirectPanel)
+    return Send_Message_Notif('انتقال چت بسته است', 'Error', RedirectTo=urlRedirectPanel)
 
 
 # View
@@ -222,67 +223,53 @@ def adminSignOut(request):
     return redirect('/')
 
 # View
-@require_POST
+@require_post_and_ajax
 def getUserView(request):
     # POST and Ajax
-    if request.is_ajax():
-        context = {}
-        userDjango = request.user
-        if userDjango.is_authenticated == False:
-            userDjango = 0
-        user = User.objects.filter(user=userDjango).first() or getUserSession(request)
-        if user == None:
-            user = createUser()
-            context['user_created'] = True
-        else:
-            context['user_created'] = False
-        context['user'] = SerializerUser(user)
-        context['user']['session_key'] = user.session_key
-        return JsonResponse(context)
-    raise PermissionDenied
+    context = {}
+    userDjango = request.user
+    if userDjango.is_authenticated == False:
+        userDjango = 0
+    user = User.objects.filter(user=userDjango).first() or getUserSession(request)
+    if user == None:
+        user = createUser()
+        context['user_created'] = True
+    else:
+        context['user_created'] = False
+    context['user'] = SerializerUser(user)
+    context['user']['session_key'] = user.session_key
+    return JsonResponse(context)
 
 # View
+@require_post_and_ajax
 @admin_authenticated
-@require_POST
 def getAdminView(request):
     # POST and Ajax
-    if request.is_ajax():
-        context = {}
-        # userDjango     = request.user
-        # if userDjango.is_authenticated == False:
-        #     userDjango = 0
-        # admin = Admin.objects.filter(user=userDjango).first()
-        # if admin:
-        #     context['status'] = '200'
-        #     context['admin'] = SerializerAdminUser(admin)
-        #     return JsonResponse(context)
-        admin = request.admin
-        context['status'] = '200'
-        context['admin'] = SerializerAdminUser(admin)
-        return JsonResponse(context)
-    raise PermissionDenied
+    context = {}
+    admin = request.admin
+    context['status'] = '200'
+    context['admin'] = SerializerAdminUser(admin)
+    return JsonResponse(context)
 
-
+@require_post_and_ajax
 def getInfoChat(request):
-    if request.method == 'POST' and request.is_ajax():
-        context = {}
-        data = json.loads(request.body)
-        idSection = data.get('id-section') or 0
-        section = Section.objects.filter(id=idSection).first()
-        if section != None:
-            user = request.user
-            # lookupChat = Q(user=user,section=section) | Q(section__admin__user=user)
-            lookupChat = Q(user=user, section=section)
-            chat = ChatGroup.objects.filter(lookupChat).first()
-            chat = SerializerChat(chat)
-            context['user'] = {
-                'name': user.get_full_name()
-            }
-            context['chat'] = chat
-            context['status'] = '200'
-            return JsonResponse(context)
-        raise Http404
-    raise PermissionDenied
+    context = {}
+    data = json.loads(request.body)
+    idSection = data.get('id-section') or 0
+    section = Section.objects.filter(id=idSection).first()
+    if section != None:
+        user = request.user
+        lookupChat = Q(user=user, section=section)
+        chat = ChatGroup.objects.filter(lookupChat).first()
+        chat = SerializerChat(chat)
+        context['user'] = {
+            'name': user.get_full_name()
+        }
+        context['chat'] = chat
+        context['status'] = '200'
+        return JsonResponse(context)
+    raise Http404
+
 
 
 def get_chat(request, section_id, create=True):
@@ -317,37 +304,34 @@ def get_chat_admin(request, id_chat):
     raise PermissionDenied
 
 
-def format_file(file):
-    return str(file).split('.')[-1]
 
-
-@require_POST
+@require_post_and_ajax
 def voiceMessage(request):
-    if request.is_ajax():
-        data = request.POST
-        type_user = data.get('type-user') or None
-        section_id = data.get('section-id') or 0
-        id_chat = data.get('id-chat')
-        voice = request.FILES.get('voice') or None
-        voice_time = data.get('voice-time') or 0
-        if type_user and voice:
-            if format_file(voice) == 'mp3':
-                sender_name = None
-                chat = None
-                chat_is_created = False
-                if type_user == 'user':
-                    chat, chat_is_created = get_chat(request, section_id)
-                    sender_name = 'user'
-                else:
-                    chat = get_chat_admin(request, id_chat)
-                    sender_name = 'admin'
-                if chat:
-                    data_response = {}
-                    audio = AudioMessage.objects.create(chat=chat, sender=sender_name, audio=voice,
-                                                        audio_time=voice_time)
-                    audio_json = SerializerMessageAudio(audio)
-                    data_response['audio'] = audio_json
-                    data_response['sender_person'] = 'you'
-                    data_response['chat_is_created'] = chat_is_created
-                    return JsonResponse(data_response)
+    # POST and Ajax
+    data = request.POST
+    type_user = data.get('type-user') or None
+    section_id = data.get('section-id') or 0
+    id_chat = data.get('id-chat')
+    voice = request.FILES.get('voice') or None
+    voice_time = data.get('voice-time') or 0
+    if type_user and voice:
+        if format_file(voice) == 'mp3':
+            sender_name = None
+            chat = None
+            chat_is_created = False
+            if type_user == 'user':
+                chat, chat_is_created = get_chat(request, section_id)
+                sender_name = 'user'
+            else:
+                chat = get_chat_admin(request, id_chat)
+                sender_name = 'admin'
+            if chat:
+                data_response = {}
+                audio = AudioMessage.objects.create(chat=chat, sender=sender_name, audio=voice,
+                                                    audio_time=voice_time)
+                audio_json = SerializerMessageAudio(audio)
+                data_response['audio'] = audio_json
+                data_response['sender_person'] = 'you'
+                data_response['chat_is_created'] = chat_is_created
+                return JsonResponse(data_response)
     raise PermissionDenied

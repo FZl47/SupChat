@@ -192,6 +192,9 @@ function ShowNotificationMessage(Text, Type, Timer = 5000, LevelOfNecessity = 3)
     new ShowNotificationMessage_Model_SUPCHAT(Text, Type, Timer, LevelOfNecessity)
 }
 
+function GoToUrl(href) {
+    window.location.href = href
+}
 
 function get_protocol_socket() {
     if (location.protocol == 'http:') {
@@ -585,18 +588,20 @@ class SupChat {
         for (let MessagesSupChat of allMessagesSupChat) {
             let section_id = MessagesSupChat.getAttribute('section-id') || 0
             let btn_scroll_to_bottom = document.querySelector(`#BtnScrollToBottomSection-${section_id}`)
-            btn_scroll_to_bottom.addEventListener('click', function () {
-                Section.get_section_by_id(section_id).scrollToBottom()
-            })
-            MessagesSupChat.addEventListener('scroll', function (e) {
-                let height = e.target.offsetHeight
-                let scrollVal = e.target.scrollTop
-                if (scrollVal < (height)) {
-                    btn_scroll_to_bottom.setAttribute('state', 'active')
-                } else {
-                    btn_scroll_to_bottom.setAttribute('state', 'hide')
-                }
-            })
+            if (btn_scroll_to_bottom) {
+                btn_scroll_to_bottom.addEventListener('click', function () {
+                    Section.get_section_by_id(section_id).scrollToBottom()
+                })
+                MessagesSupChat.addEventListener('scroll', function (e) {
+                    let height = e.target.offsetHeight
+                    let scrollVal = e.target.scrollTop
+                    if (scrollVal < (height)) {
+                        btn_scroll_to_bottom.setAttribute('state', 'active')
+                    } else {
+                        btn_scroll_to_bottom.setAttribute('state', 'hide')
+                    }
+                })
+            }
         }
     }
 

@@ -3,7 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="87823259-0142-41f3-b17d-acbad3750530" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/decorators/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/core/decorators/view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/core/tools.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/admin-panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/templates/Chat/Admin/admin-panel.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/base.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/supchat/css/theme/default.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/theme/default.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/js/base.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/base.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,9 +38,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="CSS File" />
         <option value="HTML File" />
         <option value="Python Script" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -200,7 +208,7 @@
       <workItem from="1652638017803" duration="22000" />
       <workItem from="1652638063180" duration="1144000" />
       <workItem from="1652749016107" duration="3705000" />
-      <workItem from="1662638941733" duration="29000" />
+      <workItem from="1662638941733" duration="15736000" />
     </task>
     <servers />
   </component>
@@ -208,33 +216,9 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="414" y="175" width="1092" height="721" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1650144790630">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1662663584344">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="414" y="175" width="1092" height="721" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1650144790630" />
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1652410689335">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1652410689335" />
-    <state x="740" y="261" key="FileChooserDialogImpl" timestamp="1652761234619">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="740" y="261" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1652761234619" />
-    <state x="461" y="162" key="SettingsEditor" timestamp="1650144788017">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1650144788017" />
-    <state width="498" height="446" key="SwitcherDM" timestamp="1650047440025">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="498" height="446" key="SwitcherDM/0.0.1920.1040@0.0.1920.1040" timestamp="1650047440025" />
-    <state x="578" y="164" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1651485900576">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="578" y="164" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1651485900576" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1652420759737">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1652420759737" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1662663584344" />
   </component>
 </project>

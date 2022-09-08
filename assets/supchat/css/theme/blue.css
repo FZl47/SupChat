@@ -5,32 +5,32 @@
 */
 :root {
     /* Loading */
-    --Loading--color: rgb(35, 227, 159);
+    --Loading--color: rgb(46, 143, 242);
     /* SupChat */
-    --SvgSupChat__text__stroke: #10e1c9;
+    --SvgSupChat__text__stroke: #18ebdc;
     --SupChat--border: #eee;
     --SupChat--boxshadow: rgba(170, 170, 170, 0.2);
-    --BtnOpenSupChat--background: #19ffdd;
+    --BtnOpenSupChat--background: #22348f;
     --BtnOpenSupChat--color: #fff;
     --BtnOpenSupChat--boxshadow: rgba(175, 175, 175, 0.3);
     --ContainerSectionButton__header--color: #333;
-    --ContainerSectionButton__header--borderbottom: #eee;
+    --ContainerSectionButton__header--borderbottom: none;
     --SectionButton--border: #f96265;
     --SectionButton--boxshadow: rgba(188, 188, 188, 0.2);
     --SectionButton--color: #f96265;
     --SectionButton-hover--background: #f96265;
     --SectionButton-hover--color: #fff;
-    --HeaderSupChat--background: linear-gradient(180deg, rgba(47, 255, 242, 0.2), #ffffff);
+    --HeaderSupChat--background: rgb(34, 52, 143);
     --HeaderSupChat--borderbottom: #f4f4f4;
-    --HeaderSupChat--boxshadow: rgba(238, 238, 238, 0.6);
-    --ContainerStatusUser--background: #fff;
-    --ContainerStatusUser--border: #fafafa;
-    --ContainerStatusUser--boxshadow: rgba(208, 224, 211, 0.2);
-    --StatusUserChat--color: #666;
+    --HeaderSupChat--boxshadow: red;
+    --ContainerStatusUser--background: none;
+    --ContainerStatusUser--border: none;
+    --ContainerStatusUser--boxshadow: none;
+    --StatusUserChat--color: #CCD1E4;
     --ContainerStatusUser__span--background_online: #1af1ab;
     --ContainerStatusUser__span--background_offline: #ff5751;
-    --TitleSupportChat--color: #ff734a;
-    --ContainerChatMessagesSupChat__p--color: #666;
+    --TitleSupportChat--color: #FEECE9;
+    --ContainerChatMessagesSupChat__p--color: #CCD1E4;
     --MessageSupChat-webkit-scrollbar-track--background: #f1f1f1;
     --MessageSupChat-webkit-scrollbar-thumb--background: rgb(255, 163, 154);
     --MessageSupChat-webkit-scrollbar-thumb--background-hover: #eb9289;
@@ -70,5 +70,5 @@
 }
 
 #MainSupChat{
-    /*background: url image background;*/
+    background: rgb(41, 65, 192) !important;
 }

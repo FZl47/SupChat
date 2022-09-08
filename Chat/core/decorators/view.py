@@ -1,4 +1,5 @@
 from django.shortcuts import redirect
+from django.core.exceptions import PermissionDenied
 from Chat.models import Admin
 
 def admin_authenticated(func):
@@ -20,4 +21,19 @@ def admin_authenticated(func):
         return redirect('SupChat:admin_login')
         # raise PermissionDenied
 
+    return wrapper
+
+def require_ajax(func):
+    def wrapper(request,*args,**kwargs):
+        if request.is_ajax():
+            return func(request,*args,**kwargs)
+        raise PermissionDenied
+    return wrapper
+
+
+def require_post_and_ajax(func):
+    def wrapper(request,*args,**kwargs):
+        if request.method == 'POST' and request.is_ajax():
+            return func(request,*args,**kwargs)
+        raise PermissionDenied
     return wrapper

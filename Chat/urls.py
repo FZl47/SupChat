@@ -1,6 +1,6 @@
 from django.urls import path
-from . import consumers
-from . import views
+from Chat.core import consumers
+from Chat import views
 
 app_name = 'Chat'
 def pathWs(url,handler):

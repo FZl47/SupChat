@@ -77,7 +77,8 @@ def Set_Cookie(response, key, value, days_expire=7):
     )
     return response
 
-def Set_Cookie_Functionality(Text,Type,Timer='7000',LevelOfNecessity='3',RedirectTo=None):
+
+def Send_Message_Notif(Text,Type,Timer='7000',LevelOfNecessity='3',RedirectTo=None):
     if RedirectTo == None:
         Res = HttpResponse('<script>window.location=document.referrer;</script>')
     else:

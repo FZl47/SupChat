@@ -21,14 +21,19 @@
 <link rel="stylesheet" href="{% static 'supchat/font_awesome/css/all.css' %}">
 <link rel="stylesheet" href="{% static 'supchat/css/base.css' %}">
 <link rel="stylesheet" href="{% static 'supchat/audio_simple/style.css' %}">
+{# Theme File #}
+<link rel="stylesheet" href="{% static SupChat.style.theme %}">
 <script src="{% static 'supchat/audio_simple/js.js' %}"></script>
 <button id="ButtonOpenSupChat">
     <i class="fa fa-comments"></i>
 </button>
+
 <div id="SupChat" state="close">
     <div id="ContainerBaseSupChat">
         <button id="BtnCloseSupChat">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z"/>
+            </svg>
         </button>
         <div id="ContainerSectionsButton" class="ContainerSupChat">
             <header>
@@ -78,6 +83,21 @@
                          section-title="{{ Section.title }}" class="MessagesSupChat">
                         {% for Message in Section|get_messages_sup_chat_by_user:request %}
                             {% include 'Chat/User/message-chat-for-user.html' with Message=Message %}
+                        {% empty %}
+                            {% if SupChat.config.default_message_is_active %}
+                                <div class="MessageSupChat DefaultMessage" sender-message="other">
+                                    <div class="ContentMessage">
+                                        <header>
+                                            <div>
+                                                <p class="NameSenderMessage">{{ SupChat.title }}</p>
+                                            </div>
+                                        </header>
+                                        <main>
+                                            <pre data-message="text">{{ SupChat.config.default_message }}</pre>
+                                        </main>
+                                    </div>
+                                </div>
+                            {% endif %}
                         {% endfor %}
                         {% with Section.suggestedmessage_set.all as SuggesMessages %}
                             {% if SuggesMessages|ListIsNone == False %}
@@ -96,6 +116,9 @@
                                 </div>
                             {% endif %}
                         {% endwith %}
+                        <div id="BtnScrollToBottomSection-{{ Section.id }}" class="BtnScrollToBottomSection" >
+                            <i class="fas fa-arrow-circle-down"></i>
+                        </div>
                     </div>
                 {% endfor %}
             </main>
@@ -120,11 +143,15 @@
                     <div>
                         <button button-cancel-voice-supchat
                                 onclick="SUP_CHAT.voiceRecordedCancel()">
-                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z"/>
+                            </svg>
                         </button>
                         <button button-send-voice-supchat
                                 onclick="SUP_CHAT.sendVoiceRecorded()">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -137,10 +164,14 @@
                 </div>
                 <div id="BtnsSendMessageFooterSupChat">
                     <button id="ButtonSendMessageTextSupChat">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"/>
+                        </svg>
                     </button>
                     <button id="ButtonRecordVoiceSupChat">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,15a4,4,0,0,0,4-4V5A4,4,0,0,0,8,5v6A4,4,0,0,0,12,15ZM10,5a2,2,0,0,1,4,0v6a2,2,0,0,1-4,0Zm10,6a1,1,0,0,0-2,0A6,6,0,0,1,6,11a1,1,0,0,0-2,0,8,8,0,0,0,7,7.93V21H9a1,1,0,0,0,0,2h6a1,1,0,0,0,0-2H13V18.93A8,8,0,0,0,20,11Z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12,15a4,4,0,0,0,4-4V5A4,4,0,0,0,8,5v6A4,4,0,0,0,12,15ZM10,5a2,2,0,0,1,4,0v6a2,2,0,0,1-4,0Zm10,6a1,1,0,0,0-2,0A6,6,0,0,1,6,11a1,1,0,0,0-2,0,8,8,0,0,0,7,7.93V21H9a1,1,0,0,0,0,2h6a1,1,0,0,0,0-2H13V18.93A8,8,0,0,0,20,11Z"/>
+                        </svg>
                     </button>
                 </div>
             </footer>

@@ -5,8 +5,10 @@ from asgiref.sync import async_to_sync
 from Chat.core.decorators.consumer import user_authenticated, admin_authenticated
 from Chat.core.auth.consumer import getUserConsumer, getUserSessionConsumer
 from Chat.core.tools import RandomString
-from Chat.core.serializers import SerializerMessageText, SerializerChatJSON, SerializerMessageAudio, SerializerMessageTextEdited, SerializerMessageDeleted
-from .models import Message, TextMessage, Section, ChatGroup, User, Admin
+from Chat.core.serializers import (SerializerMessageText, SerializerChatJSON,
+                                   SerializerMessageAudio, SerializerMessageTextEdited,
+                                   SerializerMessageDeleted)
+from Chat.models import Message, TextMessage, Section, ChatGroup, User, Admin
 import json
 import random
 
@@ -406,7 +408,7 @@ class ChatUser(ChatBase, WebsocketConsumer):
                         }
                     )
                 except:
-                    # No Chat yet
+                    # Not Chat yet
                     pass
 
     def createMessage(self, text, id_section):
@@ -576,17 +578,14 @@ class ChatAdmin(ChatBase, WebsocketConsumer):
                         }
                     )
                 except:
-                    # No Chat yet
+                    # Not Chat yet
                     pass
 
     def createMessage(self, text):
-        # try:
         section = self.section
         chat = self.chat
         text_message = TextMessage.objects.create(text=text, chat=chat, sender='admin')
         return text_message
-        # except:
-        #     pass
 
 
 

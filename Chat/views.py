@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import logout, authenticate, login
 from django.db.models import Q, Count, F, Max
 from django.utils import timezone
-from Chat.core.tools import Set_Cookie_Functionality
+from Chat.core.tools import Send_Message_Notif
 from Chat.core.decorators.view import admin_authenticated
 from Chat.models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin
 from Chat.core.serializers import SerializerChat, SerializerSection, SerializerUser, SerializerAdminUser, SerializerMessageAudio
@@ -53,10 +53,6 @@ def filter_chats(request, chats):
 
     elif filter_by == 'at-one-day':
         dateTime = dateTimeNow - timezone.timedelta(days=1)
-        return filter_by_date(dateTime), filter_by
-
-    elif filter_by == 'at-one-week':
-        dateTime = dateTimeNow - timezone.timedelta(weeks=1)
         return filter_by_date(dateTime), filter_by
 
     elif filter_by == 'at-one-week':
@@ -112,8 +108,8 @@ def adminViewInfoUpdate(request):
         admin.image = picture
         admin.user.save()
         admin.save()
-        return Set_Cookie_Functionality('اطلاعات شما با موفقیت اپدیت شدند', 'Success')
-    return Set_Cookie_Functionality('لطفا فیلد هارا به درستی پر نمایید', 'Error')
+        return Send_Message_Notif('اطلاعات شما با موفقیت اپدیت شدند', 'Success')
+    return Send_Message_Notif('لطفا فیلد هارا به درستی پر نمایید', 'Error')
 
 
 @admin_authenticated
@@ -176,7 +172,7 @@ def adminViewChat(request, id, name):
 @require_POST
 def transferChat(request):
     supchat = SupChat.objects.first()
-    if supchat.config.transferChatIsActive:
+    if supchat.config.transfer_chat_is_active:
         admin = request.admin
         data = request.POST
         chat_id = data.get('chat-id') or 0
@@ -196,11 +192,11 @@ def transferChat(request):
                     message_log_admin_transfer = " چتی از طرف ادمین با ایدی " + f"<b>{admin.id}</b>" + " و نام " + f"<b>{admin.get_full_name()}</b>" + " با ایدی " + f"<b>{chat.id}</b>" + " به شما انتقال پیدا کرد "
                     LogMessageAdmin.objects.create(title='انتقال چت به شما', message=message_log_admin_transfer,
                                                    admin=admin_transfer)
-                    return Set_Cookie_Functionality('انتقال چت با موفقیت انجام شد', 'Success', RedirectTo=urlRedirect)
+                    return Send_Message_Notif('انتقال چت با موفقیت انجام شد', 'Success', RedirectTo=urlRedirect)
 
-            return Set_Cookie_Functionality('ادمین برای انتقال چت یافت نشد', 'Error', RedirectTo=urlRedirect)
-        return Set_Cookie_Functionality('چتی برای انتقال یافت نشد', 'Error', RedirectTo=urlRedirect)
-    return Set_Cookie_Functionality('انتقال چت بسته است', 'Error', RedirectTo=urlRedirect)
+            return Send_Message_Notif('ادمین برای انتقال چت یافت نشد', 'Error', RedirectTo=urlRedirect)
+        return Send_Message_Notif('چتی برای انتقال یافت نشد', 'Error', RedirectTo=urlRedirect)
+    return Send_Message_Notif('انتقال چت بسته است', 'Error', RedirectTo=urlRedirect)
 
 
 # View
@@ -218,7 +214,7 @@ def adminLogin(request):
             if admin != None:
                 login(request, user)
                 return redirect('SupChat:admin_panel')
-        return Set_Cookie_Functionality('ادمینی با این مشخصات یافت نشد', 'Error')
+        return Send_Message_Notif('ادمینی با این مشخصات یافت نشد', 'Error')
 
 # View
 def adminSignOut(request):

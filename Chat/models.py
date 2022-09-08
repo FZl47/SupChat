@@ -29,8 +29,14 @@ class SupChat(models.Model):
 
 
 class SupChatStyle(models.Model):
-    backgroundChat = models.ImageField(upload_to=upload_image_background_chat, null=True, blank=True)
+    THEME_OPTIONS = (
+        # Src file css - name
+        ('/supchat/css/theme/default.css','default'),
+        ('/supchat/css/theme/blue.css','blue'),
+    )
 
+    background_chat = models.ImageField(upload_to=upload_image_background_chat, null=True, blank=True)
+    theme = models.CharField(choices=THEME_OPTIONS,max_length=200,default=THEME_OPTIONS[0][0])
     def __str__(self):
         try:
             return self.supchat_set.first().title
@@ -39,13 +45,15 @@ class SupChatStyle(models.Model):
 
     def get_background_chat(self):
         try:
-            return self.backgroundChat.url
+            return self.background_chat.url
         except:
             return static('supchat/images/default/backgroundChat.png')
 
 
 class SupChatConfig(models.Model):
-    transferChatIsActive = models.BooleanField(default=True)
+    transfer_chat_is_active = models.BooleanField(default=True)
+    default_message_is_active = models.BooleanField(default=True)
+    default_message = models.CharField(max_length=200,null=True,blank=True,default=""" پشتیبانی سایت ما در کوتاه ترین زمان ممکن پاسخگوی شما دوست عزیز است لطفا پیام خود را بگذارید .""")
 
     def __str__(self):
         try:

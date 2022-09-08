@@ -24,7 +24,7 @@ function SetCookie(Name, Value, ExpireDay = 30, Path = '/') {
 }
 
 function GetCookieFunctionality_ShowNotification() {
-    setTimeout(function() {
+    setTimeout(function () {
         let AllCookies = document.cookie.split(';')
         let Cookie_Key
         let Cookie_Val
@@ -47,7 +47,8 @@ function GetCookieFunctionality_ShowNotification() {
             Type = Cookie_Val.split('~')[1] || 'Warning'
             Timer = Cookie_Val.split('~')[2] || 8000
             LevelOfNecessity = Cookie_Val.split('~')[3] || 2
-        } catch (e) {}
+        } catch (e) {
+        }
         if (Cookie_Key == 'Functionality_N' || Cookie_Key == ' Functionality_N' || Cookie_Key == ' Functionality_N ') {
             let TextResult = ConvertCharEnglishToPersianDecode(Text)
             ShowNotificationMessage(TextResult, Type, Timer, LevelOfNecessity)
@@ -112,7 +113,8 @@ function ConvertCharPersianToEnglishDecode(Text) {
     for (let i of Text) {
         try {
             Res += Dict_Char_Persian_English[i]
-        } catch (e) {}
+        } catch (e) {
+        }
     }
     return Res
 }
@@ -165,11 +167,11 @@ class ShowNotificationMessage_Model_SUPCHAT {
         document.body.appendChild(ContainerNotifications)
         this.ContainerMessage = ContainerMessage
         let Index_Notification = this.Index_Notification
-        setTimeout(function() {
+        setTimeout(function () {
             RemoveNotification_Func(Index_Notification)
         }, Timer)
 
-        BtnClose.onclick = function(e) {
+        BtnClose.onclick = function (e) {
             let Index_Notification = e.target.getAttribute('Index_Notification')
             RemoveNotification_Func(Index_Notification)
         }
@@ -180,14 +182,14 @@ class ShowNotificationMessage_Model_SUPCHAT {
 function RemoveNotification_Func(Index) {
     let Instance = LIST_ALL_NOTIFICATIONS_INSTANCE_SUPCHAT[Index]
     Instance.ContainerMessage.classList.add('Notification_Removed')
-    setTimeout(function() {
+    setTimeout(function () {
         Instance.ContainerMessage.remove()
         delete Instance
     }, 300)
 }
 
 function ShowNotificationMessage(Text, Type, Timer = 5000, LevelOfNecessity = 3) {
-    new ShowNotificationMessage_Model_SUPCHAT (Text, Type, Timer, LevelOfNecessity)
+    new ShowNotificationMessage_Model_SUPCHAT(Text, Type, Timer, LevelOfNecessity)
 }
 
 
@@ -516,15 +518,27 @@ let ALL_SECTIONS_SUP_CHAT = []
 class Section {
     constructor(data) {
         ALL_SECTIONS_SUP_CHAT.push(this)
-            // This === this : To avoid conflict with events
+        // This === this : To avoid conflict with events
         let This = this
         this.id = data.id
         this.title = data.title
         this.container = data.container
         this.btn = document.getElementById(`SectionButton-${this.id}`)
-        this.btn.addEventListener('click', function() {
+        this.btn.addEventListener('click', function () {
             SUP_CHAT.setInfoSectionForChat(This)
         })
+    }
+
+    static get_section_by_id(id) {
+        return ALL_SECTIONS_SUP_CHAT.find(function (section) {
+            if (section.id == id) {
+                return section
+            }
+        })
+    }
+
+    scrollToBottom() {
+        this.container.scroll({top: this.container.scrollHeight, behavior: 'smooth'})
     }
 }
 
@@ -560,13 +574,34 @@ class SupChat {
 
             // Run init functions
             this.setEventButtonRecordVoice()
+            this.setEventScrollContainerMessages()
             this.setUIForTagAudios()
 
         }
     }
 
+    setEventScrollContainerMessages() {
+        let allMessagesSupChat = document.querySelectorAll('.MessagesSupChat')
+        for (let MessagesSupChat of allMessagesSupChat) {
+            let section_id = MessagesSupChat.getAttribute('section-id') || 0
+            let btn_scroll_to_bottom = document.querySelector(`#BtnScrollToBottomSection-${section_id}`)
+            btn_scroll_to_bottom.addEventListener('click', function () {
+                Section.get_section_by_id(section_id).scrollToBottom()
+            })
+            MessagesSupChat.addEventListener('scroll', function (e) {
+                let height = e.target.offsetHeight
+                let scrollVal = e.target.scrollTop
+                if (scrollVal < (height)) {
+                    btn_scroll_to_bottom.setAttribute('state', 'active')
+                } else {
+                    btn_scroll_to_bottom.setAttribute('state', 'hide')
+                }
+            })
+        }
+    }
+
     setUIForTagAudios() {
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             let audios_tag = document.getElementById('SupChat').querySelectorAll('audio')
             for (let audio_tag of audios_tag) {
                 new AudioSimple(audio_tag)
@@ -578,7 +613,7 @@ class SupChat {
     createConnection(loading = true) {
         // This === this : To avoid conflict with events
         let This = this
-            // Socket
+        // Socket
         if (loading) {
             this.loadingEffect('Show')
         }
@@ -588,17 +623,17 @@ class SupChat {
             this.Socket = new WebSocket(get_protocol_socket() + window.location.host + `/ws/chat/admin/${This.ID_CHAT}/`)
         }
 
-        this.Socket.onopen = function() {
+        this.Socket.onopen = function () {
             if (This.TYPE_USER == 'admin') {
                 This.seenMessage(This.ID_SECTION)
                 This.getLastSeen(This.ID_SECTION)
             }
-            setTimeout(function() {
+            setTimeout(function () {
                 This.loadingEffect('Hide')
             }, 100)
         }
 
-        this.Socket.onmessage = function(e) {
+        this.Socket.onmessage = function (e) {
             let _data = JSON.parse(e.data)
             let type_response = _data.type_response
             if (type_response == 'response_send_message_text') {
@@ -627,7 +662,8 @@ class SupChat {
                     if (This.SECTION_ACTIVE.id == _data.id_section) {
                         This.setLastSeen(_data)
                     }
-                } catch (e) {}
+                } catch (e) {
+                }
             } else if (type_response == 'response_create_chat') {
                 let id_section = _data.section.id
                 This.getLastSeen(id_section)
@@ -637,19 +673,19 @@ class SupChat {
             }
         }
 
-        this.Socket.onclose = function(e) {
+        this.Socket.onclose = function (e) {
             let status = e.code
             This.loadingEffect('Show')
-                // if (status != 1000 && status != 1011 && status != 1006 && status != 4003) {
+            // if (status != 1000 && status != 1011 && status != 1006 && status != 4003) {
             This.tryCreateConnection()
-                // }
+            // }
         }
     }
 
     tryCreateConnection() {
         let This = this
         This.loadingEffect('Show')
-        let timerTryConnection = setTimeout(function() {
+        let timerTryConnection = setTimeout(function () {
             // Limit Create Connection
             if (This.COUNT_TRY_CONNECTION <= This.LIMIT_COUNT_TRY_CONNECTION) {
                 This.COUNT_TRY_CONNECTION += 1
@@ -663,12 +699,13 @@ class SupChat {
     closeConnection() {
         try {
             this.Socket.close(1000)
-        } catch (e) {}
+        } catch (e) {
+        }
     }
 
     // Get Status and Last Seen and Set
     getLastSeen(id_section) {
-        let data = {...this.INFO_SEND }
+        let data = {...this.INFO_SEND}
         data['type_send'] = 'get_last_seen_status'
         data['id_section'] = id_section
         this.Socket.send(JSON.stringify(data))
@@ -683,7 +720,8 @@ class SupChat {
             let is_online = data.is_online
             try {
                 clearInterval(This.TIMER_UPDATE_LAST_SEEN)
-            } catch (e) {}
+            } catch (e) {
+            }
             if (is_online) {
                 this.StatusUserChat.innerHTML = 'انلاین'
                 this.StatusUserChat.parentNode.setAttribute('status', 'online')
@@ -729,7 +767,8 @@ class SupChat {
         let This = this
         try {
             clearInterval(This.TIMER_UPDATE_LAST_SEEN)
-        } catch (e) {}
+        } catch (e) {
+        }
         if (This.TYPE_USER == 'user') {
             this.StatusUserChat.innerText = 'در هر لحظه پاسخگوی شما هستیم'
             this.StatusUserChat.className = ''
@@ -808,7 +847,7 @@ class SupChat {
 
     // Seen Message
     seenMessage(id_section) {
-        let data = {...this.INFO_SEND }
+        let data = {...this.INFO_SEND}
         data['type_send'] = 'seen_message'
         data['id_section'] = id_section
         this.Socket.send(JSON.stringify(data))
@@ -837,10 +876,11 @@ class SupChat {
         let This = this
         if (State == 'Show') {
             this.loadingEffect('Hide')
-            setTimeout(function() {
+            setTimeout(function () {
                 try {
                     document.getElementById('ContainerLoadingEffect').remove()
-                } catch (e) {}
+                } catch (e) {
+                }
                 let ContainerLoading = document.createElement('div')
                 let CircleLoading = document.createElement('div')
                 ContainerLoading.id = 'ContainerLoadingEffect'
@@ -855,7 +895,8 @@ class SupChat {
                 for (let i of document.querySelectorAll('.ContainerLoadingEffect')) {
                     i.remove()
                 }
-            } catch (e) {}
+            } catch (e) {
+            }
         }
     }
 
@@ -865,19 +906,19 @@ class SupChat {
 
         function __Redirect__(response) {
             if (response.__Redirect__ == 'True') {
-                setTimeout(function() {
+                setTimeout(function () {
                     window.location.href = response.__RedirectURL__
                 }, parseInt(response.__RedirectAfter__ || 0))
             }
         }
 
         if (Success == undefined) {
-            Success = function(response) {
+            Success = function (response) {
                 __Redirect__(response)
             }
         }
         if (Failed == undefined) {
-            Failed = function(response) {
+            Failed = function (response) {
                 // ShowNotificationMessage('ارتباط با سرور بر قرار نشد ', 'Error', 30000, 2)
                 This.loadingEffect('Show')
             }
@@ -890,17 +931,17 @@ class SupChat {
             headers: {
                 'X-CSRFToken': window.CSRF_TOKEN
             },
-            success: function(response) {
+            success: function (response) {
                 __Redirect__(response)
                 This.loadingEffect('Hide')
                 Success(response)
             },
-            failed: function(response) {
+            failed: function (response) {
                 __Redirect__(response)
                 This.loadingEffect('Hide')
                 Failed(response)
             },
-            error: function(response) {
+            error: function (response) {
                 __Redirect__(response)
                 This.loadingEffect('Hide')
                 Failed(response)
@@ -914,13 +955,14 @@ class SupChat {
         let This = this
         try {
             clearTimeout(This.TIMER_EFFECT_IS_TYPING)
-        } catch (e) {}
+        } catch (e) {
+        }
         if (!This.EFFECT_IS_TYPING_SENDED) {
             This.sendStateTyping(true)
             This.EFFECT_IS_TYPING_SENDED = true
         }
 
-        This.TIMER_EFFECT_IS_TYPING = setTimeout(function() {
+        This.TIMER_EFFECT_IS_TYPING = setTimeout(function () {
             This.EFFECT_IS_TYPING_SENDED = false
             This.sendStateTyping(false)
         }, 2000)
@@ -943,7 +985,8 @@ class SupChat {
             if (mouseTimer) window.clearTimeout(mouseTimer);
             try {
                 This.recordVoiceStop()
-            } catch (e) {}
+            } catch (e) {
+            }
         }
 
         function recordVoiceMouseHold() {
@@ -982,17 +1025,17 @@ class SupChat {
     createObjcetRecordVoice() {
         let Footer = this.FooterSupChat
         let This = this
-        let audioIN = { audio: true };
+        let audioIN = {audio: true};
         This.recordVoiceStop()
         navigator.mediaDevices.getUserMedia(audioIN)
-            .then(function(mediaStreamObj) {
+            .then(function (mediaStreamObj) {
 
                 This.VOICE_RECORDER = new MediaRecorder(mediaStreamObj);
                 let VoiceRecorder = This.VOICE_RECORDER
                 VoiceRecorder.start()
-                VoiceRecorder.onstart = function(e) {
+                VoiceRecorder.onstart = function (e) {
                     // Update per 1 sec
-                    This.TIMER_TIME_RECORDED_VOICE = setInterval(function() {
+                    This.TIMER_TIME_RECORDED_VOICE = setInterval(function () {
                         This.TIME_RECORDED_VOICE += 1
                         This.setTimeRecordedVoice(This.TIME_RECORDED_VOICE)
                     }, 1000)
@@ -1000,16 +1043,16 @@ class SupChat {
                     This.setElementFooterSupChat('recording-voice')
                 }
 
-                VoiceRecorder.ondataavailable = function(ev) {
+                VoiceRecorder.ondataavailable = function (ev) {
                     dataArray.push(ev.data);
                 }
 
                 let dataArray = []
-                VoiceRecorder.onstop = function(ev) {
+                VoiceRecorder.onstop = function (ev) {
                     clearInterval(This.TIMER_TIME_RECORDED_VOICE)
                     if (This.TIME_RECORDED_VOICE > 0) {
                         This.setElementFooterSupChat('voice-send-or-cancel')
-                        let audioData = new Blob(dataArray, { 'type': 'audio/mp3' });
+                        let audioData = new Blob(dataArray, {'type': 'audio/mp3'});
                         audioData = new File([audioData], 'voice.mp3')
                         This.VOICE_RECORDER.voice = audioData
                         dataArray = []
@@ -1020,12 +1063,13 @@ class SupChat {
                         for (let i of this.VOICE_RECORDER.stream.getTracks()) {
                             i.stop()
                         }
-                    } catch (e) {}
+                    } catch (e) {
+                    }
                 }
-            }).catch(function(err) {
-                console.log(err.name, err.message);
-                // throw err
-            });
+            }).catch(function (err) {
+            console.log(err.name, err.message);
+            // throw err
+        });
     }
 
     recordVoiceStart() {
@@ -1039,7 +1083,8 @@ class SupChat {
                 i.stop()
             }
             this.VOICE_RECORDER.stop()
-        } catch (e) {}
+        } catch (e) {
+        }
     }
 
     voiceRecordedCancel() {
@@ -1075,7 +1120,7 @@ class SupChat {
                 headers: {
                     'X-CSRFToken': window.CSRF_TOKEN
                 },
-                success: function(response) {
+                success: function (response) {
                     This.voiceRecordedSended()
                     new AudioMessage(response)
                     let data = response.audio
@@ -1084,7 +1129,7 @@ class SupChat {
                     data['chat_is_created'] = response.chat_is_created
                     This.Socket.send(JSON.stringify(data))
                 },
-                error: function(err) {
+                error: function (err) {
                     throw err
                 }
             })
@@ -1098,7 +1143,7 @@ class SupChat {
         if (text.trim() != '') {
             ButtonSendMessageTextSupChat.setAttribute('active', 'true')
             ButtonSendMessageTextSupChat.click()
-                // SUP_CHAT.isTypingInput()
+            // SUP_CHAT.isTypingInput()
         }
     }
 
@@ -1126,15 +1171,15 @@ class ChatUser extends SupChat {
     constructor() {
         super('user');
         this.User = null
-            // Get User
-            // Create Connection
+        // Get User
+        // Create Connection
         this.getInfoUser()
     }
 
     // Get User
     getInfoUser() {
         let This = this
-        this.SendAjax('/sup-chat/get-info-user', {}, 'POST', function(response) {
+        this.SendAjax('/sup-chat/get-info-user', {}, 'POST', function (response) {
             This.User = response.user
             if (response.user_created == true) {
                 SetCookie('session_key_user_sup_chat', response.user.session_key, 99999)
@@ -1256,7 +1301,7 @@ class ChatUser extends SupChat {
 
     // Set effect Typing...
     sendStateTyping(is_typing) {
-        let data = {...this.INFO_SEND }
+        let data = {...this.INFO_SEND}
         data['type_send'] = 'effect_is_typing'
         data['id_section'] = this.SECTION_ACTIVE.id
         data['is_typing'] = is_typing
@@ -1295,7 +1340,7 @@ class ChatAdmin extends SupChat {
     // Get User
     getInfoUser() {
         let This = this
-        this.SendAjax('/sup-chat/get-info-admin', {}, 'POST', function(response) {
+        this.SendAjax('/sup-chat/get-info-admin', {}, 'POST', function (response) {
             if (response.status == '200') {
                 This.User = response.admin
             }
@@ -1304,7 +1349,7 @@ class ChatAdmin extends SupChat {
 
     // Set effect Typing...
     sendStateTyping(is_typing) {
-        let data = {...this.INFO_SEND }
+        let data = {...this.INFO_SEND}
         data['type_send'] = 'effect_is_typing'
         data['id_section'] = this.ID_SECTION
         data['is_typing'] = is_typing
@@ -1338,11 +1383,11 @@ class ChatAdminSection {
         let Socket = new WebSocket(get_protocol_socket() + window.location.host + `/ws/section/admin/${this.ID_SECTION}/`)
         this.Socket = Socket
 
-        Socket.onopen = function(e) {
+        Socket.onopen = function (e) {
 
         }
 
-        Socket.onmessage = function(e) {
+        Socket.onmessage = function (e) {
             let _data = JSON.parse(e.data)
             let type_response = _data.type_response
             if (type_response == 'response_send_message_text') {
@@ -1354,7 +1399,7 @@ class ChatAdminSection {
             }
         }
 
-        Socket.onclose = function() {
+        Socket.onclose = function () {
 
         }
     }
@@ -1382,7 +1427,8 @@ class ChatMessageSection {
         // Remove Chat if exists and Create new Chat Element
         try {
             document.querySelector(`#ChatSection-${this.chat_id}`).remove()
-        } catch (e) {}
+        } catch (e) {
+        }
 
         // Create Chat Element
         this.createChatMessage()
@@ -1480,7 +1526,8 @@ class ChatMessageSection {
             if (window.SUP_CHAT_CONFIG.NOTIFICATION_STATE == 'enabled' && Notification.permission == 'granted') {
                 try {
                     SUP_CHAT_SECTION.NOTIFICATION_OBJECT.close()
-                } catch (e) {}
+                } catch (e) {
+                }
 
                 let name_sender = this.message.sender_user.name
                 let sender_image = this.message.user.image
@@ -1495,10 +1542,10 @@ class ChatMessageSection {
                 SUP_CHAT_SECTION.NOTIFICATION_OBJECT = new Notification(name_sender, {
                     body: message,
                     icon: sender_image,
-                    data: { 'chat_url': This.message.chat_url }
+                    data: {'chat_url': This.message.chat_url}
                 })
 
-                SUP_CHAT_SECTION.NOTIFICATION_OBJECT.onclick = function(e) {
+                SUP_CHAT_SECTION.NOTIFICATION_OBJECT.onclick = function (e) {
                     let chat_url = e.currentTarget.data.chat_url
                     GoToUrl(chat_url)
                 }
@@ -1521,8 +1568,8 @@ class ChatMessageSectionTextEdited {
 function convertSecondToTimeFormat(second) {
     let sec = Math.floor(second % 60)
     let min = Math.floor(second / 60 % 60)
-        // let hr = Math.floor(second / 3600)
-        // return `${hr}:${min}:${sec}`
+    // let hr = Math.floor(second / 3600)
+    // return `${hr}:${min}:${sec}`
     return `${min}:${sec}`
 }
 
@@ -1531,21 +1578,21 @@ function convertSecondToTimeFormat(second) {
 
 let ButtonOpenSupChat = document.getElementById('ButtonOpenSupChat')
 if (ButtonOpenSupChat) {
-    ButtonOpenSupChat.addEventListener('click', function() {
+    ButtonOpenSupChat.addEventListener('click', function () {
         SUP_CHAT.toggleContainerSupChat('open')
     })
 }
 
 let BtnCloseSupChat = document.getElementById('BtnCloseSupChat')
 if (BtnCloseSupChat) {
-    BtnCloseSupChat.addEventListener('click', function() {
+    BtnCloseSupChat.addEventListener('click', function () {
         SUP_CHAT.toggleContainerSupChat('close')
     })
 }
 
 let ButtonSendMessageTextSupChat = document.getElementById('ButtonSendMessageTextSupChat')
 if (ButtonSendMessageTextSupChat) {
-    ButtonSendMessageTextSupChat.addEventListener('click', function() {
+    ButtonSendMessageTextSupChat.addEventListener('click', function () {
         let stateActive = this.getAttribute('active') || 'false'
         if (stateActive == 'true') {
             let typeSendInputSendMessage = InputTextMessageSupChat.getAttribute('type-send-message') || 'new-message'
@@ -1561,7 +1608,7 @@ if (ButtonSendMessageTextSupChat) {
 
 let InputTextMessageSupChat = document.getElementById('InputTextMessageSupChat')
 if (InputTextMessageSupChat) {
-    InputTextMessageSupChat.addEventListener('input', function() {
+    InputTextMessageSupChat.addEventListener('input', function () {
         let value = this.value
         if (value.trim() != '') {
             ButtonSendMessageTextSupChat.setAttribute('active', 'true')

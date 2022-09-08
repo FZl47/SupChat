@@ -318,8 +318,8 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    max-height: 95vh;
-    font-size: 16px;
+    /*max-height: 95vh;*/
+    font-size: 15.5px;
     border: 1px solid #eee;
     box-shadow: 0 3px 12px rgba(170, 170, 170, 0.2);
     background: #fff;
@@ -475,10 +475,12 @@
     align-items: end;
     text-align: right;
     background: linear-gradient(180deg, rgba(47, 255, 242, 0.2), #ffffff);
-    padding: 3px;
-    height: 85px;
+    padding: 6px;
+    height: 83px;
     border-bottom: 1px solid #f4f4f4;
+    box-shadow: 0 3px 6px rgba(238, 238, 238, 0.6);
 }
+
 
 .ContainerInfoSectionChat {
     display: flex;
@@ -490,7 +492,7 @@
     position: relative;
     height: 30px;
     left: 0;
-    margin-right: 40px;
+    margin-right: 50px;
 }
 
 .ImageAdminSection {
@@ -536,7 +538,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 0 4px rgba(208, 224, 211, 0.3);
+    box-shadow: 0 0 4px rgba(208, 224, 211, 0.2);
     border: 1px solid #fafafa;
 }
 
@@ -618,19 +620,24 @@
 }
 
 .MessagesSupChat::-webkit-scrollbar {
-    width: 5px;
+    width: 6px;
+    height: 4px;
+    border-radius: 50px;
 }
 
 .MessagesSupChat::-webkit-scrollbar-track {
     background: #f1f1f1;
+    border-radius: 50px;
+
 }
 
 .MessagesSupChat::-webkit-scrollbar-thumb {
-    background: #666666;
+    background: rgb(48, 255, 238);
+    border-radius: 50px;
 }
 
 .MessagesSupChat::-webkit-scrollbar-thumb:hover {
-    background: #333333;
+    background: #1ed2c9;
 }
 
 [ContainerMessagesShow] {
@@ -648,6 +655,7 @@
     padding: 5px 10px;
     background: linear-gradient(360deg, rgba(47, 255, 242, 0.2), #ffffff);
     border-top: 1px solid #f0f0f0;
+    box-shadow: 0 -1px 4px rgba(238, 238, 238, 0.3);
 }
 
 #FooterSupChat p {
@@ -830,7 +838,7 @@
     animation: AnimationButtonVoiceIsRecording 2s infinite;
 }
 
-#FooterSupChat[section-active='voice-send-or-cancel']{
+#FooterSupChat[section-active='voice-send-or-cancel'] {
     justify-content: center;
 }
 
@@ -1026,14 +1034,15 @@
 
 /*   Message  */
 
+
 .MessageSupChat {
 }
 
 .MessageSupChat .ContentMessage {
     background: #fff;
-    border: 1px solid #eee;
-    box-shadow: 0 1px 3px rgba(170, 170, 170, 0.2);
-    margin: 5px;
+    border: 1px solid rgba(240, 240, 240, 0.3);
+    box-shadow: 0 2px 3px rgba(170, 170, 170, 0.2);
+    margin: 5px 10px;
     border-radius: 12px;
     padding: 5px 9px;
     max-width: 75%;
@@ -1084,7 +1093,7 @@
     margin: 5px;
     text-align: right;
     display: block;
-    width: 100%;
+    width: 95%;
 }
 
 .ContentMessage > footer {
@@ -1098,14 +1107,28 @@
 }
 
 
+.DefaultMessage .NameSenderMessage {
+    font-size: 110% !important;
+    color: #ff734a !important;
+    margin-top: 5px !important;
+    font-family: KalameBlack !important;
+}
+
+.DefaultMessage pre {
+    color: #888;
+    text-align: justify;
+}
+
+
 /* Content Message */
 
 .MessageSupChat pre {
     border: none;
-    font-size: 95%;
-    white-space: pre-wrap;
+    font-size: 90%;
+    line-height: 27px;
+    white-space: pre-line;
     font-family: 'Vazir';
-    word-break: break-all;
+    word-break: break-word;
     padding: 1px;
     height: auto;
     background: none;
@@ -1206,6 +1229,29 @@ button.OptionMessage:hover {
     display: none !important;
 }
 
+.BtnScrollToBottomSection {
+    cursor: pointer;
+    position: absolute;
+    left: 20px;
+    bottom: 90px;
+    z-index: 3;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .3s;
+    transform: translateY(15px);
+}
+
+.BtnScrollToBottomSection[state='active'] {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.BtnScrollToBottomSection i {
+    color: #5d5d5d;
+    font-size: 155%;
+}
+
 .SuggestedMessagesSupChat {
     position: absolute;
     padding: 0;
@@ -1255,7 +1301,7 @@ button.OptionMessage:hover {
 
 .ButtonToggleSuggestedMessages {
     background: #ff8874 !important;
-    border-radius: 4px 0 0 4px;
+    border-radius: 8px 0 0 8px;
     border: 1px solid #eee !important;
     padding-left: 7px;
     text-align: center;

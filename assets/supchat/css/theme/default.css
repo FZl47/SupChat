@@ -22,7 +22,7 @@
     --SectionButton-hover--color: #fff;
     --HeaderSupChat--background: linear-gradient(180deg, rgba(47, 255, 242, 0.2), #ffffff);
     --HeaderSupChat--borderbottom: #f4f4f4;
-    --HeaderSupChat--boxshadow: rgba(238, 238, 238, 0.6);
+    --HeaderSupChat--boxshadow: 0 3px 6px rgba(238, 238, 238, 0.6);
     --ContainerStatusUser--background: #fff;
     --ContainerStatusUser--border: #fafafa;
     --ContainerStatusUser--boxshadow: rgba(208, 224, 211, 0.2);
@@ -30,13 +30,14 @@
     --ContainerStatusUser__span--background_online: #1af1ab;
     --ContainerStatusUser__span--background_offline: #ff5751;
     --TitleSupportChat--color: #ff734a;
+    --TitleDefaultMessageSupChat--color:#ff734a;
     --ContainerChatMessagesSupChat__p--color: #666;
     --MessageSupChat-webkit-scrollbar-track--background: #f1f1f1;
     --MessageSupChat-webkit-scrollbar-thumb--background: rgb(255, 163, 154);
     --MessageSupChat-webkit-scrollbar-thumb--background-hover: #eb9289;
     --FooterSupChat--background: linear-gradient(360deg, rgba(47, 255, 242, 0.2), #ffffff);
     --FooterSupChat--bordertop: #f0f0f0;
-    --FooterSupChat--boxshadow: rgba(238, 238, 238, 0.3);
+    --FooterSupChat--boxshadow: 0 -1px 4px rgba(238, 238, 238, 0.3);
     --VoiceIsRecordingSupChat--background: #fff;
     --VoiceIsRecordingSupChat--border: rgba(238, 238, 238, 1);
     --BtnCancelVoiceSupChat__svg--fill:orangered;
@@ -47,7 +48,7 @@
     --MessageSupChat__ContentMessage--background:#fff;
     --MessageSupChat__ContentMessage--boxshadow:rgba(170, 170, 170, 0.2);
     --MessageSupChat__ContentMessage--border:rgba(240, 240, 240, 0.3);
-    --NameSenderMessage--color:#bbb;
+    --NameSenderMessage--color:#aaa;
     --MessageSupChat__pre--color:#444;
     --TimeSentMessage--color:#888;
     --BtnShowMoreOptionMessage__i--color:#bbb;

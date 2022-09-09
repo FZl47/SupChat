@@ -3,12 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="87823259-0142-41f3-b17d-acbad3750530" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/decorators/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/core/decorators/view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/core/tools.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/admin-panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/templates/Chat/Admin/admin-panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Config/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/supchat/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/css/theme/blue.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/theme/blue.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/supchat/css/theme/default.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/theme/default.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/supchat/js/base.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/base.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
@@ -209,6 +207,7 @@
       <workItem from="1652638063180" duration="1144000" />
       <workItem from="1652749016107" duration="3705000" />
       <workItem from="1662638941733" duration="15736000" />
+      <workItem from="1662702583757" duration="8666000" />
     </task>
     <servers />
   </component>
@@ -216,9 +215,9 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1662663584344">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1662711198915">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1662663584344" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1662711198915" />
   </component>
 </project>

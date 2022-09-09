@@ -17,7 +17,7 @@
 
 .SvgSupChat text {
     stroke: #18ebdc;
-    font-size: 21px;
+    font-size: 20px;
     stroke-width: 1.5px;
     fill: transparent;
     animation: SvgSupChatAnimation 5s forwards;
@@ -323,7 +323,7 @@
     bottom: 20px;
     right: 20px;
     /*max-height: 95vh;*/
-    font-size: 15.5px;
+    font-size: 15.5px!important;
     border: 1px solid var(--SupChat--border);
     box-shadow: 0 3px 12px var(--SupChat--boxshadow);
     background: #fff;
@@ -338,8 +338,8 @@
 }
 
 #SupChat[state='open'] #ContainerBaseSupChat {
-    width: 480px;
-    height: 690px;
+    width: 420px;
+    height: 630px;
 }
 
 #ContainerBaseSupChat {
@@ -381,7 +381,7 @@
 #BtnCloseSupChat > svg {
     width: 24px;
     height: 24px;
-    fill: #ff5860;
+    fill: #ff3f2d;
 }
 
 #ButtonOpenSupChat {
@@ -482,8 +482,8 @@
     background: var(--HeaderSupChat--background);
     padding: 6px;
     height: 83px;
-    border-bottom: 1px solid var(--ContainerSectionButton__header--borderbottom);
-    box-shadow: 0 3px 6px var(--HeaderSupChat--boxshadow);
+    border-bottom: 1px solid var(--HeaderSupChat--borderbottom);
+    box-shadow: var(--HeaderSupChat--boxshadow);
 }
 
 
@@ -659,7 +659,7 @@
     padding: 5px 10px;
     background: var(--FooterSupChat--background);
     border-top: 1px solid var(--FooterSupChat--bordertop);
-    box-shadow: 0 -1px 4px var(--FooterSupChat--boxshadow);
+    box-shadow:  var(--FooterSupChat--boxshadow);
 }
 
 #FooterSupChat p {
@@ -716,7 +716,6 @@
     width: 65%;
     background: var(--VoiceIsRecordingSupChat--background);
     border: 1px solid var(--VoiceIsRecordingSupChat--border);
-    margin-top: 5px;
     font-size: 97%;
     border-radius: 20px 5px 5px 20px;
     /*animation: AnimationVoiceIsRecording 8s infinite;*/
@@ -1017,7 +1016,7 @@
 #ButtonSendMessageTextSupChat {
     cursor: default;
     vertical-align: bottom;
-    margin-bottom: 7px !important;
+    margin-bottom: 5px !important;
 }
 
 #ButtonSendMessageTextSupChat svg {
@@ -1039,6 +1038,7 @@
 /*   Message  */
 
 .MessageSupChat {
+    font-size: 97%;
 }
 
 .MessageSupChat .ContentMessage {
@@ -1081,7 +1081,7 @@
 }
 
 .NameSenderMessage {
-    color: var(--NameSenderMessage--color);
+    color: var(--NameSenderMessage--color)!important;
     font-size: 80% !important;
 }
 
@@ -1112,7 +1112,7 @@
 
 .DefaultMessage .NameSenderMessage {
     font-size: 110% !important;
-    color: var(--TitleSupportChat--color) !important;
+    color: var(--TitleDefaultMessageSupChat--color) !important;
     margin-top: 5px !important;
     font-family: KalameBlack !important;
 }

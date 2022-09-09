@@ -594,8 +594,9 @@ class SupChat {
                 })
                 MessagesSupChat.addEventListener('scroll', function (e) {
                     let height = e.target.offsetHeight
+                    let scrollHeight = e.target.scrollHeight
                     let scrollVal = e.target.scrollTop
-                    if (scrollVal < (height)) {
+                    if (scrollVal < (scrollHeight - height)) {
                         btn_scroll_to_bottom.setAttribute('state', 'active')
                     } else {
                         btn_scroll_to_bottom.setAttribute('state', 'hide')

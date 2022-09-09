@@ -27,7 +27,17 @@
 <button id="ButtonOpenSupChat">
     <i class="fa fa-comments"></i>
 </button>
-
+{% if SupChat.config.default_message_outside_is_active %}
+    <div id="DefaultMessageOutSideSupChat" show-after="{{ SupChat.config.default_message_outside_show_after }}">
+        <button id="DefaultMessageOutSideSupChatClose">
+            <i class="fa fa-times"></i>
+        </button>
+        <div>
+            <i class="fa fa-headphones-alt"></i>
+            <p>{{ SupChat.config.default_message_outside }}</p>
+        </div>
+    </div>
+{% endif %}
 <div id="SupChat" state="close">
     <div id="ContainerBaseSupChat">
         <button id="BtnCloseSupChat">
@@ -48,7 +58,8 @@
             </main>
             <footer>
                 <svg class="SvgSupChat">
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="cursor-pointer" onclick="GoToUrl('https://fazelmomeni.codevar.ir')">
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="cursor-pointer"
+                          onclick="GoToUrl('https://fazelmomeni.codevar.ir')">
                         SupChat
                     </text>
                 </svg>
@@ -116,7 +127,7 @@
                                 </div>
                             {% endif %}
                         {% endwith %}
-                        <div id="BtnScrollToBottomSection-{{ Section.id }}" class="BtnScrollToBottomSection" >
+                        <div id="BtnScrollToBottomSection-{{ Section.id }}" class="BtnScrollToBottomSection">
                             <i class="fas fa-arrow-circle-down"></i>
                         </div>
                     </div>

@@ -578,9 +578,30 @@ class SupChat {
             // Run init functions
             this.setEventButtonRecordVoice()
             this.setEventScrollContainerMessages()
+            this.setEventDefaultMessageOutSide()
             this.setUIForTagAudios()
 
         }
+    }
+
+    setEventDefaultMessageOutSide() {
+        let This = this
+        let btn_close = document.getElementById('DefaultMessageOutSideSupChatClose')
+        let default_message_outside_content = document.querySelector('#DefaultMessageOutSideSupChat > div')
+        if (btn_close) {
+            btn_close.addEventListener('click', function () {
+                This.hideDefaultMessageOutSide()
+            })
+        }
+        if (default_message_outside_content) {
+            default_message_outside_content.addEventListener('click', function () {
+                This.toggleContainerSupChat('open')
+            })
+        }
+    }
+
+    hideDefaultMessageOutSide() {
+        document.getElementById('DefaultMessageOutSideSupChat').classList.add('DefaultMessageOutSideSupChatHide')
     }
 
     setEventScrollContainerMessages() {
@@ -1220,6 +1241,7 @@ class ChatUser extends SupChat {
             this.toggleContainerButtonsSection('open')
             this.setDefaultStatusChat()
             this.setDefaultSection()
+            this.hideDefaultMessageOutSide()
         } else {
             this.loadingEffect('Hide')
             this.ContainerSupChat.setAttribute('state', 'close')

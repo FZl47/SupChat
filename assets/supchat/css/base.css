@@ -6,7 +6,7 @@
     filter: blur(8px);
 }
 
-.cursor-pointer{
+.cursor-pointer {
     cursor: pointer;
 }
 
@@ -323,7 +323,7 @@
     bottom: 20px;
     right: 20px;
     /*max-height: 95vh;*/
-    font-size: 15.5px!important;
+    font-size: 15.5px !important;
     border: 1px solid var(--SupChat--border);
     box-shadow: 0 3px 12px var(--SupChat--boxshadow);
     background: #fff;
@@ -382,6 +382,84 @@
     width: 24px;
     height: 24px;
     fill: #ff3f2d;
+}
+
+#DefaultMessageOutSideSupChat {
+    position: absolute;
+    position: fixed;
+    bottom: 85px;
+    right: 85px;
+    background: #ff6258;
+    color: #fff;
+    padding: 5px;
+    font-size: 110%;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 3px 18px rgba(156, 156, 156, 0.66);
+    transform: translateY(-5px);
+    transition: all .5s;
+    animation: AnimationButtonOpenChat 6s infinite;
+}
+
+#DefaultMessageOutSideSupChat::after {
+    content: "";
+    position: absolute;
+    display: block;
+    bottom: -4px;
+    right: -6px;
+    border-top: 10px solid transparent;
+    border-left: 20px solid #ff6258;
+    border-bottom: 10px solid transparent;
+    transform: rotate(-64deg);
+    border-radius: 3px;
+}
+
+#DefaultMessageOutSideSupChat > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#DefaultMessageOutSideSupChat > div > * {
+    margin: 7px;
+}
+
+#DefaultMessageOutSideSupChat p {
+    font-family: Vazir;
+}
+
+.DefaultMessageOutSideSupChatHide{
+    opacity: 0!important;
+    visibility: hidden!important;
+}
+
+#DefaultMessageOutSideSupChat:hover #DefaultMessageOutSideSupChatClose {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#DefaultMessageOutSideSupChatClose:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#DefaultMessageOutSideSupChatClose {
+    position: absolute;
+    top: -35px;
+    right: 0;
+    width: 50px;
+    text-align: right;
+    padding: 5px;
+    background: none;
+    border: none;
+    color: #ff4b5c;
+    font-size: 120%;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .25s;
+    transform: translateY(10px);
 }
 
 #ButtonOpenSupChat {
@@ -659,7 +737,7 @@
     padding: 5px 10px;
     background: var(--FooterSupChat--background);
     border-top: 1px solid var(--FooterSupChat--bordertop);
-    box-shadow:  var(--FooterSupChat--boxshadow);
+    box-shadow: var(--FooterSupChat--boxshadow);
 }
 
 #FooterSupChat p {
@@ -1038,7 +1116,7 @@
 /*   Message  */
 
 .MessageSupChat {
-    font-size: 97%;
+    font-size: 95%;
 }
 
 .MessageSupChat .ContentMessage {
@@ -1081,7 +1159,7 @@
 }
 
 .NameSenderMessage {
-    color: var(--NameSenderMessage--color)!important;
+    color: var(--NameSenderMessage--color) !important;
     font-size: 80% !important;
 }
 

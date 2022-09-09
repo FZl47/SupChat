@@ -53,6 +53,10 @@ class SupChatConfig(models.Model):
     transfer_chat_is_active = models.BooleanField(default=True)
     default_message_is_active = models.BooleanField(default=True)
     default_message = models.CharField(max_length=200,null=True,blank=True,default=""" پشتیبانی سایت ما در کوتاه ترین زمان ممکن پاسخگوی شما دوست عزیز است لطفا پیام خود را بگذارید .""")
+    default_message_outside_is_active = models.BooleanField(default=True)
+    default_message_outside_show_after = models.IntegerField(default=5,help_text='پس از گذشت چند ثانیه نمایش داده شود')
+    default_message_outside = models.CharField(max_length=200,null=True,blank=True,default="""سلام ، چطور میتوانم کمک کنم ؟""")
+    show_last_seen = models.BooleanField(default=True)
 
     def __str__(self):
         try:

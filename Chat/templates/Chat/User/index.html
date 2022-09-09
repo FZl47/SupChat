@@ -16,7 +16,7 @@
         src: url("{% static 'supchat/font/Vazir-Regular.woff' %}");
     }
     {% if SupChat.config.show_last_seen == False %}
-        .ContainerStatusUser{
+        .ContainerStatusUser:not([status='is_typing']:not([status='default'])){
             display: none!important;
         }
     {% endif %}

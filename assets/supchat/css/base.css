@@ -323,7 +323,7 @@
     bottom: 20px;
     right: 20px;
     /*max-height: 95vh;*/
-    font-size: 15.5px !important;
+    font-size: 16px !important;
     border: 1px solid var(--SupChat--border);
     box-shadow: 0 3px 12px var(--SupChat--boxshadow);
     background: #fff;
@@ -394,7 +394,7 @@
     font-size: 110%;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 3px 18px rgba(156, 156, 156, 0.66);
+    box-shadow: 0 3px 15px rgba(156, 156, 156, 0.4);
     transform: translateY(-5px);
     transition: all .5s;
     animation: AnimationButtonOpenChat 6s infinite;
@@ -405,7 +405,7 @@
     position: absolute;
     display: block;
     bottom: -4px;
-    right: -4px;
+    right: -5px;
     border-top: 10px solid transparent;
     border-left: 20px solid #ff6258;
     border-bottom: 10px solid transparent;
@@ -1115,7 +1115,7 @@
 /*   Message  */
 
 .MessageSupChat {
-    font-size: 95%;
+    font-size: 100%;
 }
 
 .MessageSupChat .ContentMessage {

@@ -594,7 +594,9 @@ class SupChat {
             if (This.ContainerSupChat.getAttribute('state') != 'open') {
                 default_message_outside.classList.remove('DefaultMessageOutSideSupChatHide')
                 let sound = default_message_outside.querySelector('audio')
-                sound.play()
+                try {
+                    sound.play()
+                }catch (e) {}
             }
         }, time)
     }

@@ -15,6 +15,11 @@
         font-family: 'Vazir';
         src: url("{% static 'supchat/font/Vazir-Regular.woff' %}");
     }
+    {% if SupChat.config.show_last_seen == False %}
+        .ContainerStatusUser{
+            display: none!important;
+        }
+    {% endif %}
 
 </style>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">

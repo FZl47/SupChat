@@ -385,7 +385,6 @@
 }
 
 #DefaultMessageOutSideSupChat {
-    position: absolute;
     position: fixed;
     bottom: 85px;
     right: 85px;
@@ -406,7 +405,7 @@
     position: absolute;
     display: block;
     bottom: -4px;
-    right: -6px;
+    right: -4px;
     border-top: 10px solid transparent;
     border-left: 20px solid #ff6258;
     border-bottom: 10px solid transparent;

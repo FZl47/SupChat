@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="87823259-0142-41f3-b17d-acbad3750530" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/supchat/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/base.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/supchat/js/base.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/base.js" afterDir="false" />
@@ -205,7 +204,7 @@
       <workItem from="1652638063180" duration="1144000" />
       <workItem from="1652749016107" duration="3705000" />
       <workItem from="1662638941733" duration="15736000" />
-      <workItem from="1662702583757" duration="16047000" />
+      <workItem from="1662702583757" duration="18079000" />
     </task>
     <servers />
   </component>

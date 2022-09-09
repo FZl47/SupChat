@@ -28,7 +28,7 @@
     <i class="fa fa-comments"></i>
 </button>
 {% if SupChat.config.default_message_outside_is_active %}
-    <div id="DefaultMessageOutSideSupChat" show-after="{{ SupChat.config.default_message_outside_show_after }}">
+    <div id="DefaultMessageOutSideSupChat" show-after="{{ SupChat.config.default_message_outside_show_after }}" class="DefaultMessageOutSideSupChatHide">
         <button id="DefaultMessageOutSideSupChatClose">
             <i class="fa fa-times"></i>
         </button>
@@ -36,6 +36,7 @@
             <i class="fa fa-headphones-alt"></i>
             <p>{{ SupChat.config.default_message_outside }}</p>
         </div>
+        <audio src="{% static 'supchat/sound/1.mp3' %}" controls class="d-none"></audio>
     </div>
 {% endif %}
 <div id="SupChat" state="close">

@@ -578,10 +578,25 @@ class SupChat {
             // Run init functions
             this.setEventButtonRecordVoice()
             this.setEventScrollContainerMessages()
+            this.setTimerShowDefaultMessageOutSide()
             this.setEventDefaultMessageOutSide()
             this.setUIForTagAudios()
 
         }
+    }
+
+    setTimerShowDefaultMessageOutSide() {
+        let This = this
+        let default_message_outside = document.getElementById('DefaultMessageOutSideSupChat')
+        let time = parseInt(default_message_outside.getAttribute('show-after')) || 5
+        time = time * 1000 // Convert second to milisecond
+        setTimeout(function () {
+            if (This.ContainerSupChat.getAttribute('state') != 'open') {
+                default_message_outside.classList.remove('DefaultMessageOutSideSupChatHide')
+                let sound = default_message_outside.querySelector('audio')
+                sound.play()
+            }
+        }, time)
     }
 
     setEventDefaultMessageOutSide() {

@@ -17,8 +17,8 @@
 
 .SvgSupChat text {
     stroke: #18ebdc;
-    font-size: 20px;
-    stroke-width: 1.5px;
+    font-size: 18px;
+    stroke-width: 1px;
     fill: transparent;
     animation: SvgSupChatAnimation 5s forwards;
 }
@@ -494,13 +494,15 @@
     }
 }
 
-#ContainerSectionsButton {
+
+
+#ContainerInfoStartSupChat {
     flex-direction: column;
     background: transparent;
     width: 100%;
 }
 
-#ContainerSectionsButton header {
+#ContainerInfoStartSupChat header {
     text-align: center;
     padding: 15px 7px;
     font-size: 130%;
@@ -509,20 +511,21 @@
     border-bottom: 1px solid var(--ContainerSectionButton__header--borderbottom);
 }
 
-#ContainerSectionsButton main {
+#ContainerInfoStartSupChat main {
     margin-top: 50px;
     overflow: auto;
 }
 
-#ContainerSectionsButton footer {
+#ContainerInfoStartSupChat footer {
     margin-top: auto;
     height: 60px;
 }
 
+
 [section-button] {
     display: block;
     padding: 10px 8px;
-    margin: 20px auto;
+    margin: 25px auto;
     width: 60%;
     min-width: 230px;
     font-family: 'Vazir';
@@ -1411,6 +1414,7 @@ button.OptionMessage:hover {
     background: var(--SuggestedMessage--background-hover) !important;
     color: var(--SuggestedMessage--color-hover);
 }
+
 
 
 /* Responsive */

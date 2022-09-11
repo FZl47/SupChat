@@ -569,7 +569,7 @@ class SupChat {
 
             // Get Elements
             this.ContainerSupChat = document.getElementById('SupChat')
-            this.ContainerButtonsSection = document.getElementById('ContainerSectionsButton')
+            this.ContainerButtonsSection = document.getElementById('ContainerInfoStartSupChat')
             this.ContainerChat = document.getElementById('ContainerChatMessagesSupChat')
             this.NameSectionChat = document.getElementById('NameSectionChat')
             this.StatusUserChat = document.getElementById('StatusUserChat')
@@ -1113,9 +1113,7 @@ class SupChat {
                     } catch (e) {
                     }
                 }
-            }).catch(function (err) {
-            console.log(err.name, err.message);
-            // throw err
+            }).catch(function (e) {
         });
     }
 

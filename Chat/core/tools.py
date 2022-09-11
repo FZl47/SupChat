@@ -87,6 +87,9 @@ def Send_Message_Notif(Text,Type,Timer='7000',LevelOfNecessity='3',RedirectTo=No
     return Res
 
 
+def GetTime():
+    return timezone.now()
+
 
 def GetTimeIran():
     TimeIranZone = pytz.timezone('Asia/Tehran')

@@ -4,7 +4,7 @@ from django.utils import timezone
 from asgiref.sync import async_to_sync
 from Chat.core.decorators.consumer import user_authenticated, admin_authenticated
 from Chat.core.auth.consumer import getUserConsumer, getUserSessionConsumer
-from Chat.core.tools import RandomString
+from Chat.core.tools import RandomString, GetTime
 from Chat.core.serializers import (SerializerMessageText, SerializerChatJSON,
                                    SerializerMessageAudio, SerializerMessageTextEdited,
                                    SerializerMessageDeleted)
@@ -142,12 +142,12 @@ class ChatBase:
     def set_status_offline(self):
         if self.type_user == 'user':
             self.user.status_online = 'offline'
-            self.user.lastSeen = timezone.now()
+            self.user.lastSeen = GetTime()
             self.user.save()
             self.send_response_status_user()
         else:
             self.admin.status_online = 'offline'
-            self.admin.lastSeen = timezone.now()
+            self.admin.lastSeen = GetTime()
             self.admin.save()
             self.send_response_status_admin()
 
@@ -160,13 +160,6 @@ class ChatBase:
                 self.chat.user.group_name,
                 data
             )
-
-    def send_response_status_admin_type(self, event):
-        self.send(text_data=response_last_seen_status_online(event))
-
-    def send_response_status_admin_section_type(self, event):
-        self.send(text_data=response_last_seen_status_online_section(event))
-
     def send_response_status_user(self):
         if self.is_accepted:
             all_chat_with_admin_online = ChatGroup.objects.filter(user=self.user, isActive=True,
@@ -179,6 +172,12 @@ class ChatBase:
                     chat.get_group_name_admin,
                     data
                 )
+
+    def send_response_status_admin_type(self, event):
+        self.send(text_data=response_last_seen_status_online(event))
+
+    def send_response_status_admin_section_type(self, event):
+        self.send(text_data=response_last_seen_status_online_section(event))
 
     def send_response_status_user_type(self, event):
         data = self.user.get_last_seen_status()

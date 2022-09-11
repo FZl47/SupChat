@@ -182,7 +182,6 @@ class Admin(models.Model):
         return self.sections.filter(isActive=True)
 
 
-
     def has_log_message(self):
         logs = self.logmessageadmin_set.filter(seen=False).count()
         return True if logs > 0 else False
@@ -336,7 +335,7 @@ def upload_audio_message(instance, path):
 class AudioMessage(Message):
     type = models.CharField(max_length=10, default='audio', editable=False)
     audio = models.FileField(upload_to=upload_audio_message)
-    audio_time = models.CharField(max_length=5, default="0")
+    audio_time = models.CharField(max_length=5, default='0')
 
 
 

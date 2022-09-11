@@ -3,7 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="87823259-0142-41f3-b17d-acbad3750530" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/core/consumers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/core/tools.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/css/theme/default.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/theme/default.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/supchat/js/base.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/base.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
@@ -204,7 +209,12 @@
       <workItem from="1652749016107" duration="3705000" />
       <workItem from="1662638941733" duration="15736000" />
       <workItem from="1662702583757" duration="18147000" />
-      <workItem from="1662740744172" duration="5886000" />
+      <workItem from="1662740744172" duration="6485000" />
+      <workItem from="1662814822794" duration="1905000" />
+      <workItem from="1662818416661" duration="815000" />
+      <workItem from="1662874940657" duration="7638000" />
+      <workItem from="1662894522042" duration="2175000" />
+      <workItem from="1662903204060" duration="4924000" />
     </task>
     <servers />
   </component>
@@ -216,9 +226,13 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="807" y="434" key="VCS.ChangelistChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1662712943007" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1662742398495">
+    <state x="566" y="126" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1662880497109">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1662742398495" />
+    <state x="566" y="126" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1662880497109" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1662895902251">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1662895902251" />
   </component>
 </project>

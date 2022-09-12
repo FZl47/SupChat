@@ -3,14 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="87823259-0142-41f3-b17d-acbad3750530" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/core/consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/core/tools.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/css/theme/default.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/theme/default.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/js/base.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/base.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -214,7 +206,7 @@
       <workItem from="1662818416661" duration="815000" />
       <workItem from="1662874940657" duration="7638000" />
       <workItem from="1662894522042" duration="2175000" />
-      <workItem from="1662903204060" duration="4924000" />
+      <workItem from="1662903204060" duration="5827000" />
     </task>
     <servers />
   </component>

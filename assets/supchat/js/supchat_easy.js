@@ -50,6 +50,10 @@ let SUPCHAT_STYLE = [
 
 let SUPCHAT_SCRIPTS = [
     {
+        'src': 'https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js',
+        'external': true
+    },
+    {
         'src': 'js/errors.js',
         'external': false
     },

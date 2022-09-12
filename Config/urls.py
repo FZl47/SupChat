@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',home),
     # SupChat
-    path('sup-chat/', include('Chat.urls', namespace='SupChat'))
+    path('sup-chat/', include('SupChat.urls', namespace='SupChat'))
 ]
 
 if settings.DEBUG:

@@ -26,8 +26,14 @@ class TranslateSupChat {
 
 
 class SupChat {
+    URL_SUPCHAT = 'sup-chat'
+
+    constructor(type_user) {
+        this.TYPE_USER = type_user
+    }
+
     run(){
-        SendAjax(`${URL_BACKEND_SUPCHAT}/supchat-run`,{},'POST',function (response) {
+        SendAjax(`${URL_BACKEND_SUPCHAT}/${this.URL_SUPCHAT}/run`,{},'POST',function (response) {
 
         })
     }

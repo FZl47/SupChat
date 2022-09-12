@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     # SupCaht
     'django_render_partial',
     'channels',
-    'Chat'
+    'SupChat'
 ]
 
 MIDDLEWARE = [
@@ -66,7 +66,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'libraries': {
-                'FilterTagsSupChat': 'Chat.filter_tags.templatetags.Filter'
+                'FilterTagsSupChat': 'SupChat.filter_tags.templatetags.Filter'
             }
         },
     },
@@ -136,7 +136,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # SupChat
-ASGI_APPLICATION = 'Chat.core.routing.application'
+ASGI_APPLICATION = 'SupChat.core.routing.application'
 
 # You need redis here
 CHANNEL_LAYERS = {

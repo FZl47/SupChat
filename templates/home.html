@@ -1,13 +1,28 @@
-{% load FilterTagsSupChat %}
-{% load render_partial %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0 , user-scalable=no">
-    <title>SupChat V2</title>
+    <title>SupChat V3</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <link rel="stylesheet" href="https://v1.fontapi.ir/css/Estedad">
+    <link rel="stylesheet" href="/assets/supchat/css/supchat.css">
+    <link rel="stylesheet" href="/assets/supchat/css/tools.css">
 </head>
 <body>
-      {% render_partial 'Chat.views.index' %}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/assets/supchat/js/errors.js"></script>
+<script src="/assets/supchat/js/models.js"></script>
+<script src="/assets/supchat/js/tools.js"></script>
+<script src="/assets/supchat/js/supchat.js"></script>
+
+<script>
+    const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'
+    const SUP_CHAT = new SupChat('USER')
+    SUP_CHAT.run()
+</script>
+
 </body>
 </html>

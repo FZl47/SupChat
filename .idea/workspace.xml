@@ -2,35 +2,54 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="87823259-0142-41f3-b17d-acbad3750530" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/V2.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/asgi.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/settings.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/wsgi.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/apps.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/asgi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/actions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/auth/consumer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/auth/view.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/consumers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/decorators/consumer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/decorators/view.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/routing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/serializers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/signals.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/core/tools.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/filter_tags/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/filter_tags/templatetags/Filter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/filter_tags/templatetags/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/migrations/0002_auto_20220908_1202.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/migrations/0003_auto_20220908_1206.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/migrations/0004_auto_20220908_1527.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/migrations/0005_auto_20220908_1534.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/migrations/0006_auto_20220909_1236.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/migrations/0007_auto_20220909_1303.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/migrations/0008_auto_20220909_1314.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/migrations/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/admin-panel.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/chat-section.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/filter-chats.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/message-chat-for-admin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Base/BaseTemplateSupChat.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/message-chat-for-user.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chat/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Config/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Config/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/js/models.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/models.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/js/supchat.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/supchat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/js/supchat_easy.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/supchat_easy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/js/tools.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/tools.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/audios/chat/1/K25jzYjP5RkpD0vZs0QP5XXni.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/audios/chat/1/T2Irj5S76i8TNf7wTJSjlvwdM.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/audios/chat/1/cvSgtdjY4p0pFkCb72n8l1FE4.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/audios/chat/1/rrFKbLhjM6ShsX4iBRFsAEAnT.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/audios/chat/1/tM6U5zz2Evkaa50Dy5gE8Jy5A.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/audios/chat/1/xKTb79GMPpce2gLxLpRtt0eHR.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/audios/chat/10/meICjCio90223w6u094A66qxk.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/audios/chat/18/3g0w88TfOocf877VOgHiYUtli.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/audios/chat/3/f9WiyNFJ7MIzh2LSjcftiFR2x.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/images/admins/chat/1KN3ozWynbSGTePjSglZ.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/images/admins/chat/99F1aWpTryQejNqay3wM.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/images/admins/chat/Atc5e1TfoqRasBno1ZHI.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/media/supchat/images/admins/chat/rIczjXrNk9UUx1kgeoVH.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,9 +77,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="Python Script" />
         <option value="CSS File" />
         <option value="JavaScript File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -237,7 +256,7 @@
       <workItem from="1662894522042" duration="2175000" />
       <workItem from="1662903204060" duration="5827000" />
       <workItem from="1662980709114" duration="7031000" />
-      <workItem from="1662993212526" duration="8499000" />
+      <workItem from="1662993212526" duration="13432000" />
     </task>
     <servers />
   </component>

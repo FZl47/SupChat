@@ -3,52 +3,26 @@
   <component name="ChangeListManager">
     <list default="true" id="87823259-0142-41f3-b17d-acbad3750530" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/asgi.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/actions.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/auth/consumer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/auth/view.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/consumers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/decorators/consumer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/decorators/view.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/routing.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/serializers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/signals.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/core/tools.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/filter_tags/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/filter_tags/templatetags/Filter.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/filter_tags/templatetags/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/migrations/0002_auto_20220908_1202.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/migrations/0003_auto_20220908_1206.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/migrations/0004_auto_20220908_1527.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/migrations/0005_auto_20220908_1534.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/migrations/0006_auto_20220909_1236.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/migrations/0007_auto_20220909_1303.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/migrations/0008_auto_20220909_1314.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/admin-panel.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/chat-section.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/filter-chats.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Admin/message-chat-for-admin.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/Base/BaseTemplateSupChat.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/templates/Chat/User/message-chat-for-user.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chat/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Config/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Config/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/js/models.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/models.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/js/supchat.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/supchat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SupChat/core/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/core/consumers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SupChat/core/decorators/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/core/decorators/view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SupChat/core/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/core/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SupChat/core/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/core/tools.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SupChat/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SupChat/migrations/0002_alter_user_group_name.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SupChat/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SupChat/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SupChat/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/css/supchat.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/supchat.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/css/theme/blue.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/css/theme/default.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/theme/default.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/css/tools.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/tools.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/jq/jquery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/js/models.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/supchat/js/supchat.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/supchat/js/supchat_easy.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/supchat_easy.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/supchat/js/tools.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/tools.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -78,8 +52,8 @@
       <list>
         <option value="HTML File" />
         <option value="CSS File" />
-        <option value="JavaScript File" />
         <option value="Python Script" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -107,7 +81,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Config/settings.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../PizzleAPI" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.stylelint" value="true" />
@@ -256,7 +230,9 @@
       <workItem from="1662894522042" duration="2175000" />
       <workItem from="1662903204060" duration="5827000" />
       <workItem from="1662980709114" duration="7031000" />
-      <workItem from="1662993212526" duration="13432000" />
+      <workItem from="1662993212526" duration="14823000" />
+      <workItem from="1663062919213" duration="14746000" />
+      <workItem from="1663082662518" duration="21996000" />
     </task>
     <servers />
   </component>
@@ -268,10 +244,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1662993199906" />
-    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1662980824726">
+    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1663013515572">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1662980824726" />
+    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1663013515572" />
     <state x="461" y="162" key="SettingsEditor" timestamp="1662993192374">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -284,9 +260,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="566" y="126" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1662880497109" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1662895902251">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1663077409837">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1662895902251" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1663077409837" />
   </component>
 </project>

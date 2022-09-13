@@ -1,0 +1,193 @@
+@font-face {
+    src: url("/assets/supchat/font/Kalameh_Black.woff");
+    font-family: 'KalameBlack';
+}
+
+#SupChat {
+    font-family: VazirMatn;
+    direction: rtl;
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid #e4eeeb;
+    box-shadow: 0 3px 15px rgba(204, 204, 204, 0.4);
+    z-index: 10;
+    transition: all .3s;
+}
+
+#SupChat[state='open'] {
+    width: 400px;
+    height: 600px;
+    overflow: auto;
+}
+
+#SupChat > div {
+    display: none;
+}
+
+#SupChatStart {
+    text-align: center;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+#SupChatStart[container-show] {
+    display: flex;
+}
+
+#SupChatStart header {
+    height: 55px;
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+#SupChatStart main {
+    height: calc(100% - 55px - 55px);
+    overflow: auto;
+    padding: 10px 0;
+}
+
+#SupChatStart main img {
+    /* set inline */
+    /*width: 45%;*/
+    height: auto;
+    margin: auto;
+    display: block;
+}
+
+#SupChatStart footer {
+    height: 55px;
+}
+
+#SupChatStart footer a {
+    display: inline-block;
+}
+
+
+#BtnStartChatSupChat {
+    width: 65%;
+    margin: auto;
+    margin-top: 30px;
+    display: block;
+    border-radius: 8px;
+    border: none;
+    background: #f5f5f5;
+    color: #999;
+    padding: 11px;
+    font-size: 110%;
+    font-family: VazirMatn;
+    cursor: not-allowed;
+    transition: all .35s;
+}
+
+
+#BtnStartChatSupChat[valid='true'] {
+    background: linear-gradient(-20deg, #ff5b56, #ff6f77);
+    box-shadow: 0 3px 10px rgba(255, 91, 86, 0.5);
+    color: #fff;
+    cursor: pointer;
+}
+
+#BtnStartChatSupChat[valid='true']:hover {
+    box-shadow: 0 3px 3px rgba(255, 91, 86, 0.7);
+}
+
+#SupChatLoading {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    border-radius: inherit;
+    z-index: 2;
+    background: rgba(60, 60, 60, 0.15);
+    backdrop-filter: blur(2px);
+}
+
+#SupChatLoading > div {
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-supchat-intro {
+    width: 100%;
+    height: 50px;
+    margin-top: 5px;
+}
+
+.title-supchat-intro text {
+    stroke: #00ebd5;
+    font-size: 17px;
+    stroke-width: 1px;
+    fill: transparent;
+    animation: title-supchat-intro-animation 5s forwards;
+}
+
+@keyframes title-supchat-intro-animation {
+    from {
+        stroke-dasharray: 0 70%;
+    }
+    to {
+        stroke-dasharray: 50% 0;
+        stroke-dashoffset: 10%;
+        fill: #00ebd5;
+    }
+}
+
+.title-supchat-site {
+    font-size: 140%;
+    font-weight: bold;
+    color: #333333;
+}
+
+#BtnOpenSupChat {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    border-radius: 10px;
+    padding: 10px;
+    width: 55px;
+    height: 55px;
+    z-index: 1;
+    border: none;
+    box-shadow: 0 5px 9px #ddd;
+    cursor: pointer;
+    transition: all .4s;
+    animation: AnimationBtnOpenChat 4s infinite;
+}
+
+#BtnOpenSupChat i {
+    font-size: 160%;
+}
+
+#BtnOpenSupChat:hover {
+    border-radius: 14px;
+}
+
+@keyframes AnimationBtnOpenChat {
+    50% {
+        transform: translateY(7px);
+    }
+}
+
+#BtnCloseSupChat {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    font-size: 150%;
+    color: #ee4a4e;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 9;
+}
+

@@ -1,28 +1,3 @@
-function _add_css_link(src) {
-    let css = document.createElement('link')
-    css.rel = 'stylesheet'
-    css.href = src
-    document.head.appendChild(css)
-}
-
-function _add_js_link(src) {
-    let js = document.createElement('script')
-    js.src = src
-    document.body.appendChild(js)
-}
-
-function _get_link_assets_supchat(src, external = false) {
-    if (typeof ROOT_URL_ASSETS_SUPCHAT != "undefined") {
-        if (external) {
-            return src
-        } else {
-            return ROOT_URL_ASSETS_SUPCHAT + 'supchat/' + src
-        }
-    } else {
-        alert('شما باید متغیر  "ROOT_URL_ASSETS_SUPCHAT" را برای استفاده از "SupChat" تعریف و مقدار دهی کنید')
-    }
-}
-
 
 // Add Styles and Fonts and Scripts
 
@@ -72,15 +47,15 @@ let SUPCHAT_SCRIPTS = [
 ]
 
 for (let font of SUPCHAT_FONTS) {
-    _add_css_link(_get_link_assets_supchat(font.src, font.external))
+    _add_css_link(get_link_assets_supchat(font.src, font.external))
 }
 
 for (let css of SUPCHAT_STYLE) {
-    _add_css_link(_get_link_assets_supchat(css.src, css.external))
+    _add_css_link(get_link_assets_supchat(css.src, css.external))
 }
 
 for (let js of SUPCHAT_SCRIPTS) {
-    _add_js_link(_get_link_assets_supchat(js.src, js.external))
+    _add_js_link(get_link_assets_supchat(js.src, js.external))
 }
 
 

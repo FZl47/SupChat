@@ -276,7 +276,7 @@ def ListIsNone(List):
         return True
 
 
-def RandomString(Len=40):
+def RandomString(Len=30):
     return ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=Len))
 
 

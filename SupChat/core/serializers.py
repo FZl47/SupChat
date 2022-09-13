@@ -1,111 +1,58 @@
-def SerializerSection(section):
+def Serializer_supchat_style(style):
     return {
-        'id': section.id,
-        'title': section.title
+        'background_chat': style.get_background_chat(),
+        'theme_type': style.get_theme_display(),
+        'theme_src': style.theme,
     }
 
 
-def SerializerUser(user):
-    data = {}
-    data['name'] = user.get_full_name() or 'Unknown'
-    data['image'] = user.get_image()
-    # data['session_key'] = user.session_key
-    return data
-
-
-def SerializerAdminUser(admin):
+def Serializer_supchat_config(config):
     return {
-        'name': admin.get_full_name(),
-        'image': admin.image.url
+        'language': config.language,
+        'transfer_chat_is_active': config.transfer_chat_is_active,
+        'default_message_is_active': config.default_message_is_active,
+        'default_message': config.default_message,
+        'notif_message_is_active': config.notif_message_is_active,
+        'notif_message_show_after': config.notif_message_show_after,
+        'notif_message': config.notif_message,
+        'end_chat_auto': config.end_chat_auto,
+        'end_chat_after': config.end_chat_after,
+        'show_title_section': config.show_title_section,
+        'show_last_seen': config.show_last_seen,
+        'show_seen_message': config.show_seen_message,
+        'can_delete_message': config.can_delete_message,
+        'can_edit_message': config.can_edit_message,
+        'get_phone_or_email': config.get_phone_or_email,
     }
 
 
-def SerializerMessageText(message):
-    d = {
-        'id': message.id,
-        'time_send': message.get_time(),
-        'time_send_full': message.get_time_full(),
-        'text': message.text,
-        'type': message.type,
-        'sender': message.sender,
-        'deleted': message.deleted,
-        'seen': message.seen,
-        'edited':message.edited,
-        'section': SerializerSection(message.chat.section),
-        'chat_id': message.chat_id,
-        'chat_url': str(message.chat.get_url_absolute_admin()),
-        'user': SerializerUser(message.chat.user),
-        'count_unread_message': message.chat.get_count_messages_without_seen()
-    }
-    if message.sender == 'admin':
-        d['sender_user'] = SerializerAdminUser(message.chat.admin)
-    else:
-        d['sender_user'] = SerializerUser(message.chat.user)
-    return d
-
-
-
-def SerializerMessageTextEdited(message):
+def Serializer_supchat(supchat):
     return {
-        'id':message.id,
-        'text':message.text,
-        'edited':True,
-        'chat_id':message.chat_id
+        'supchat': {
+            'title':supchat.title
+        },
+        'style': Serializer_supchat_style(supchat.style),
+        'config': Serializer_supchat_config(supchat.config),
     }
 
 
-def SerializerMessageAudio(message):
-    d = {
-        'id': message.id,
-        'time_send': message.get_time(),
-        'time_send_full': message.get_time_full(),
-        'audio': message.audio.url,
-        'audio_time': message.audio_time,
-        'type': message.type,
-        'sender': message.sender,
-        'deleted': message.deleted,
-        'seen': message.seen,
-        'edited': message.edited,
-        'section': SerializerSection(message.chat.section),
-        'chat_id': message.chat_id,
-        'chat_url': str(message.chat.get_url_absolute_admin()),
-        'user': SerializerUser(message.chat.user),
-        'count_unread_message': message.chat.get_count_messages_without_seen()
-
-    }
-    if message.sender == 'admin':
-        d['sender_user'] = SerializerAdminUser(message.chat.admin)
-    else:
-        d['sender_user'] = SerializerUser(message.chat.user)
-    return d
-
-def SerializerMessageDeleted(message):
-    return {
-        'id':message.id
-    }
+def Serializer_section(section,many=False):
+    results = []
+    def wrapper(obj):
+        return {
+            'id':obj.id,
+            'title':obj.title,
+        }
+    if many:
+        for obj in section:
+            results.append(wrapper(obj))
+        return results
+    return wrapper(section)
 
 
-def SerializerChat(chat):
-    if chat != None:
-        messages_list = []
-        chat_data = {}
-        messages = chat.get_messages()
-        for message in messages:
-            d = SerializerMessageText(message)
-            if message.sender == 'user':
-                d['user'] = SerializerUser(chat.user)
-            else:
-                d['user'] = SerializerUser(message.section_user)
-
-            messages_list.append(d)
-        chat_data['messages'] = messages_list
-        return chat_data
-
-    return {'messages': []}
-
-
-def SerializerChatJSON(chat):
-    return {
-        'section': SerializerSection(chat.section),
-        'isActive': chat.isActive
-    }
+def Serializer_chat(chat):
+    if chat:
+        return {
+            'w':'w123'
+        }
+    return None

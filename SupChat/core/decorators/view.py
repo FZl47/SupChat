@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
-from SupChat.models import Admin
+from SupChat.models import Admin, User
+
 
 def admin_authenticated(func):
     """
@@ -23,17 +24,35 @@ def admin_authenticated(func):
 
     return wrapper
 
+
 def require_ajax(func):
-    def wrapper(request,*args,**kwargs):
+    def wrapper(request, *args, **kwargs):
         if request.is_ajax():
-            return func(request,*args,**kwargs)
+            return func(request, *args, **kwargs)
         raise PermissionDenied
+
     return wrapper
 
 
 def require_post_and_ajax(func):
-    def wrapper(request,*args,**kwargs):
+    def wrapper(request, *args, **kwargs):
         if request.method == 'POST' and request.is_ajax():
-            return func(request,*args,**kwargs)
+            return func(request, *args, **kwargs)
         raise PermissionDenied
+
+    return wrapper
+
+
+def get_user(func):
+    def wrapper(request, *args, **kwargs):
+        session_key_user_sup_chat = request.COOKIES.get('session_key_user_sup_chat', None)
+        if session_key_user_sup_chat:
+            user = None
+            try:
+                user = User.objects.get(session_key=session_key_user_sup_chat)
+            except:
+                pass
+            setattr(request, 'user_supchat', None)
+        return func(request, *args, **kwargs)
+
     return wrapper

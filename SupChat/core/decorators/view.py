@@ -46,13 +46,13 @@ def require_post_and_ajax(func):
 def get_user(func):
     def wrapper(request, *args, **kwargs):
         session_key_user_sup_chat = request.COOKIES.get('session_key_user_sup_chat', None)
+        user = None
         if session_key_user_sup_chat:
             user = None
             try:
                 user = User.objects.get(session_key=session_key_user_sup_chat)
             except:
                 pass
-            setattr(request, 'user_supchat', None)
-        return func(request, *args, **kwargs)
-
+        setattr(request, 'user_supchat', user)
+        return func(request, *args)
     return wrapper

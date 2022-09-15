@@ -23,6 +23,6 @@ def loginUser(request, user):
         user_session.save()
 
 
-def createUser():
-    user = User.objects.create()
+def create_user(phone_or_email):
+    user = User.objects.create(phone_or_email=phone_or_email)
     return user

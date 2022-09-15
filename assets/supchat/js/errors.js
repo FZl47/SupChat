@@ -1,6 +1,0 @@
-
-class CustomeErrorSupChat {
-    constructor(text) {
-
-    }
-}

@@ -214,6 +214,7 @@ def ValidationNumber(Number, Bigger=None, Less=None):
     StateNumber = Number.isdigit()
     if Number is not None:
         if StateNumber:
+            Number = int(Number)
             if Bigger is not None and Less is not None:
                 if Number > Bigger and Number < Less:
                     return True

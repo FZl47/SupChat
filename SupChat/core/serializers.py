@@ -29,20 +29,22 @@ def Serializer_supchat_config(config):
 def Serializer_supchat(supchat):
     return {
         'supchat': {
-            'title':supchat.title
+            'title': supchat.title
         },
         'style': Serializer_supchat_style(supchat.style),
         'config': Serializer_supchat_config(supchat.config),
     }
 
 
-def Serializer_section(section,many=False):
+def Serializer_section(section, many=False):
     results = []
+
     def wrapper(obj):
         return {
-            'id':obj.id,
-            'title':obj.title,
+            'id': obj.id,
+            'title': obj.title,
         }
+
     if many:
         for obj in section:
             results.append(wrapper(obj))
@@ -53,6 +55,56 @@ def Serializer_section(section,many=False):
 def Serializer_chat(chat):
     if chat:
         return {
-            'w':'w123'
+            'id': chat.id,
+            'user': '',
+            'admin': '',
+            'messages':Serializer_message(chat.get_messages(),True)
         }
     return None
+
+
+def Serializer_user_basic(user):
+    return {
+        'session_key': user.session_key
+    }
+
+
+def Serializer_text_messagae(text_message):
+    return {
+        'text': text_message.text
+    }
+
+
+def Serializer_audio_messagae(audio_message):
+    return {
+        'audio': audio_message.audio,
+        'audio_time': audio_message.audio_time,
+    }
+
+
+def Serializer_message(message, many=False):
+    results = []
+
+    def wrapper(obj):
+        d = {
+            'id': message.id,
+            'type': message.type,
+            'sender': message.sender,
+            'seen': message.seen,
+            'edited': message.edited,
+            'deleted': message.deleted,
+            'time_send': message.get_time(),
+            'time_send_full': message.get_time_full()
+        }
+        if message.type == 'text':
+            d.update(Serializer_text_messagae(obj))
+        elif message.type == 'audio':
+            d.update(Serializer_audio_messagae(obj))
+
+        return d
+
+    if many:
+        for obj in message:
+            results.append(wrapper(obj))
+        return results
+    return wrapper(message)

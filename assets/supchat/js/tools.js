@@ -1,3 +1,26 @@
+function get_cookie(Name) {
+    let Res = null
+    let Cookie = document.cookie
+    for (let i of Cookie.split(';')) {
+        let S1 = i.split('=')[0]
+        let S2 = i.split('=')[1]
+        if (S1 == Name || S1 == ` ${Name}` | S1 == `${Name} `) {
+            Res = S2
+        }
+    }
+    return Res
+}
+
+function set_cookie(Name, Value, ExpireDay = 30, Path = '/') {
+    let T = new Date()
+    T.setTime(T.getTime() + (ExpireDay * 24 * 60 * 60 * 1000))
+    T = T.toUTCString()
+    if (ExpireDay == 'Session') {
+        T = ''
+    }
+    document.cookie = `${Name}=${Value};expires=${T};path=${Path}`
+}
+
 // Send Ajax
 function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed) {
     let This = this
@@ -41,26 +64,28 @@ function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed) {
 function _add_css_link(src) {
     let css = document.createElement('link')
     css.rel = 'stylesheet'
-    css.href = String(src).replace('//', '/') // Prevent at some bug like : /assets//supchat/...
+    css.href = String(src)
     document.head.appendChild(css)
 }
 
 function _add_js_link(src) {
     let js = document.createElement('script')
-    js.src = String(src).replace('//', '/') // Prevent at some bug like : /assets//supchat/...
+    js.src = String(src)
     document.body.appendChild(js)
 }
 
 
-function get_link_assets_supchat(src, external = false) {
+function get_link_assets_supchat(src, external = false, append_supchat_url = true, append_slah = true) {
     if (typeof ROOT_URL_ASSETS_SUPCHAT != "undefined") {
         if (external) {
             return src
         } else {
-            return ROOT_URL_ASSETS_SUPCHAT + 'supchat/' + src
+            return (ROOT_URL_ASSETS_SUPCHAT + (append_supchat_url ? 'supchat' : '') + (append_slah ? '/' : '') + src).replace('//','/') // Prevent at some bug like : /assets//supchat/...
         }
     } else {
-        alert('شما باید متغیر  "ROOT_URL_ASSETS_SUPCHAT" را برای استفاده از "SupChat" تعریف و مقدار دهی کنید')
+        let error = 'شما باید متغیر "ROOT_URL_ASSETS_SUPCHAT" را برای استفاده از "SupChat" تعریف و مقدار دهی کنید'
+        alert(error)
+        throw (error)
     }
 }
 
@@ -74,7 +99,7 @@ function check_input_validation(Input, Bigger, Less, SetIn = 'Input', Type = 'Te
     if (Type == 'Number') {
         Value = validation_number(Value)
     }
-    if (Value != '' && Value != ' ' && Value != null && Value != undefined && IsBlank(Value) != true && Value != false) {
+    if (Value != '' && Value != ' ' && Value != null && Value != undefined && is_blank(Value) != true && Value != false) {
         if (ValueLength < Less && ValueLength > Bigger) {
             State = true
         } else {
@@ -142,6 +167,6 @@ function validation_number(Text) {
     return State
 }
 
-function IsBlank(Value) {
+function is_blank(Value) {
     return (!Value || /^\s*$/.test(Value));
 }

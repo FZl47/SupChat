@@ -13,12 +13,14 @@
 # from SupChat.core.serializers import SerializerChat, SerializerSection, SerializerUser, SerializerAdminUser, SerializerMessageAudio
 # from SupChat.core.auth.view import getUser, getUserSession, createUser
 # from SupChat.core.tools import format_file
-
+import json
 from django.http import HttpResponse, JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from SupChat.core.decorators.view import admin_authenticated, require_post_and_ajax, get_user
+from SupChat.core.auth.view import create_user
 from SupChat.core import serializers
 from SupChat.models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin
+from SupChat.core import tools
 
 
 def get_supchat():
@@ -353,9 +355,9 @@ def sup_chat_run(request):
     supchat = get_supchat()
     sections = Section.objects.filter(is_active=True)
     if supchat and sections:
-        chat = ChatGroup.objects.filter(user=request.user_supchat,is_active=True)
+        chat = ChatGroup.objects.filter(user=request.user_supchat, is_active=True).first()
         supchat_serialized = serializers.Serializer_supchat(supchat)
-        section_serialized = serializers.Serializer_section(sections,True)
+        section_serialized = serializers.Serializer_section(sections, True)
         chat_serializer = serializers.Serializer_chat(chat)
         context['supchat'] = supchat_serialized
         context['sections'] = section_serialized
@@ -366,9 +368,83 @@ def sup_chat_run(request):
     return JsonResponse(context)
 
 
+def create_user(phone_or_email):
+    return User.objects.create(phone_or_email=phone_or_email)
+
+
+@get_user
+def get_user_by_request_or_phone_email(request, phone_or_email):
+    exists = False
+    user = request.user_supchat
+    if user == None:
+        user = User.objects.filter(phone_or_email=phone_or_email).first()
+    return user
+
+
 @csrf_exempt
 @require_post_and_ajax
 @get_user
 def start_chat(request):
-    print(request.body)
-    return JsonResponse({})
+    context = {}
+
+    def create_chat(user, admin, section):
+        return ChatGroup.objects.create(user=user, admin=admin, section=section)
+
+    def get_chat(user, admin, section):
+        return ChatGroup.objects.filter(user=user, admin=admin, section=section, is_active=True).first()
+
+
+    data = json.loads(request.body)
+    phone_or_email = data.get('phone_or_email') or ''
+    section_id = data.get('section_id') or 0
+    section = Section.objects.filter(id=section_id).first()
+    supchat = get_supchat()
+    admin = section.get_admin_less_busy()
+
+    if supchat and section:
+        phone_or_email_is_valid = False
+        if supchat.config.get_phone_or_email:
+            if tools.ValidationEmail(phone_or_email, 3, 100) or tools.ValidationNumber(phone_or_email, 10, 15):
+                phone_or_email_is_valid = True
+
+        if (supchat.config.get_phone_or_email == False) or phone_or_email_is_valid:
+            if admin:
+                user = get_user_by_request_or_phone_email(request, phone_or_email)
+                if user == None:
+                    user = create_user(phone_or_email)
+                    context['user_created'] = True
+                else:
+                    context['user_created'] = False
+                chat = get_chat(user, admin, section)
+                if chat == None:
+                    chat = create_chat(user, admin, section)
+                context['chat'] = serializers.Serializer_chat(chat)
+                context['user'] = serializers.Serializer_user_basic(user)
+                context['status_code'] = 200
+            else:
+                context['status_code'] = 404
+        else:
+            context['status_code'] = 400
+    else:
+        context['status_code'] = 404
+
+    return JsonResponse(context)
+
+
+@csrf_exempt
+@require_post_and_ajax
+@get_user
+def get_messages(request):
+    context = {}
+    data = json.loads(request.body)
+    chat_id = data.get('chat_id') or 0
+    chat = ChatGroup.objects.filter(id=chat_id, user=request.user_supchat, is_active=True).first()
+    if chat:
+        messages = chat.message_set.all().select_subclasses()
+        context['messages'] = serializers.Serializer_message(messages, True)
+        context['status_code'] = 200
+
+    else:
+        context['messages'] = []
+        context['status_code'] = 404
+    return JsonResponse(context)

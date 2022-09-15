@@ -39,5 +39,6 @@ urlpatterns = [
     # ---------------- V3 ----------------
     path('run',views.sup_chat_run),
     path('start-chat',views.start_chat),
+    path('get-messages',views.get_messages),
 
 ]

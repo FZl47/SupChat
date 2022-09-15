@@ -85,6 +85,10 @@ class Section(models.Model):
     def __str__(self):
         return self.title
 
+
+    def get_admin_less_busy(self):
+        return self.admin_set.order_by('-chatgroup__is_active').first()
+
     # def get_chats(self):
     #     """
     #         sort chats by last message
@@ -227,7 +231,6 @@ class User(models.Model):
 
 
 
-
 class ChatGroup(models.Model):
 
     TYPE_CLOSE_CHOICE = (
@@ -245,6 +248,9 @@ class ChatGroup(models.Model):
 
     def __str__(self):
         return f"Chat Group {self.user.get_full_name()} - {self.admin.get_full_name()}"
+
+    def get_messages(self):
+        return self.message_set.filter(deleted=False).select_subclasses().all()
 
     # def get_messages_by_user(self):
     #     messages = self.message_set.filter(deleted=False).select_subclasses().all()
@@ -276,11 +282,11 @@ class ChatGroup(models.Model):
     # def get_messages_without_seen_admin(self):
     #     return self.get_messages_without_seen().filter(sender='admin')
     #
-    # def seen_messages_user(self):
-    #     self.message_set.filter(sender='user', seen=False).update(seen=True)
-    #
-    # def seen_messages_admin(self):
-    #     self.message_set.filter(sender='admin', seen=False).update(seen=True)
+    def seen_messages_user(self):
+        self.message_set.filter(sender='user', seen=False).update(seen=True)
+
+    def seen_messages_admin(self):
+        self.message_set.filter(sender='admin', seen=False).update(seen=True)
     #
     # def get_url_absolute_admin(self):
     #     return reverse_lazy('SupChat:admin_panel_chat', args=(self.id, self.user.get_full_name()))
@@ -304,6 +310,7 @@ class BlackList(models.Model):
 
 class MessageBase(models.Model):
     # TYPE_MESSAGE = ['text','audio']
+
     SENDER_MESSAGE = (
         ('admin', 'Admin'),
         ('user', 'User'),
@@ -368,3 +375,5 @@ class LogMessageAdmin(models.Model):
 
     def __str__(self):
         return self.title
+
+

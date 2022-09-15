@@ -20,10 +20,16 @@ class TranslateSupChat {
             'Please select the desired section'
         ],
         'لطفا تلفن همراه یا ایمیل خود را وارد نمایید': [
-            'Please enter your mobile phone or email'
+            'Please enter your phone or email'
         ],
         'شروع': [
             'Start'
+        ],
+        'پایان گفت و wگو':[
+            'End'
+        ],
+        'پیام':[
+            'Message'
         ]
     }
 
@@ -33,16 +39,6 @@ class TranslateSupChat {
         } catch (e) {
             return text
         }
-    }
-
-}
-
-let LIST_TEXTMESSAGE_OBJECTS = []
-
-class TextMessage {
-    constructor(message) {
-        LIST_TEXTMESSAGE_OBJECTS.push(this)
-
     }
 
 }
@@ -66,7 +62,6 @@ class SupChat {
         SendAjaxSupChat(`run`, {}, 'POST', function (response) {
             let status_code = response.status_code
             if (status_code == 200) {
-                console.log(response)
                 This._set_supchat_info(response)
                 This._create_element_supchat()
                 This._set_elements()
@@ -87,12 +82,17 @@ class SupChat {
         this.IS_OPEN = false
 
         // Add Theme Css
-        _add_css_link(ROOT_URL_ASSETS_SUPCHAT + this.STYLE.theme_src)
+        _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
 
     }
 
     _create_element_supchat() {
         let supchat = document.createElement('div')
+        if (this.CONFIG.language == 'fa') {
+            supchat.dir = 'rtl'
+        } else {
+            supchat.dir = 'ltr'
+        }
         let btn_open_supchat = document.createElement('button')
         supchat.id = 'SupChat'
         btn_open_supchat.id = 'BtnOpenSupChat'
@@ -108,6 +108,12 @@ class SupChat {
             btn_open_supchat: document.getElementById('BtnOpenSupChat'),
             btn_close_supchat: document.getElementById('BtnCloseSupChat'),
             supchat_start: document.getElementById('SupChatStart'),
+            supchat_content: document.getElementById('SupChatContent'),
+            supchat_content_header: document.querySelector('#SupChatContent header'),
+            supchat_content_main: document.querySelector('#SupChatContent main'),
+            supchat_content_footer: document.querySelector('#SupChatContent footer'),
+            supchat_messages_chat: document.querySelector('#supchat-messages-chat'),
+            supchat_loading: document.getElementById('SupChatLoading'),
             btn_start_chat: document.getElementById('BtnStartChatSupChat'),
             input_choice_section: document.getElementById('input-choice-section-supchat'),
             input_phone_or_email: document.getElementById('input-enter-phone-or-email-supchat'),
@@ -115,16 +121,63 @@ class SupChat {
     }
 
     _init_chat_or_register() {
-        let elements = this.ELEMENTS
         if (this.CHAT) {
-
+            this._create_messages(this.CHAT.messages)
+            SUP_CHAT.toggle_container_supchat_content('show')
         } else {
-            elements.supchat_start.setAttribute('container-show', '')
+            this.toggle_container_supchat_start('show')
+        }
+    }
+
+    toggle_container_supchat_content(state) {
+        if (state == 'show') {
+            this.ELEMENTS.supchat_content.setAttribute('container-show', '')
+        } else {
+            this.ELEMENTS.supchat_content.removeAttribute('container-show')
+        }
+    }
+
+    toggle_container_supchat_start(state) {
+        if (state == 'show') {
+            this.ELEMENTS.supchat_start.setAttribute('container-show', '')
+        } else {
+            this.ELEMENTS.supchat_start.removeAttribute('container-show')
+        }
+    }
+
+    toggle_loading(state) {
+        if (state == 'show') {
+            this.ELEMENTS.supchat_loading.setAttribute('container-show', '')
+        } else {
+            this.ELEMENTS.supchat_loading.removeAttribute('container-show')
+        }
+    }
+
+    // _get_messages(chat_id) {
+    //     let This = this
+    //     SendAjaxSupChat('get-messages', {
+    //         'chat_id': chat_id
+    //     }, 'POST', function (response) {
+    //         let status = response.status_code
+    //         if (status == 200) {
+    //             This._create_messages(response.messages)
+    //         } else {
+    //             This.toggle_container_supchat_start('show')
+    //         }
+    //     })
+    // }
+
+    _create_messages(messages) {
+        for (let message of messages) {
+            if (message.type == 'text') {
+                new TextMessage(message)
+            } else if (message.type == 'audio') {
+                new AudioMessage(message)
+            }
         }
     }
 
     _events() {
-        let SUP_CHAT = this
         let elements = SUP_CHAT.ELEMENTS
 
         function toggle_state_supchat(state) {
@@ -168,29 +221,107 @@ class SupChat {
 
         elements.btn_start_chat.addEventListener('click', function () {
             let valid = this.getAttribute('valid') || 'false'
-            let data = {}
-            if (SUP_CHAT.CONFIG.get_phone_or_email) {
-                data['phone_or_email'] = elements.input_phone_or_email.value
-            }
-            if (SUP_CHAT.SECTIONS.length <= 1) {
-                data['section_id'] = SUP_CHAT.SECTIONS[0].id
-            } else {
-                data['section_id'] = elements.input_choice_section.value
-            }
-
             if (valid == 'true') {
-                SendAjaxSupChat('start-chat', data, 'POST', function (response) {
-                    console.log(response)
-                })
+                SUP_CHAT.start_chat()
             }
         })
 
     }
 
-    toggle_loading(state) {
+    start_chat() {
+        if (!this.CHAT) {
+            let elements = this.ELEMENTS
+            let data = {}
+            if (this.CONFIG.get_phone_or_email) {
+                data['phone_or_email'] = elements.input_phone_or_email.value
+            }
+            if (this.SECTIONS.length <= 1) {
+                data['section_id'] = this.SECTIONS[0].id
+            } else {
+                data['section_id'] = elements.input_choice_section.value
+            }
 
+            SendAjaxSupChat('start-chat', data, 'POST', function (response) {
+                let status = response.status_code
+                if (status == 200) {
+                    let user_created = response.user_created || false
+                    set_cookie('session_key_user_sup_chat', response.user.session_key, 365)
+                    SUP_CHAT.CHAT = response.chat
+                    SUP_CHAT.toggle_container_supchat_content('show')
+                }
+            })
+        }
+    }
+
+
+}
+
+class MessageSupChat {
+    constructor(message) {
+        if (message.sender == 'user') {
+            if (SUP_CHAT.TYPE_USER == 'USER') {
+                this.create_message_you(message)
+            } else {
+                this.create_message_other(message)
+            }
+        } else {
+            if (SUP_CHAT.TYPE_USER == 'ADMIN') {
+                this.create_message_you(message)
+            } else {
+                this.create_message_other(message)
+            }
+        }
+    }
+}
+
+let LIST_TEXTMESSAGE_OBJECTS = []
+
+class TextMessage extends MessageSupChat {
+    constructor(message) {
+        LIST_TEXTMESSAGE_OBJECTS.push(this)
+        super(message)
+    }
+
+
+    create_message_you(message) {
+        let message_element = document.createElement('div')
+        message_element.classList.add('container-message-supchat')
+        message_element.setAttribute('sender-type', 'you')
+        message_element.innerHTML = get_node_text_message_you(message)
+        SUP_CHAT.ELEMENTS.supchat_messages_chat.appendChild(message_element)
+    }
+
+    create_message_other(message) {
+        let message_element = document.createElement('div')
+        message_element.classList.add('container-message-supchat')
+        message_element.setAttribute('sender-type', 'other')
+        message_element.innerHTML = get_node_text_message_other(message)
+        SUP_CHAT.ELEMENTS.supchat_messages_chat.appendChild(message_element)
     }
 
 }
 
 
+class AudioMessage extends MessageSupChat {
+    constructor(message) {
+        super(message)
+    }
+
+    create_message_you(message) {
+        let message_element = document.createElement('div')
+        message_element.classList.add('container-message-supchat')
+        message_element.setAttribute('sender-type', 'you')
+        message_element.innerHTML = get_node_audio_message_you(message)
+        SUP_CHAT.ELEMENTS.supchat_messages_chat.appendChild(message_element)
+        new AudioSimple(message_element.querySelector('audio'))
+    }
+
+    create_message_other(message) {
+        let message_element = document.createElement('div')
+        message_element.classList.add('container-message-supchat')
+        message_element.setAttribute('sender-type', 'other')
+        message_element.innerHTML = get_node_audio_message_other(message)
+        SUP_CHAT.ELEMENTS.supchat_messages_chat.appendChild(message_element)
+        new AudioSimple(message_element.querySelector('audio'))
+    }
+}

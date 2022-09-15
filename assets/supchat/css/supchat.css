@@ -5,7 +5,6 @@
 
 #SupChat {
     font-family: VazirMatn;
-    direction: rtl;
     position: fixed;
     right: 18px;
     bottom: 18px;
@@ -30,10 +29,17 @@
 }
 
 #SupChatStart {
-    text-align: center;
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+}
+
+#SupChatContent[container-show]{
+    display: flex;
+}
+
+#SupChatLoading[container-show]{
+    display: block;
 }
 
 #SupChatStart[container-show] {
@@ -41,6 +47,7 @@
 }
 
 #SupChatStart header {
+    text-align: right;
     height: 55px;
     padding: 10px 8px;
     border-bottom: 1px solid #eee;
@@ -61,6 +68,7 @@
 }
 
 #SupChatStart footer {
+    text-align: center;
     height: 55px;
 }
 
@@ -183,7 +191,7 @@
     position: absolute;
     top: 8px;
     left: 8px;
-    font-size: 150%;
+    font-size: 130%;
     color: #ee4a4e;
     background: none;
     border: none;

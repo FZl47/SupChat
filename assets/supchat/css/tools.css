@@ -13,7 +13,6 @@
 .field-form-supchat {
     margin: auto;
     padding: 10px 20px;
-    text-align: right;
 }
 
 input::placeholder {
@@ -22,7 +21,8 @@ input::placeholder {
 
 .field-form-supchat label {
     display: block;
-    font-size: 85%;
+    font-size: 80%;
+    word-spacing: .5px;
     color: #777;
 }
 

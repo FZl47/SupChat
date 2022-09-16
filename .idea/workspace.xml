@@ -3,21 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="87823259-0142-41f3-b17d-acbad3750530" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SupChat/core/auth/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/core/auth/view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SupChat/core/decorators/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/core/decorators/view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SupChat/core/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/core/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SupChat/core/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/core/tools.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SupChat/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SupChat/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SupChat/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/SupChat/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/css/supchat.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/supchat.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/css/tools.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/css/tools.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/js/errors.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/supchat/js/nodes.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/nodes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/supchat/js/tools.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/supchat/js/tools.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -230,6 +216,7 @@
       <workItem from="1663144393290" duration="14933000" />
       <workItem from="1663168725637" duration="299000" />
       <workItem from="1663256882676" duration="13685000" />
+      <workItem from="1663349628880" duration="841000" />
     </task>
     <servers />
   </component>

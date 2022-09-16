@@ -107,12 +107,33 @@ function get_node_supchat() {
                         <p></p>
                         <i class="fa fa-times"></i>
                     </div>
-                    <input id="input-message-supchat" type-message="new" type="text" placeholder="... ${SUP_CHAT.TRANSLATE.get('پیام')}">
-                    <button id="btn-send-message-supchat">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"></path>
-                        </svg>
-                    </button>
+                     <div container-type="send-message-main">
+                        <button id="btn-send-message-supchat">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"></path>
+                            </svg>
+                        </button>
+                        <input id="input-message-supchat" type-message="new" type="text" placeholder="... ${SUP_CHAT.TRANSLATE.get('پیام')}">
+                    </div>
+                    <div container-type="voice-recording">
+                        <p></p>
+                    </div> 
+                    <div container-type="voice-send-or-cancel">
+                        <div>
+                            <p></p>
+                            <p></p>
+                        </div>
+                        <div>
+                            <button>    
+                                <i class="fal fa-times"></i>
+                            </button>
+                            <button>    
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                     <button id="btn-record-voice-supchat">
                         <i class="fal fa-microphone"></i>
                     </button>
@@ -156,6 +177,7 @@ function get_node_footer_message_you(message) {
     `
     return footer
 }
+
 function get_node_footer_message_other(message) {
     let footer = `
          <footer>

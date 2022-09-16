@@ -80,7 +80,7 @@ function get_link_assets_supchat(src, external = false, append_supchat_url = tru
         if (external) {
             return src
         } else {
-            return (ROOT_URL_ASSETS_SUPCHAT + (append_supchat_url ? 'supchat' : '') + (append_slah ? '/' : '') + src).replace('//','/') // Prevent at some bug like : /assets//supchat/...
+            return (ROOT_URL_ASSETS_SUPCHAT + (append_supchat_url ? 'supchat' : '') + (append_slah ? '/' : '') + src).replace('//', '/') // Prevent at some bug like : /assets//supchat/...
         }
     } else {
         let error = 'شما باید متغیر "ROOT_URL_ASSETS_SUPCHAT" را برای استفاده از "SupChat" تعریف و مقدار دهی کنید'
@@ -169,4 +169,24 @@ function validation_number(Text) {
 
 function is_blank(Value) {
     return (!Value || /^\s*$/.test(Value));
+}
+
+
+function generate_id(len) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (var i = 0; i < len; i++) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
+}
+
+function get_protocol_socket() {
+    if (location.protocol == 'http:') {
+        return 'ws://'
+    } else {
+        return 'wss://'
+    }
 }

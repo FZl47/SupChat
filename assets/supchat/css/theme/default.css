@@ -10,3 +10,7 @@
     background: #2fffed;
     color: #fff;
 }
+
+#SupChatContent header {
+    background: linear-gradient(40deg, #02d7c4, #02ebd8);
+}

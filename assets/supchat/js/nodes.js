@@ -64,21 +64,31 @@ function get_node_supchat() {
         </div>
         <div id="SupChatContent">
             <header>
-                <div class="info-chat-supchat">
+                <div class="content-header-supchat">
+                    <div class="info-chat-supchat">
                     <div>
-                        <img src="" alt="">
+                        <img id="image-user-chat-supchat" src="/assets/supchat/images/default/iconUser.png" alt="image user">
+                        <div class="container-status-user-chat-supchat">
+                            <span id="status-online-info-chat-supchat" state="online"></span>
+                            <span id="last-seen-info-chat-supchat">اخرین بازدید 2 ساعت پیش</span>
+                        </div>
+                    </div>
                         <div>
-                            <span id="status-online-info-chat-supchat"></span>
-                            <span id="last-seen-info-chat-supchat"></span>
+                            <p id="name-user-info-chat-supchat">Fazel Momeni</p>
+                            <p id="name-section-info-chat-supchat">پشتیبانی فنی</p>
                         </div>
                     </div>
                     <div>
-                        <p id="name-user-info-chat-supchat"></p>
-                        <p id="name-section-info-chat-supchat"></p>
+                        <button id="btn-more-option-chat-supchat">
+                            <i class="fal fa-ellipsis-v"></i>
+                        </button>
+                        <div id="container-more-options-chat-supchat">
+                            <button id="btn-end-chat">
+                                <i class="fal fa-sign-out-alt"></i>
+                                ${SUP_CHAT.TRANSLATE.get('پایان گفت و گو')}
+                            </button>  
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <button id="btn-end-chat">${SUP_CHAT.TRANSLATE.get('پایان گفت و گو')}</button>
                 </div>
             </header>
             <main>
@@ -104,24 +114,31 @@ function get_node_supchat() {
                     <!-- voice-send-or-cancel  -->
                     <!-- voice-sending  -->
                     <div container-type="send-message-edit-main">
-                        <p></p>
+                        <p id="content-message-for-edit-chat-supchat"></p>
                         <i class="fa fa-times"></i>
                     </div>
                      <div container-type="send-message-main">
-                        <button id="btn-send-message-supchat">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"></path>
-                            </svg>
-                        </button>
-                        <input id="input-message-supchat" type-message="new" type="text" placeholder="... ${SUP_CHAT.TRANSLATE.get('پیام')}">
+                        <div class="container-btns-send-message-voice">
+                            <button id="btn-record-voice-supchat">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12,15a4,4,0,0,0,4-4V5A4,4,0,0,0,8,5v6A4,4,0,0,0,12,15ZM10,5a2,2,0,0,1,4,0v6a2,2,0,0,1-4,0Zm10,6a1,1,0,0,0-2,0A6,6,0,0,1,6,11a1,1,0,0,0-2,0,8,8,0,0,0,7,7.93V21H9a1,1,0,0,0,0,2h6a1,1,0,0,0,0-2H13V18.93A8,8,0,0,0,20,11Z"></path>
+                                </svg>
+                            </button>
+                             <button id="btn-send-message-supchat">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <textarea id="input-message-supchat" type-message="new" type="text" placeholder="... ${SUP_CHAT.TRANSLATE.get('پیام')}"></textarea>
                     </div>
                     <div container-type="voice-recording">
-                        <p></p>
+                        <p id="time-voice-recording-supchat">0.0</p>
                     </div> 
                     <div container-type="voice-send-or-cancel">
                         <div>
-                            <p></p>
-                            <p></p>
+                            <p>... ${SUP_CHAT.TRANSLATE.get('صدای ضبط شده')}</p>
+                            <p id="time-voice-recorded-supchat">0.0</p>
                         </div>
                         <div>
                             <button>    
@@ -134,9 +151,6 @@ function get_node_supchat() {
                             </button>
                         </div>
                     </div>
-                    <button id="btn-record-voice-supchat">
-                        <i class="fal fa-microphone"></i>
-                    </button>
                 </div>
             </footer>
         </div>

@@ -25,11 +25,14 @@ class TranslateSupChat {
         'شروع': [
             'Start'
         ],
-        'پایان گفت و wگو':[
+        'پایان گفت و wگو': [
             'End'
         ],
-        'پیام':[
+        'پیام': [
             'Message'
+        ],
+        'صدای ضبط شده': [
+            'Recorded voice'
         ]
     }
 
@@ -49,11 +52,13 @@ class SupChat {
 
     constructor(type_user) {
         this.SUPCHAT = undefined
+        this.SOCKET = undefined
         this.CHAT = undefined
         this.CONFIG = undefined
         this.STYLE = undefined
         this.ELEMENTS = undefined
         this.TRANSLATE = undefined
+        this.CAN_CREATE_CONNECTION = true
         this.TYPE_USER = type_user
     }
 
@@ -117,13 +122,16 @@ class SupChat {
             btn_start_chat: document.getElementById('BtnStartChatSupChat'),
             input_choice_section: document.getElementById('input-choice-section-supchat'),
             input_phone_or_email: document.getElementById('input-enter-phone-or-email-supchat'),
+            btn_more_option_chat_supchat: document.getElementById('btn-more-option-chat-supchat'),
+            container_more_option_chat_supchat: document.getElementById('container-more-options-chat-supchat'),
+            btn_send_message_supchat: document.getElementById('btn-send-message-supchat'),
+            input_message_supchat: document.getElementById('input-message-supchat'),
         }
     }
 
     _init_chat_or_register() {
         if (this.CHAT) {
-            this._create_messages(this.CHAT.messages)
-            SUP_CHAT.toggle_container_supchat_content('show')
+            this.init_chat()
         } else {
             this.toggle_container_supchat_start('show')
         }
@@ -153,19 +161,6 @@ class SupChat {
         }
     }
 
-    // _get_messages(chat_id) {
-    //     let This = this
-    //     SendAjaxSupChat('get-messages', {
-    //         'chat_id': chat_id
-    //     }, 'POST', function (response) {
-    //         let status = response.status_code
-    //         if (status == 200) {
-    //             This._create_messages(response.messages)
-    //         } else {
-    //             This.toggle_container_supchat_start('show')
-    //         }
-    //     })
-    // }
 
     _create_messages(messages) {
         for (let message of messages) {
@@ -226,6 +221,28 @@ class SupChat {
             }
         })
 
+        elements.btn_send_message_supchat.addEventListener('click', function () {
+            let state = this.getAttribute('state') || 'false'
+            if (state == 'true') {
+
+            }
+        })
+
+        elements.input_message_supchat.addEventListener('input', function () {
+            let value = this.value
+            if (!is_blank(value)) {
+                elements.btn_send_message_supchat.setAttribute('state', 'true')
+            } else {
+                elements.btn_send_message_supchat.setAttribute('state', 'false')
+            }
+        })
+
+    }
+
+    init_chat() {
+        this._create_messages(this.CHAT.messages)
+        SUP_CHAT.toggle_container_supchat_content('show')
+        // this.create_connection()
     }
 
     start_chat() {
@@ -247,17 +264,60 @@ class SupChat {
                     let user_created = response.user_created || false
                     set_cookie('session_key_user_sup_chat', response.user.session_key, 365)
                     SUP_CHAT.CHAT = response.chat
-                    SUP_CHAT.toggle_container_supchat_content('show')
+                    SUP_CHAT.init_chat()
                 }
             })
         }
     }
 
 
+    // Socket
+    create_connection() {
+        if (this.CAN_CREATE_CONNECTION) {
+            this.toggle_loading('show')
+            let socket = new WebSocket(get_protocol_socket() + (URL_BACKEND_SUPCHAT + '/ws/chat/user/').replace('//', '/'))
+            this.SOCKET = socket
+            socket.onmessage = function (e) {
+                SUP_CHAT.socket_recive(e)
+            }
+            socket.onopen = function (e) {
+                SUP_CHAT.toggle_loading('hide')
+                SUP_CHAT.socket_open(e)
+            }
+            socket.onclose = function (e) {
+                SUP_CHAT.socket_close(e)
+            }
+            socket.onerror = function (e) {
+                SUP_CHAT.socket_error(e)
+            }
+        }
+    }
+
+    socket_recive(e) {
+
+    }
+
+    socket_open(e) {
+        console.log('awd')
+    }
+
+    socket_close(e) {
+
+    }
+
+    socket_error(e) {
+
+    }
+
+    send_message(text_message) {
+
+    }
+
 }
 
 class MessageSupChat {
     constructor(message) {
+        this.ID = generate_id(10)
         if (message.sender == 'user') {
             if (SUP_CHAT.TYPE_USER == 'USER') {
                 this.create_message_you(message)
@@ -288,6 +348,7 @@ class TextMessage extends MessageSupChat {
         message_element.classList.add('container-message-supchat')
         message_element.setAttribute('sender-type', 'you')
         message_element.innerHTML = get_node_text_message_you(message)
+        this.ELEMENTS.message = message_element
         SUP_CHAT.ELEMENTS.supchat_messages_chat.appendChild(message_element)
     }
 
@@ -296,6 +357,7 @@ class TextMessage extends MessageSupChat {
         message_element.classList.add('container-message-supchat')
         message_element.setAttribute('sender-type', 'other')
         message_element.innerHTML = get_node_text_message_other(message)
+        this.ELEMENTS.message = message_element
         SUP_CHAT.ELEMENTS.supchat_messages_chat.appendChild(message_element)
     }
 
@@ -312,6 +374,7 @@ class AudioMessage extends MessageSupChat {
         message_element.classList.add('container-message-supchat')
         message_element.setAttribute('sender-type', 'you')
         message_element.innerHTML = get_node_audio_message_you(message)
+        this.ELEMENTS.message = message_element
         SUP_CHAT.ELEMENTS.supchat_messages_chat.appendChild(message_element)
         new AudioSimple(message_element.querySelector('audio'))
     }
@@ -321,6 +384,7 @@ class AudioMessage extends MessageSupChat {
         message_element.classList.add('container-message-supchat')
         message_element.setAttribute('sender-type', 'other')
         message_element.innerHTML = get_node_audio_message_other(message)
+        this.ELEMENTS.message = message_element
         SUP_CHAT.ELEMENTS.supchat_messages_chat.appendChild(message_element)
         new AudioSimple(message_element.querySelector('audio'))
     }

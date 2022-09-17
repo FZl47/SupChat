@@ -3,14 +3,14 @@ from SupChat.core import consumers
 from SupChat import views
 
 app_name = 'Chat'
-def pathWs(url,handler):
+def path_ws(url,handler):
     URL_BASE_WEBSOCKET = 'ws/'
     url = f"{URL_BASE_WEBSOCKET}{url}"
     return path(url,handler)
 
 
 websocket_urlpatterns = [
-    # pathWs('chat/user/',consumers.ChatUser.as_asgi()),
+    path_ws('chat/user/<chat_id>',consumers.ChatUser.as_asgi()),
     # pathWs('chat/admin/<id_chat>/',consumers.ChatAdmin.as_asgi()),
     # pathWs('section/admin/<section_id>/',consumers.ChatAdminSection.as_asgi()),
 ]

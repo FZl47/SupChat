@@ -16,6 +16,7 @@
 import json
 from django.http import HttpResponse, JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Count
 from SupChat.core.decorators.view import admin_authenticated, require_post_and_ajax, get_user
 from SupChat.core.auth.view import create_user
 from SupChat.core import serializers
@@ -353,7 +354,7 @@ def get_supchat():
 def sup_chat_run(request):
     context = {}
     supchat = get_supchat()
-    sections = Section.objects.filter(is_active=True)
+    sections = Section.objects.annotate(admin_count=Count('admin')).filter(is_active=True,admin_count__gt=0)
     if supchat and sections:
         chat = ChatGroup.objects.filter(user=request.user_supchat, is_active=True).first()
         supchat_serialized = serializers.Serializer_supchat(supchat)

@@ -147,10 +147,7 @@ class Admin(models.Model):
     lastSeen = models.DateTimeField(default=timezone.now)
     status_online = models.CharField(max_length=10, choices=STATUS_ONLINE,default='offline')
     is_busy = models.BooleanField(default=False)
-    """
-        for use group name in consumer ChatAdmin must use method "get_group_name_admin" in model ChatGroup :return GroupNameAdmin_GroupNameUser
-    """
-    group_name = models.CharField(max_length=40, default=f"Group_Admin_{RandomString}",editable=False)
+    group_name = models.CharField(max_length=40, default=RandomString,editable=False)
 
     def __str__(self):
         return self.get_full_name()
@@ -218,7 +215,7 @@ class User(models.Model):
     phone_or_email = models.CharField(max_length=150,null=True,blank=True)
     last_seen = models.DateTimeField(null=True, blank=True, default=timezone.now)
     status_online = models.CharField(max_length=10, choices=STATUS_ONLINE, default='offline')
-    group_name = models.CharField(max_length=40, default=f"Group_User_{RandomString}",editable=False)
+    group_name = models.CharField(max_length=40, default=RandomString,editable=False)
 
     def __str__(self):
         return self.get_full_name()
@@ -291,12 +288,12 @@ class ChatGroup(models.Model):
     # def get_url_absolute_admin(self):
     #     return reverse_lazy('SupChat:admin_panel_chat', args=(self.id, self.user.get_full_name()))
     #
-    # @property
-    # def get_group_name_admin(self):
-    #     """
-    #         must use this in consumer chat
-    #     """
-    #     return f"{self.admin.group_name}_{self.user.group_name}_Chat_ID_{self.id}"
+
+    def get_group_name(self):
+        """
+            must use this in consumer chat
+        """
+        return f"GroupName_{self.admin.group_name}_{self.user.group_name}"
 
 class BlackList(models.Model):
     session_key = models.CharField(max_length=50)

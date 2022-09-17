@@ -25,7 +25,7 @@ class TranslateSupChat {
         'شروع': [
             'Start'
         ],
-        'پایان گفت و wگو': [
+        'پایان گفت و گو': [
             'End'
         ],
         'پیام': [
@@ -224,7 +224,8 @@ class SupChat {
         elements.btn_send_message_supchat.addEventListener('click', function () {
             let state = this.getAttribute('state') || 'false'
             if (state == 'true') {
-
+                RequestSupChat.text_message.send(elements.input_message_supchat.value)
+                elements.input_message_supchat.value = ''
             }
         })
 
@@ -241,8 +242,9 @@ class SupChat {
 
     init_chat() {
         this._create_messages(this.CHAT.messages)
+        SUP_CHAT.toggle_container_supchat_start('hide')
         SUP_CHAT.toggle_container_supchat_content('show')
-        // this.create_connection()
+        this.create_connection()
     }
 
     start_chat() {
@@ -273,14 +275,18 @@ class SupChat {
 
     // Socket
     create_connection() {
-        if (this.CAN_CREATE_CONNECTION) {
-            this.toggle_loading('show')
-            let socket = new WebSocket(get_protocol_socket() + (URL_BACKEND_SUPCHAT + '/ws/chat/user/').replace('//', '/'))
-            this.SOCKET = socket
+        let count_try_create = 5
+
+        function create_socket() {
+
+            let socket = new WebSocket(get_protocol_socket() + (get_only_url_backend() + `/ws/chat/user/${SUP_CHAT.CHAT.id}`).replace('//', '/'))
+            SUP_CHAT.toggle_loading('show')
+            SUP_CHAT.SOCKET = socket
             socket.onmessage = function (e) {
                 SUP_CHAT.socket_recive(e)
             }
             socket.onopen = function (e) {
+                count_try_create = 5
                 SUP_CHAT.toggle_loading('hide')
                 SUP_CHAT.socket_open(e)
             }
@@ -289,12 +295,29 @@ class SupChat {
             }
             socket.onerror = function (e) {
                 SUP_CHAT.socket_error(e)
+                try_create_socket()
             }
+        }
+
+        function try_create_socket() {
+            let timer_try_connection = setTimeout(function () {
+                if (SUP_CHAT.CAN_CREATE_CONNECTION && count_try_create > 0) {
+                    count_try_create -= 1
+                    create_socket()
+                } else {
+                    clearTimeout(timer_try_connection)
+                }
+            }, 2000)
+        }
+
+        if (this.CAN_CREATE_CONNECTION) {
+            create_socket()
         }
     }
 
+    // Socket Events
     socket_recive(e) {
-
+        console.log(e)
     }
 
     socket_open(e) {
@@ -302,22 +325,26 @@ class SupChat {
     }
 
     socket_close(e) {
-
+        console.log(e)
     }
 
     socket_error(e) {
 
     }
 
-    send_message(text_message) {
-
-    }
 
 }
 
+
 class MessageSupChat {
+    static LIST_MESSAGES = []
+
     constructor(message) {
+        MessageSupChat.LIST_MESSAGES.push(this)
         this.ID = generate_id(10)
+
+        this.ELEMENTS = {}
+
         if (message.sender == 'user') {
             if (SUP_CHAT.TYPE_USER == 'USER') {
                 this.create_message_you(message)
@@ -334,11 +361,10 @@ class MessageSupChat {
     }
 }
 
-let LIST_TEXTMESSAGE_OBJECTS = []
+
 
 class TextMessage extends MessageSupChat {
     constructor(message) {
-        LIST_TEXTMESSAGE_OBJECTS.push(this)
         super(message)
     }
 

@@ -94,6 +94,7 @@
     justify-content: space-between;
     align-items: start;
     width: 80%;
+    margin: auto;
     margin-right: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -249,13 +250,14 @@
 }
 
 
-#SupChatContent main{
+#SupChatContent main {
     width: 100%;
     height: calc(100% - 95px - 70px);
+    overflow: auto;
     background: #f0f0f0;
 }
 
-#container-suggested-messages-supchat{
+#container-suggested-messages-supchat {
     display: none;
 }
 
@@ -293,7 +295,7 @@
     padding: 10px;
 }
 
-.container-btns-send-message-voice > button{
+.container-btns-send-message-voice > button {
     margin: 0 1px;
 }
 
@@ -301,12 +303,12 @@
     display: flex;
 }
 
-#btn-record-voice-supchat{
+#btn-record-voice-supchat {
     border: none;
     background: none;
 }
 
-#btn-record-voice-supchat svg{
+#btn-record-voice-supchat svg {
     width: 25px;
     fill: #006ae1;
 }
@@ -322,7 +324,7 @@
     transform: rotate(-180deg);
 }
 
-#btn-send-message-supchat[state='true'] svg{
+#btn-send-message-supchat[state='true'] svg {
     fill: #00cdaa;
 }
 
@@ -339,18 +341,18 @@
     resize: none;
 }
 
-#input-message-supchat::-webkit-scrollbar{
+#input-message-supchat::-webkit-scrollbar {
     width: 4px;
     height: 4px;
     border-radius: 30px;
 }
 
-#input-message-supchat::-webkit-scrollbar-track{
+#input-message-supchat::-webkit-scrollbar-track {
     background: #ddd;
     border-radius: 30px;
 }
 
-#input-message-supchat::-webkit-scrollbar-thumb{
+#input-message-supchat::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 30px;
 }
@@ -392,8 +394,8 @@
     bottom: 0;
     border-radius: inherit;
     z-index: 2;
-    background: rgba(225, 225, 225, 0.5);
-    backdrop-filter: blur(3px);
+    background: rgba(250, 250, 250, 0.2);
+    backdrop-filter: blur(5px);
 }
 
 #SupChatLoading > div {

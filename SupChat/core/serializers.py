@@ -69,36 +69,36 @@ def Serializer_user_basic(user):
     }
 
 
-def Serializer_text_messagae(text_message):
-    return {
-        'text': text_message.text
-    }
-
-
-def Serializer_audio_messagae(audio_message):
-    return {
-        'audio': audio_message.audio,
-        'audio_time': audio_message.audio_time,
-    }
-
 
 def Serializer_message(message, many=False):
+
+    def Serializer_text_messagae(text_message):
+        return {
+            'text': text_message.text
+        }
+
+    def Serializer_audio_messagae(audio_message):
+        return {
+            'audio': audio_message.audio,
+            'audio_time': audio_message.audio_time,
+        }
+
     results = []
 
     def wrapper(obj):
         d = {
-            'id': message.id,
-            'type': message.type,
-            'sender': message.sender,
-            'seen': message.seen,
-            'edited': message.edited,
-            'deleted': message.deleted,
-            'time_send': message.get_time(),
-            'time_send_full': message.get_time_full()
+            'id': obj.id,
+            'type': obj.type,
+            'sender': obj.sender,
+            'seen': obj.seen,
+            'edited': obj.edited,
+            'deleted': obj.deleted,
+            'time_send': obj.get_time(),
+            'time_send_full': obj.get_time_full()
         }
-        if message.type == 'text':
+        if obj.type == 'text':
             d.update(Serializer_text_messagae(obj))
-        elif message.type == 'audio':
+        elif obj.type == 'audio':
             d.update(Serializer_audio_messagae(obj))
 
         return d

@@ -190,3 +190,7 @@ function get_protocol_socket() {
         return 'wss://'
     }
 }
+
+function get_only_url_backend() {
+    return URL_BACKEND_SUPCHAT.replace('https://', '').replace('http://', '')
+}

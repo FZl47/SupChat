@@ -13,7 +13,7 @@
     overflow: hidden;
     border-radius: 12px;
     border: 1px solid #e4eeeb;
-    box-shadow: 0 3px 15px rgba(204, 204, 204, 0.4);
+    box-shadow: 0 3px 15px rgba(191, 191, 191, 0.6);
     z-index: 10;
     transition: all .3s;
 }
@@ -60,13 +60,13 @@
     border-bottom: 1px solid #eee;
 }
 
-#SupChatStart main {
+#SupChatStart > main {
     height: calc(100% - 55px - 55px);
     overflow: auto;
     padding: 10px 0;
 }
 
-#SupChatStart main img {
+#SupChatStart > main img {
     /* set inline */
     /*width: 45%;*/
     height: auto;
@@ -74,16 +74,16 @@
     display: block;
 }
 
-#SupChatStart footer {
+#SupChatStart > footer {
     text-align: center;
     height: 55px;
 }
 
-#SupChatStart footer a {
+#SupChatStart > footer a {
     display: inline-block;
 }
 
-#SupChatContent header {
+#SupChatContent > header {
     margin: 0 auto;
     width: 100%;
     height: 95px;
@@ -250,12 +250,36 @@
 }
 
 
-#SupChatContent main {
+#SupChatContent > main {
     width: 100%;
     height: calc(100% - 95px - 70px);
+    padding: 10px;
     overflow: auto;
-    background: #f0f0f0;
+    direction: rtl;
+    background: #f7f7f7;
 }
+
+#SupChatContent > main::-webkit-scrollbar {
+    width: 5px;
+    height: 4px;
+    border-radius: 50px;
+}
+
+#SupChatContent > main::-webkit-scrollbar-track {
+    background: #ddd;
+    border-radius: 50px;
+}
+
+#SupChatContent > main::-webkit-scrollbar-thumb {
+    background: rgba(29, 238, 191, 0.8);
+    border-radius: 50px;
+}
+
+
+#SupChatContent > main::-webkit-scrollbar-thumb:hover {
+    background: rgb(29, 226, 179);
+}
+
 
 #container-suggested-messages-supchat {
     display: none;
@@ -277,8 +301,9 @@
 }
 
 
-#SupChatContent footer {
+#SupChatContent > footer {
     width: 100%;
+    border-top: 1px solid #eee;
     background: #fff;
     height: 70px;
 }
@@ -478,6 +503,51 @@
     border: none;
     cursor: pointer;
     z-index: 9;
+}
+
+
+.container-message-supchat {
+    margin: 7px 0;
+}
+
+.container-message-supchat[sender-type='you'] {
+    text-align: right;
+}
+
+.container-message-supchat[sender-type='other'] {
+    text-align: left;
+}
+
+.container-message-supchat[sender-type='you'] .content-message-supchat > main {
+    border-radius: 15px 4px 15px 15px;
+    padding: 6px;
+    background: #20c8c1;
+    color: #fff;
+    min-width: 120px;
+}
+
+.container-message-supchat[sender-type='other'] {
+    text-align: left;
+}
+
+.content-message-supchat{
+    position: relative;
+    display: inline-block;
+}
+
+.content-message-supchat pre{
+    font-family: VazirMatn;
+    white-space: pre-wrap;
+    color: inherit;
+    margin: 0;
+    font-size: 100%;
+}
+
+.content-message-supchat > footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 

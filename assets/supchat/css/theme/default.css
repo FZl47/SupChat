@@ -11,6 +11,6 @@
     color: #fff;
 }
 
-#SupChatContent header {
+#SupChatContent > header {
     background: linear-gradient(40deg, #02d7c4, #02ebd8);
 }

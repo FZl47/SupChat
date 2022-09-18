@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # SupCaht
-    'django_render_partial',
     'channels',
     'SupChat'
 ]

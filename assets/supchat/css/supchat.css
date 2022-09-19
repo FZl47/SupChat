@@ -334,7 +334,7 @@
 }
 
 #btn-record-voice-supchat svg {
-    width: 25px;
+    width: 23px;
     fill: #006ae1;
 }
 
@@ -344,7 +344,7 @@
 }
 
 #btn-send-message-supchat svg {
-    width: 25px;
+    width: 23px;
     fill: #666;
     transform: rotate(-180deg);
 }
@@ -531,6 +531,7 @@
 }
 
 .content-message-supchat{
+    max-width: 75%;
     position: relative;
     display: inline-block;
 }
@@ -538,17 +539,117 @@
 .content-message-supchat pre{
     font-family: VazirMatn;
     white-space: pre-wrap;
+    text-align: justify;
     color: inherit;
     margin: 0;
-    font-size: 100%;
+    padding: 2px;
+    font-size: 90%;
+    max-width: 92%;
+    overflow: hidden;
 }
 
 .content-message-supchat > footer{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 95%;
+    margin: auto;
+    margin-top: 3px;
+    color: #888;
 }
+
+.time-send-message-supchat{
+    font-size: 65%;
+}
+
+.seen-message-supchat{
+    display: inline-block;
+    font-size: 75%;
+}
+
+.seen-message-supchat[seen='true']{
+    color: #006ae1;
+}
+
+.icon-message-edited-supchat{
+    font-size: 65%;
+}
+
+.btn-show-more-options-message-supchat{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: none;
+    border: none;
+    font-size: 105%;
+}
+
+.btn-show-more-options-message-supchat:focus + .container-more-options-message-supchat{
+    visibility: visible;
+    opacity: 1;
+}
+
+.btn-show-more-options-message-supchat:active + .container-more-options-message-supchat{
+    visibility: visible;
+    opacity: 1;
+}
+
+.container-more-options-message-supchat{
+    position: absolute;
+    width: 150px;
+    max-width: 100%;
+    left: -10px;
+    top: 0;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0 0 4px #ddd;
+    border: 1px solid #ddd;
+    direction: ltr;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 4;
+    transition: all .2s;
+}
+
+.container-more-options-message-supchat button{
+    width: 100%;
+    background: none;
+    border: none;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    margin: 3px 0;
+    font-size: 85%;
+    transition: all .2s;
+}
+
+
+.container-more-options-message-supchat button[btn-delete-message]:hover i{
+    color: #cf022b;
+}
+
+
+.container-more-options-message-supchat button[btn-edit-message]:hover i{
+    color: #0988f0;
+}
+
+
+.container-more-options-message-supchat button:hover{
+    background: #f6f6f6;
+}
+
+
+.container-more-options-message-supchat button:hover i{
+    font-weight: bold;
+}
+
+
+.container-more-options-message-supchat p{
+    margin: 0;
+}
+
 
 
 @media screen and (max-width: 450px) {

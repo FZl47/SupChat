@@ -17,7 +17,7 @@ import json
 
 
 
-class SupChat(WebsocketConsumer,send.TypeMethods):
+class SupChat(WebsocketConsumer,send.Response):
 
     def add_to_group(self,group_name):
         async_to_sync(self.channel_layer.group_add)(
@@ -42,9 +42,7 @@ class ChatUser(SupChat):
     def receive(self, text_data=None, bytes_data=None):
         text_data = json.loads(text_data)
         type_request = text_data.get('TYPE_REQUEST')
-        if type_request == 'SEND_TEXT_MESSAGE':
-            text_message = text_data.get('message')
-            self.send_text_message(text_message)
-        elif type_request == 'DELETE_MESSAGE':
-            message_id = text_data.get('id')
-            self.delete_message(message_id)
+        handler_request_name = self.RESPONSES.get(type_request,'')
+        handler_request = getattr(self,handler_request_name,None)
+        if handler_request:
+            handler_request(text_data)

@@ -16,8 +16,8 @@ class ResponseSupChat {
         this.FUNC = FUNC
     }
 
-    run(e) {
-        this.FUNC(e)
+    run(data) {
+        this.FUNC(data)
     }
 
 }
@@ -26,16 +26,24 @@ class ResponseSupChat {
 // --- RESPONSES ---
 
 // response text message
-new ResponseSupChat('TEXT_MESSAGE', function (e) {
-
+new ResponseSupChat('TEXT_MESSAGE', function (data) {
+    new TextMessage(data.message)
 })
 
+
+// response delete message
+new ResponseSupChat('DELETE_MESSAGE', function (data) {
+    let message_obj = MessageSupChat.get(data.message.id)   
+    if (message_obj){
+        message_obj.delete_element()
+    }
+})
 
 
 
 // --- REQUESTS ---
 
-class RequestBaseSupChat {
+class _RequestBaseSupChat {
     constructor(TYPE_REQUEST) {
         this.TYPE_REQUEST =  TYPE_REQUEST
     }
@@ -50,7 +58,7 @@ class RequestBaseSupChat {
 }
 
 
-class RequestSendTextMessageSupChat extends RequestBaseSupChat{
+class RequestSendTextMessageSupChat extends _RequestBaseSupChat{
 
     constructor() {
         super('SEND_TEXT_MESSAGE');
@@ -64,7 +72,7 @@ class RequestSendTextMessageSupChat extends RequestBaseSupChat{
     }
 }
 
-class RequestSendAudioMessageSupChat extends RequestBaseSupChat{
+class RequestSendAudioMessageSupChat extends _RequestBaseSupChat{
 
     constructor() {
         super('SEND_AUDIO_MESSAGE');
@@ -78,7 +86,23 @@ class RequestSendAudioMessageSupChat extends RequestBaseSupChat{
     }
 }
 
+
+class RequestDeleteMessageSupChat extends _RequestBaseSupChat{
+
+    constructor() {
+        super('DELETE_MESSAGE');
+    }
+
+    send(id) {
+        let data = {
+            'id': id
+        }
+        this.send_to_socket(data)
+    }
+}
+
 const RequestSupChat = {
     'text_message': new RequestSendTextMessageSupChat(),
     'audio_message': new RequestSendAudioMessageSupChat(),
+    'delete_message': new RequestDeleteMessageSupChat(),
 }

@@ -33,6 +33,12 @@ class TranslateSupChat {
         ],
         'صدای ضبط شده': [
             'Recorded voice'
+        ],
+        'حذف':[
+            'Delete'
+        ],
+        'تغییر':[
+            'Edit'
         ]
     }
 
@@ -126,6 +132,7 @@ class SupChat {
             container_more_option_chat_supchat: document.getElementById('container-more-options-chat-supchat'),
             btn_send_message_supchat: document.getElementById('btn-send-message-supchat'),
             input_message_supchat: document.getElementById('input-message-supchat'),
+
         }
     }
 
@@ -317,7 +324,11 @@ class SupChat {
 
     // Socket Events
     socket_recive(e) {
-        console.log(e)
+        let data = JSON.parse(e.data)
+        let response_obj = ResponseSupChat.get(data.TYPE_RESPONSE)
+        if(response_obj){
+            response_obj.run(data)
+        }
     }
 
     socket_open(e) {
@@ -339,9 +350,19 @@ class SupChat {
 class MessageSupChat {
     static LIST_MESSAGES = []
 
+    static get(id){
+        return MessageSupChat.LIST_MESSAGES.find(function(obj,index,arr){
+            if (obj.id == id){
+                return obj
+            }
+        })    
+    }
+
+
+
     constructor(message) {
         MessageSupChat.LIST_MESSAGES.push(this)
-        this.ID = generate_id(10)
+        this.id = message.id
 
         this.ELEMENTS = {}
 
@@ -358,7 +379,30 @@ class MessageSupChat {
                 this.create_message_other(message)
             }
         }
+
+        this._events()
+
     }
+
+    _events(){
+        let This = this
+        let btn_delete = this.ELEMENTS.message.querySelector('.btn-delete-message-supchat')
+        if (btn_delete){
+            btn_delete.addEventListener('click',function(){
+                This.delete()
+            })
+        }
+    }
+
+
+    delete(){
+        RequestSupChat.delete_message.send(this.id)
+    }
+
+    delete_element(){
+        this.ELEMENTS.message.remove()
+    }
+
 }
 
 

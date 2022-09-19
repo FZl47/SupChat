@@ -1,5 +1,4 @@
 *.* linguist-language=Python
 .idea
-.idea/
 __pycache__
 db.sqlite3

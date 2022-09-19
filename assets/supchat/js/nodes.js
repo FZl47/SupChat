@@ -70,12 +70,12 @@ function get_node_supchat() {
                         <img id="image-user-chat-supchat" src="/assets/supchat/images/default/iconUser.png" alt="image user">
                         <div class="container-status-user-chat-supchat">
                             <span id="status-online-info-chat-supchat" state="online"></span>
-                            <span id="last-seen-info-chat-supchat">اخرین بازدید 2 ساعت پیش</span>
+                            ${SUP_CHAT.CONFIG.show_seen_message ? `<span id="last-seen-info-chat-supchat">اخرین بازدید 2 ساعت پیش</span>` : ''}
                         </div>
                     </div>
                         <div>
                             <p id="name-user-info-chat-supchat">Fazel Momeni</p>
-                            <p id="name-section-info-chat-supchat">پشتیبانی فنی</p>
+                            ${SUP_CHAT.CONFIG.show_title_section ? `<p id="name-section-info-chat-supchat">پشتیبانی فنی</p>` : ''}
                         </div>
                     </div>
                     <div>
@@ -186,8 +186,11 @@ function get_node_footer_message_you(message) {
     let footer = `
          <footer>
             <div class="time-send-message-supchat">${message.time_send}</div> 
-            ${SUP_CHAT.CONFIG.show_seen_message ? `<div class="seen-message-supchat" seen="${message.seen}">${message.seen ? get_node_seen_true() : get_node_seen_false()}</div>` : ''} 
-        </footer>  
+            <div>
+                ${message.edited ? `<i class="icon-message-edited-supchat fal fa-pen"></i>` : ''}
+                ${SUP_CHAT.CONFIG.show_seen_message ? `<div class="seen-message-supchat" seen="${message.seen}">${message.seen ? get_node_seen_true() : get_node_seen_false()}</div>` : ''} 
+            </div>
+            </footer>  
     `
     return footer
 }
@@ -201,12 +204,51 @@ function get_node_footer_message_other(message) {
     return footer
 }
 
+function get_node_header_delete_message(){
+    let node_header_delete_message = SUP_CHAT.CONFIG.can_delete_message ? `
+        <button class="btn-delete-message-supchat" btn-delete-message>
+            <i class="fal fa-trash"></i>
+            <p>${SUP_CHAT.TRANSLATE.get('حذف')}</p>
+        </button>
+    ` : ''
+    return node_header_delete_message
+}
+
+function get_node_header_edit_message(){
+    let node_header_edit_message = SUP_CHAT.CONFIG.can_edit_message ? `
+        <button class="btn-edit-message-supchat" btn-edit-message>
+            <i class="fal fa-edit"></i>
+            <p>${SUP_CHAT.TRANSLATE.get('تغییر')}</p>
+        </button>
+    ` : ''
+    return node_header_edit_message
+}
+
 function get_node_text_message_you(message) {
+
+    let node_header_delete_message = get_node_header_delete_message()
+
+    let node_header_edit_message = get_node_header_edit_message()
+    
+    
+
     return `
         <div class="content-message-supchat">
-            <header></header>
+            <header>
+            </header>
             <main>
-                <pre>${message.text}</pre>
+                <div>
+                     <pre>${message.text}</pre>
+                </div>
+                ${node_header_edit_message || node_header_delete_message ? `
+                    <button class="btn-show-more-options-message-supchat">
+                        <i class="fal fa-ellipsis-v"></i>
+                    </button>` : ''
+                    }
+                <div class="container-more-options-message-supchat">
+                    ${node_header_edit_message}
+                    ${node_header_delete_message}
+                </div>
             </main>
             ${get_node_footer_message_you(message)}
         </div>
@@ -227,11 +269,29 @@ function get_node_text_message_other(message) {
 
 
 function get_node_audio_message_you(message) {
+
+    
+    let node_header_delete_message = get_node_header_delete_message()
+
+    
+    
+
     return `
         <div class="content-message-supchat">
-            <header></header>
+            <header>
+            </header>
             <main>
-                <audio src="${message.audio}" time-duration="${message.audio_time}" preload="none"></audio>
+                <div>
+                    <audio src="${message.audio}" time-duration="${message.audio_time}" preload="none"></audio>
+                </div>
+                ${node_header_delete_message ? `
+                <button class="btn-show-more-options-message-supchat">
+                    <i class="fal fa-ellipsis-v"></i>
+                </button>` : ''
+                }
+                <div class="container-more-options-message-supchat">
+                    ${node_header_delete_message}
+                </div>
             </main>
             ${get_node_footer_message_you(message)}
         </div>

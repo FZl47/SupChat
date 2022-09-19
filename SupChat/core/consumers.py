@@ -45,4 +45,6 @@ class ChatUser(SupChat):
         if type_request == 'SEND_TEXT_MESSAGE':
             text_message = text_data.get('message')
             self.send_text_message(text_message)
-
+        elif type_request == 'DELETE_MESSAGE':
+            message_id = text_data.get('id')
+            self.delete_message(message_id)

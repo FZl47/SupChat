@@ -581,7 +581,8 @@
     left: 5px;
     background: none;
     border: none;
-    font-size: 105%;
+    color: #ddd;
+    font-size: 110%;
 }
 
 .btn-show-more-options-message-supchat:focus + .container-more-options-message-supchat{

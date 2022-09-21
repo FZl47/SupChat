@@ -295,6 +295,18 @@ class ChatGroup(models.Model):
         """
         return f"GroupName_{self.admin.group_name}_{self.user.group_name}"
 
+    def get_group_name_admin(self):
+        """
+            must use this in consumer chat
+        """
+        return f"GroupName_{self.admin.group_name}"
+
+    def get_group_name_user(self):
+        """
+            must use this in consumer chat
+        """
+        return f"GroupName_{self.user.group_name}"
+
 class BlackList(models.Model):
     session_key = models.CharField(max_length=50)
     phone_or_email = models.CharField(max_length=150,null=True,blank=True)

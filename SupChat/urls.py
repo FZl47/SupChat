@@ -2,7 +2,7 @@ from django.urls import path
 from SupChat.core import consumers
 from SupChat import views
 
-app_name = 'Chat'
+app_name = 'SupChat'
 def path_ws(url,handler):
     URL_BASE_WEBSOCKET = 'ws/'
     url = f"{URL_BASE_WEBSOCKET}{url}"
@@ -11,6 +11,7 @@ def path_ws(url,handler):
 
 websocket_urlpatterns = [
     path_ws('chat/user/<chat_id>',consumers.ChatUser.as_asgi()),
+    path_ws('chat/admin/<chat_id>',consumers.AdminUser.as_asgi()),
     # pathWs('chat/admin/<id_chat>/',consumers.ChatAdmin.as_asgi()),
     # pathWs('section/admin/<section_id>/',consumers.ChatAdminSection.as_asgi()),
 ]
@@ -37,8 +38,10 @@ urlpatterns = [
 
 
     # ---------------- V3 ----------------
-    path('run',views.sup_chat_run),
+    path('run',views.sup_chat_run_user),
     path('start-chat',views.start_chat),
-    path('get-messages',views.get_messages),
 
+    # Admin
+    path('admin/chat/<int:chat_id>',views.view_chat_admin,name='view_chat_admin'),
+    path('admin/login',views.view_login_admin,name='view_login_admin'),
 ]

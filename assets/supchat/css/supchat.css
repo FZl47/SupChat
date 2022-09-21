@@ -235,7 +235,8 @@
     border: none;
     font-size: 90%;
     padding: 6px 10px;
-    border-radius: 5px;
+    border-radius: 2px;
+    background: inherit;
     color: #ff5353;
     transition: all .2s;
 }
@@ -253,30 +254,35 @@
 #SupChatContent > main {
     width: 100%;
     height: calc(100% - 95px - 70px);
-    padding: 10px;
-    overflow: auto;
     direction: rtl;
     background: #f7f7f7;
 }
 
-#SupChatContent > main::-webkit-scrollbar {
+#supchat-messages-chat {
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    padding: 20px 10px;
+}
+
+#supchat-messages-chat::-webkit-scrollbar {
     width: 5px;
     height: 4px;
     border-radius: 50px;
 }
 
-#SupChatContent > main::-webkit-scrollbar-track {
+#supchat-messages-chat::-webkit-scrollbar-track {
     background: #ddd;
     border-radius: 50px;
 }
 
-#SupChatContent > main::-webkit-scrollbar-thumb {
+#supchat-messages-chat::-webkit-scrollbar-thumb {
     background: rgba(29, 238, 191, 0.8);
     border-radius: 50px;
 }
 
 
-#SupChatContent > main::-webkit-scrollbar-thumb:hover {
+#supchat-messages-chat::-webkit-scrollbar-thumb:hover {
     background: rgb(29, 226, 179);
 }
 
@@ -298,8 +304,20 @@
     border-radius: 50%;
     font-size: 180%;
     border: none;
+    transform: translateY(-10px);
+    transition: all .2s;
 }
 
+#btn-scroll-down-chat-supchat[state="hide"] {
+    visibility: hidden;
+    opacity: 0;
+}
+
+#btn-scroll-down-chat-supchat[state="show"] {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(0);
+}
 
 #SupChatContent > footer {
     width: 100%;
@@ -308,25 +326,71 @@
     height: 70px;
 }
 
-.content-footer-supchat {
+#content-footer-supchat {
     width: 100%;
+    height: 100%;
     direction: ltr;
 }
 
-.content-footer-supchat > div {
+#content-footer-supchat > div {
     display: none;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
 }
 
+#content-footer-supchat p{
+    margin: 0;
+}
+
 .container-btns-send-message-voice > button {
     margin: 0 1px;
 }
 
-.content-footer-supchat[container-active="send-message-main"] [container-type="send-message-main"] {
+#content-footer-supchat[container-active="send-message-main"] [container-type="send-message-main"] {
     display: flex;
 }
+
+#content-footer-supchat[container-active="voice-recording"] [container-type="voice-recording"] {
+    display: flex;
+}
+
+#content-footer-supchat[container-active="voice-recording"] [container-type="send-message-main"] #input-message-supchat {
+    display: none;
+}
+
+#content-footer-supchat[container-active="voice-recording"] [container-type="send-message-main"] {
+    display: block;
+}
+
+#content-footer-supchat[container-active="voice-recording"] [container-type="send-message-main"] #btn-send-message-supchat {
+    display: none;
+}
+
+#content-footer-supchat[container-active="voice-recording"] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#content-footer-supchat[container-active="voice-recording"] p{
+    margin: 0 6px;
+    font-size: 85%;
+    color: #777;
+}
+
+#time-voice-recording-supchat{
+    margin: 0;
+    font-size: 95%;
+    color: #555!important;
+}
+
+
+#content-footer-supchat[container-active="voice-send-or-cancel"] [container-type="voice-send-or-cancel"] {
+    display: flex;
+}
+
+
 
 #btn-record-voice-supchat {
     border: none;
@@ -526,29 +590,37 @@
     min-width: 120px;
 }
 
+.container-message-supchat[sender-type='other'] .content-message-supchat > main {
+    border-radius: 4px 15px 15px 15px;
+    padding: 6px;
+    background: #e8e8e8;
+    color: #444;
+    min-width: 120px;
+}
+
 .container-message-supchat[sender-type='other'] {
     text-align: left;
 }
 
-.content-message-supchat{
+.content-message-supchat {
     max-width: 75%;
     position: relative;
     display: inline-block;
 }
 
-.content-message-supchat pre{
+.content-message-supchat pre {
     font-family: VazirMatn;
     white-space: pre-wrap;
     text-align: justify;
     color: inherit;
     margin: 0;
     padding: 2px;
-    font-size: 90%;
+    font-size: 94%;
     max-width: 92%;
     overflow: hidden;
 }
 
-.content-message-supchat > footer{
+.content-message-supchat > footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -558,24 +630,45 @@
     color: #888;
 }
 
-.time-send-message-supchat{
-    font-size: 65%;
+.time-send-message-supchat {
+    font-size: 70%;
 }
 
-.seen-message-supchat{
+.seen-message-supchat {
     display: inline-block;
     font-size: 75%;
 }
 
-.seen-message-supchat[seen='true']{
+.seen-message-supchat > i {
+    display: none;
+}
+
+.seen-message-supchat [icon-seen-true] {
     color: #006ae1;
 }
 
-.icon-message-edited-supchat{
+.icon-message-edited-supchat {
     font-size: 65%;
 }
 
-.btn-show-more-options-message-supchat{
+.content-message-supchat[edited='true'] .icon-message-edited-supchat {
+    visibility: visible;
+}
+
+.content-message-supchat[edited='false'] .icon-message-edited-supchat {
+    visibility: hidden;
+}
+
+.content-message-supchat[seen='true'] [icon-seen-true] {
+    display: inline-block;
+}
+
+.content-message-supchat[seen='false'] [icon-seen-false] {
+    display: inline-block;
+}
+
+
+.btn-show-more-options-message-supchat {
     position: absolute;
     top: 5px;
     left: 5px;
@@ -585,17 +678,17 @@
     font-size: 110%;
 }
 
-.btn-show-more-options-message-supchat:focus + .container-more-options-message-supchat{
+.btn-show-more-options-message-supchat:focus + .container-more-options-message-supchat {
     visibility: visible;
     opacity: 1;
 }
 
-.btn-show-more-options-message-supchat:active + .container-more-options-message-supchat{
+.btn-show-more-options-message-supchat:active + .container-more-options-message-supchat {
     visibility: visible;
     opacity: 1;
 }
 
-.container-more-options-message-supchat{
+.container-more-options-message-supchat {
     position: absolute;
     width: 150px;
     max-width: 100%;
@@ -612,7 +705,7 @@
     transition: all .2s;
 }
 
-.container-more-options-message-supchat button{
+.container-more-options-message-supchat button {
     width: 100%;
     background: none;
     border: none;
@@ -627,31 +720,85 @@
 }
 
 
-.container-more-options-message-supchat button[btn-delete-message]:hover i{
+.container-more-options-message-supchat button[btn-delete-message]:hover i {
     color: #cf022b;
 }
 
 
-.container-more-options-message-supchat button[btn-edit-message]:hover i{
+.container-more-options-message-supchat button[btn-edit-message]:hover i {
     color: #0988f0;
 }
 
 
-.container-more-options-message-supchat button:hover{
+.container-more-options-message-supchat button:hover {
     background: #f6f6f6;
 }
 
 
-.container-more-options-message-supchat button:hover i{
+.container-more-options-message-supchat button:hover i {
     font-weight: bold;
 }
 
-
-.container-more-options-message-supchat p{
+.container-more-options-message-supchat p {
     margin: 0;
 }
 
+#container-effect-is-typing {
+    transform: translateX(-10px);
+    transition: all .3s;
+}
 
+#container-effect-is-typing[state='show']{
+    opacity: 1;
+    transform: translateX(0);
+}
+
+#container-effect-is-typing[state='hide']{
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+#container-effect-is-typing .content-message-supchat {
+    text-align: center;
+    padding: 5px;
+}
+
+#container-effect-is-typing .content-message-supchat main {
+    min-width: 85px;
+}
+
+#container-effect-is-typing span {
+    display: inline-block;
+    border-radius: 50%;
+    width: 9px;
+    height: 9px;
+    margin: -2px 2px;
+    background: #888;
+}
+
+#container-effect-is-typing span:nth-of-type(1) {
+    animation: animation-effect-is-typing .8s linear infinite;
+}
+
+#container-effect-is-typing span:nth-of-type(2) {
+    animation: animation-effect-is-typing .8s linear infinite;
+    animation-delay: .2s;
+}
+
+#container-effect-is-typing span:nth-of-type(3) {
+    animation: animation-effect-is-typing .8s linear infinite;
+    animation-delay: .4s;
+}
+
+@keyframes animation-effect-is-typing {
+    50% {
+        transform: translateY(-5px);
+        background: #666;
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
 
 @media screen and (max-width: 450px) {
     #SupChat[state='open'] {

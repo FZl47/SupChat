@@ -40,7 +40,7 @@ class TranslateSupChat {
         'تغییر': [
             'Edit'
         ],
-        'در حال ضبط':[
+        'در حال ضبط': [
             'Recording'
         ]
     }
@@ -69,6 +69,14 @@ class SupChat {
         this.TRANSLATE = undefined
         this.CAN_CREATE_CONNECTION = true
         this.TYPE_USER = type_user
+
+        this.EFFECT_IS_TYPING_SENDED = false
+        this.TIMER_UPDATE_LAST_SEEN
+        this.TIMER_EFFECT_IS_TYPING
+        this.TIMER_HOLD_BUTTON_RECORD_VOICE
+        this.TIMER_TIME_RECORDED_VOICE
+        this.TIME_RECORDED_VOICE = 0
+        this.VOICE_RECORDER
 
     }
 
@@ -236,29 +244,36 @@ class SupChat {
         })
 
 
-        let mouse_timer_record_voice
-        function mouse_down() {
-            mouse_up();
-            mouse_timer_record_voice = setTimeout(function () {
+        function event_record_voice() {
+            let mouseTimer = SUP_CHAT.TIMER_HOLD_BUTTON_RECORD_VOICE
+
+            function mouse_down() {
+                mouse_up()
+                mouseTimer = window.setTimeout(record_voice_mouse_hold, 1000)
+            }
+
+            function mouse_up() {
+                if (mouseTimer) {
+                    window.clearTimeout(mouseTimer)
+                }
+                try {
+                    SUP_CHAT.record_voice_stop()
+                } catch (e) {
+                }
+            }
+
+            function record_voice_mouse_hold() {
                 SUP_CHAT.start_record_voice()
-            }, 1000);
+            }
+
+            elements.btn_record_voice.addEventListener("mousedown", mouse_down);
+            elements.btn_record_voice.addEventListener("touchstart", mouse_down);
+            document.body.addEventListener("mouseup", mouse_up);
+            document.body.addEventListener("touchend", mouse_up);
         }
 
-        function mouse_up() {
-            if (mouse_timer_record_voice){
-                 clearTimeout(mouse_timer_record_voice)
-            }
-            try {
-                SUP_CHAT.voice_recorded_cancel()
-            } catch (e) {
-                throw e
-            }
-        }
+        event_record_voice()
 
-        elements.btn_record_voice.addEventListener("mousedown", mouse_down);
-        elements.btn_record_voice.addEventListener("touchstart", mouse_down);
-        document.body.addEventListener("mouseup", mouse_up);
-        document.body.addEventListener("touchend", mouse_up);
 
         elements.btn_cancel_voice.addEventListener('click', function () {
             SUP_CHAT.voice_recorded_cancel()
@@ -267,7 +282,6 @@ class SupChat {
         elements.btn_send_voice_recorded.addEventListener('click', function () {
             SUP_CHAT.send_voice_recorded()
         })
-
 
         elements.input_message_supchat.addEventListener('input', function () {
             let value = this.value
@@ -289,7 +303,6 @@ class SupChat {
                 elements.btn_send_message_supchat.setAttribute('state', 'false')
             }
         })
-
 
         elements.supchat_messages_chat.addEventListener('scroll', function (e) {
             let height = e.target.offsetHeight
@@ -350,24 +363,21 @@ class SupChat {
 
     // Is Typing or Voicing Element
     effect_is_typing(state) {
-        let element_is_typing = document.getElementById('container-effect-is-typing')
-        if (!element_is_typing) {
-            element_is_typing = document.createElement('div')
-            this.ELEMENTS.supchat_messages_chat.appendChild(element_is_typing)
-        }
         if (state == true) {
+            let element_is_typing = document.createElement('div')
+            this.ELEMENTS.supchat_messages_chat.appendChild(element_is_typing)
             element_is_typing.id = 'container-effect-is-typing'
             element_is_typing.setAttribute('state', 'show')
             element_is_typing.classList.add('container-message-supchat')
             element_is_typing.setAttribute('sender-type', 'other')
             element_is_typing.innerHTML = get_node_is_typing_element()
         } else {
-            element_is_typing.setAttribute('state', 'hide')
+            document.getElementById('container-effect-is-typing').remove()
         }
     }
 
 
-    set_container_type_footer_chat(type = 'voice-recording') {
+    set_container_type_footer_chat(type = 'voice-send-or-cancel') {
         SUP_CHAT.ELEMENTS.footer_content_chat.setAttribute('container-active', type)
     }
 
@@ -386,13 +396,9 @@ class SupChat {
             .then(function (mediaStreamObj) {
                 SUP_CHAT.VOICE_RECORDER = new MediaRecorder(mediaStreamObj);
                 let voice_recorder = SUP_CHAT.VOICE_RECORDER
-                console.log(voice_recorder)
                 voice_recorder.start()
                 voice_recorder.onstart = function (e) {
                     // Update per 1 sec
-                    if (SUP_CHAT.TIME_RECORDED_VOICE == undefined) {
-                        SUP_CHAT.TIME_RECORDED_VOICE = 0
-                    }
                     SUP_CHAT.TIMER_TIME_RECORDED_VOICE = setInterval(function () {
                         SUP_CHAT.TIME_RECORDED_VOICE += 1
                         SUP_CHAT.set_time_record_voice(SUP_CHAT.TIME_RECORDED_VOICE)
@@ -407,9 +413,7 @@ class SupChat {
                 let dataArray = []
                 voice_recorder.onstop = function (ev) {
                     clearInterval(SUP_CHAT.TIMER_TIME_RECORDED_VOICE)
-                    console.log(this.TIME_RECORDED_VOICE)
                     if (SUP_CHAT.TIME_RECORDED_VOICE > 0) {
-                        console.log('awdwadwad12312312312')
                         SUP_CHAT.set_container_type_footer_chat('voice-send-or-cancel')
                         let audioData = new Blob(dataArray, {'type': 'audio/mp3'});
                         audioData = new File([audioData], 'voice.mp3')
@@ -424,7 +428,6 @@ class SupChat {
                         }
                     } catch (e) {
                     }
-                    // SUP_CHAT.record_voice_stop()
                 }
             }).catch(function (e) {
             throw e

@@ -341,6 +341,7 @@
 
 #content-footer-supchat p{
     margin: 0;
+    display: inline-block;
 }
 
 .container-btns-send-message-voice > button {

@@ -1,0 +1,111 @@
+{% if Message.sender == 'admin' %}
+    <div class="MessageSupChat" id="MessageSupChat-{{ Message.id }}" sender-message="other"
+         {% if Message.edited %}message-edited{% endif %}>
+        <div class="ContentMessage">
+            <header>
+                <div>
+                    <p class="NameSenderMessage">{{ Message.chat.admin.get_full_name }}</p>
+                </div>
+                <div>
+                    <button class="BtnShowMoreOptionMessage">
+                        <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <div class="MoreOptionMessage">
+                        <div class="OptionMessage">
+                            <p class="NameSenderMessage">{{ Message.chat.admin.get_full_name }}</p>
+                            <img src="{{ Message.chat.admin.get_image }}"
+                                 alt="{{ Message.chat.admin.get_full_name }}">
+                        </div>
+                        <div class="OptionMessage">
+                            <p class="DateTimeSendMessage">{{ Message.get_time_full }}</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <main>
+                {% if Message.type == 'text' %}
+                    <pre data-message="text">{{ Message.text }}</pre>
+                {% elif Message.type == 'audio' %}
+                    <audio data-message="audio" src="{{ Message.audio.url }}" time-duration="{{ Message.audio_time }}"
+                           controls preload="none"></audio>
+                {% endif %}
+            </main>
+            <footer>
+                <div class="TimeSentMessage">
+                    {{ Message.get_time }}
+                </div>
+                <div>
+                    <div>
+                        <i class="fa fa-pen" icon-message-edit></i>
+                    </div>
+                    <div>
+                        {% if Message.deleted %}
+                            <i class="fa fa-ban MessageDeletedIcon"></i>
+                        {% endif %}
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+{% else %}
+    <div class="MessageSupChat" id="MessageSupChat-{{ Message.id }}" sender-message="you"
+         {% if Message.edited %}message-edited{% endif %}>
+        <div class="ContentMessage">
+            <header>
+                <div>
+                    <b class="NameSenderMessage">You</b>
+                </div>
+                <div>
+                    <button class="BtnShowMoreOptionMessage">
+                        <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <div class="MoreOptionMessage">
+                        <div class="OptionMessage">
+                            <p class="NameSenderMessage">{{ Message.chat.user.get_full_name }}</p>
+                            <img src="{{ Message.chat.user.get_image }}"
+                                 alt="{{ Message.chat.user.get_full_name }}">
+                        </div>
+                        <div class="OptionMessage">
+                            <p class="DateTimeSendMessage">{{ Message.get_time_full }}</p>
+                        </div>
+                        {% if Message.type == 'text' %}
+                            <button class="OptionMessage" onclick="SUP_CHAT.editMessageText('{{ Message.id }}')">
+                                <p>ویرایش</p>
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        {% endif %}
+                        <button class="OptionMessage" onclick="SUP_CHAT.deleteMessage('{{ Message.id }}')">
+                            <p>حذف</p>
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            <main>
+                {% if Message.type == 'text' %}
+                    <pre data-message="text">{{ Message.text }}</pre>
+                {% elif Message.type == 'audio' %}
+                    <audio data-message="audio" src="{{ Message.audio.url }}" time-duration="{{ Message.audio_time }}"
+                           controls preload="none"></audio>
+                {% endif %}
+            </main>
+            <footer>
+                <div class="TimeSentMessage">
+                    {{ Message.get_time }}
+                </div>
+                <div>
+                    <div>
+                        <i class="fa fa-pen" icon-message-edit></i>
+                    </div>
+                    <div>
+                        {% if Message.seen == True %}
+                            <i class="far fa-check-double" message-seen="true"></i>
+                        {% else %}
+                            <i class="far fa-check" message-seen="false"></i>
+                        {% endif %}
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+{% endif %}

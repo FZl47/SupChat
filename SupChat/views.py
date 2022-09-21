@@ -15,6 +15,7 @@
 # from SupChat.core.tools import format_file
 import json
 from django.http import HttpResponse, JsonResponse, Http404
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
 from SupChat.core.decorators.view import admin_authenticated, require_post_and_ajax, get_user
@@ -351,10 +352,10 @@ def get_supchat():
 @csrf_exempt
 @require_post_and_ajax
 @get_user
-def sup_chat_run(request):
+def sup_chat_run_user(request):
     context = {}
     supchat = get_supchat()
-    sections = Section.objects.annotate(admin_count=Count('admin')).filter(is_active=True,admin_count__gt=0)
+    sections = Section.objects.annotate(admin_count=Count('admin')).filter(is_active=True, admin_count__gt=0)
     if supchat and sections:
         chat = ChatGroup.objects.filter(user=request.user_supchat, is_active=True).first()
         supchat_serialized = serializers.Serializer_supchat(supchat)
@@ -367,6 +368,7 @@ def sup_chat_run(request):
     else:
         context['status_code'] = 404
     return JsonResponse(context)
+
 
 
 def create_user(phone_or_email):
@@ -393,7 +395,6 @@ def start_chat(request):
 
     def get_chat(user, admin, section):
         return ChatGroup.objects.filter(user=user, admin=admin, section=section, is_active=True).first()
-
 
     data = json.loads(request.body)
     phone_or_email = data.get('phone_or_email') or ''
@@ -432,20 +433,21 @@ def start_chat(request):
     return JsonResponse(context)
 
 
-@csrf_exempt
-@require_post_and_ajax
-@get_user
-def get_messages(request):
-    context = {}
-    data = json.loads(request.body)
-    chat_id = data.get('chat_id') or 0
-    chat = ChatGroup.objects.filter(id=chat_id, user=request.user_supchat, is_active=True).first()
-    if chat:
-        messages = chat.message_set.all().select_subclasses()
-        context['messages'] = serializers.Serializer_message(messages, True)
-        context['status_code'] = 200
 
-    else:
-        context['messages'] = []
-        context['status_code'] = 404
-    return JsonResponse(context)
+
+@admin_authenticated
+def view_chat_admin(request, chat_id):
+    context = {}
+    chat = ChatGroup.objects.filter(id=chat_id, admin=request.admin, is_active=True).first()
+    supchat = get_supchat()
+    if chat and supchat:
+        chat_serializer = serializers.Serializer_chat(chat)
+        supchat_serialized = serializers.Serializer_supchat(supchat)
+        context['chat'] = json.dumps(chat_serializer)
+        context['supchat'] = json.dumps(supchat_serialized)
+        return render(request,'admin.html',context)
+    raise Http404
+
+
+def view_login_admin(request):
+    return HttpResponse('Login Page Admin')

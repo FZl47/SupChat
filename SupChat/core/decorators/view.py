@@ -19,7 +19,7 @@ def admin_authenticated(func):
         """
             Can raise PermissionDenied or Redirect To login Page
         """
-        return redirect('SupChat:admin_login')
+        return redirect('SupChat:view_login_admin')
         # raise PermissionDenied
 
     return wrapper

@@ -192,5 +192,12 @@ function get_protocol_socket() {
 }
 
 function get_only_url_backend() {
-    return URL_BACKEND_SUPCHAT.replace('https://', '').replace('http://', '')
+    return URL_BACKEND_SUPCHAT.replace('https://', '').replace('http://', '').replace('/','')
+}
+
+
+function convert_second_to_time_format(second) {
+    let sec = Math.floor(second % 60)
+    let min = Math.floor(second / 60 % 60)
+    return `${min}:${sec}`
 }

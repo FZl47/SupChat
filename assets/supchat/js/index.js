@@ -34,11 +34,14 @@ class TranslateSupChat {
         'صدای ضبط شده': [
             'Recorded voice'
         ],
-        'حذف':[
+        'حذف': [
             'Delete'
         ],
-        'تغییر':[
+        'تغییر': [
             'Edit'
+        ],
+        'در حال ضبط':[
+            'Recording'
         ]
     }
 
@@ -66,21 +69,9 @@ class SupChat {
         this.TRANSLATE = undefined
         this.CAN_CREATE_CONNECTION = true
         this.TYPE_USER = type_user
+
     }
 
-    run() {
-        let This = this
-        SendAjaxSupChat(`run`, {}, 'POST', function (response) {
-            let status_code = response.status_code
-            if (status_code == 200) {
-                This._set_supchat_info(response)
-                This._create_element_supchat()
-                This._set_elements()
-                This._events()
-                This._init_chat_or_register()
-            }
-        })
-    }
 
     _set_supchat_info(response) {
         let supchat = response.supchat
@@ -88,7 +79,7 @@ class SupChat {
         this.CONFIG = supchat.config
         this.STYLE = supchat.style
         this.CHAT = response.chat
-        this.SECTIONS = response.sections
+        this.SECTIONS = response.sections || []
         this.TRANSLATE = new TranslateSupChat(this.CONFIG.language)
         this.IS_OPEN = false
 
@@ -131,7 +122,14 @@ class SupChat {
             btn_more_option_chat_supchat: document.getElementById('btn-more-option-chat-supchat'),
             container_more_option_chat_supchat: document.getElementById('container-more-options-chat-supchat'),
             btn_send_message_supchat: document.getElementById('btn-send-message-supchat'),
+            btn_record_voice: document.getElementById('btn-record-voice-supchat'),
             input_message_supchat: document.getElementById('input-message-supchat'),
+            btn_scroll_down: document.getElementById('btn-scroll-down-chat-supchat'),
+            footer_content_chat: document.getElementById('content-footer-supchat'),
+            time_voice_recorded: document.getElementById('time-voice-recorded-supchat'),
+            time_voice_recording: document.getElementById('time-voice-recording-supchat'),
+            btn_cancel_voice: document.getElementById('btn-voice-cancel-supchat'),
+            btn_send_voice_recorded: document.getElementById('btn-send-voice-recorded-supchat'),
 
         }
     }
@@ -234,16 +232,80 @@ class SupChat {
                 RequestSupChat.text_message.send(elements.input_message_supchat.value)
                 elements.input_message_supchat.value = ''
             }
+            this.setAttribute('state', 'false')
         })
+
+
+        let mouse_timer_record_voice
+        function mouse_down() {
+            mouse_up();
+            mouse_timer_record_voice = setTimeout(function () {
+                SUP_CHAT.start_record_voice()
+            }, 1000);
+        }
+
+        function mouse_up() {
+            if (mouse_timer_record_voice){
+                 clearTimeout(mouse_timer_record_voice)
+            }
+            try {
+                SUP_CHAT.voice_recorded_cancel()
+            } catch (e) {
+                throw e
+            }
+        }
+
+        elements.btn_record_voice.addEventListener("mousedown", mouse_down);
+        elements.btn_record_voice.addEventListener("touchstart", mouse_down);
+        document.body.addEventListener("mouseup", mouse_up);
+        document.body.addEventListener("touchend", mouse_up);
+
+        elements.btn_cancel_voice.addEventListener('click', function () {
+            SUP_CHAT.voice_recorded_cancel()
+        })
+
+        elements.btn_send_voice_recorded.addEventListener('click', function () {
+            SUP_CHAT.send_voice_recorded()
+        })
+
 
         elements.input_message_supchat.addEventListener('input', function () {
             let value = this.value
             if (!is_blank(value)) {
                 elements.btn_send_message_supchat.setAttribute('state', 'true')
+                try {
+                    clearTimeout(SUP_CHAT.TIMER_EFFECT_IS_TYPING)
+                } catch (e) {
+                }
+                if (!SUP_CHAT.EFFECT_IS_TYPING_SENDED) {
+                    RequestSupChat.is_typing.send(true)
+                    SUP_CHAT.EFFECT_IS_TYPING_SENDED = true
+                }
+                SUP_CHAT.TIMER_EFFECT_IS_TYPING = setTimeout(function () {
+                    SUP_CHAT.EFFECT_IS_TYPING_SENDED = false
+                    RequestSupChat.is_typing.send(false)
+                }, 2000)
             } else {
                 elements.btn_send_message_supchat.setAttribute('state', 'false')
             }
         })
+
+
+        elements.supchat_messages_chat.addEventListener('scroll', function (e) {
+            let height = e.target.offsetHeight
+            let scrollHeight = e.target.scrollHeight
+            let scrollVal = e.target.scrollTop
+            if (scrollVal < (scrollHeight - height - 200)) {
+                elements.btn_scroll_down.setAttribute('state', 'show')
+            } else {
+                elements.btn_scroll_down.setAttribute('state', 'hide')
+            }
+        })
+
+        elements.btn_scroll_down.addEventListener('click', function () {
+            SUP_CHAT.scroll_to_down_chat()
+        })
+
 
     }
 
@@ -252,7 +314,14 @@ class SupChat {
         SUP_CHAT.toggle_container_supchat_start('hide')
         SUP_CHAT.toggle_container_supchat_content('show')
         this.create_connection()
+        this.scroll_to_down_chat()
     }
+
+    scroll_to_down_chat() {
+        let chat_element = this.ELEMENTS.supchat_messages_chat
+        chat_element.scroll({top: chat_element.scrollHeight, behavior: 'smooth'})
+    }
+
 
     start_chat() {
         if (!this.CHAT) {
@@ -279,14 +348,164 @@ class SupChat {
         }
     }
 
+    // Is Typing or Voicing Element
+    effect_is_typing(state) {
+        let element_is_typing = document.getElementById('container-effect-is-typing')
+        if (!element_is_typing) {
+            element_is_typing = document.createElement('div')
+            this.ELEMENTS.supchat_messages_chat.appendChild(element_is_typing)
+        }
+        if (state == true) {
+            element_is_typing.id = 'container-effect-is-typing'
+            element_is_typing.setAttribute('state', 'show')
+            element_is_typing.classList.add('container-message-supchat')
+            element_is_typing.setAttribute('sender-type', 'other')
+            element_is_typing.innerHTML = get_node_is_typing_element()
+        } else {
+            element_is_typing.setAttribute('state', 'hide')
+        }
+    }
+
+
+    set_container_type_footer_chat(type = 'voice-recording') {
+        SUP_CHAT.ELEMENTS.footer_content_chat.setAttribute('container-active', type)
+    }
+
+    set_time_record_voice(time) {
+        let time_format = convert_second_to_time_format(time)
+        this.ELEMENTS.time_voice_recorded.innerHTML = time_format
+        this.ELEMENTS.time_voice_recording.innerHTML = time_format
+        this.TIME_RECORDED_VOICE = time
+    }
+
+    create_objcet_record_voice() {
+
+        let audioIN = {audio: true};
+        SUP_CHAT.record_voice_stop()
+        navigator.mediaDevices.getUserMedia(audioIN)
+            .then(function (mediaStreamObj) {
+                SUP_CHAT.VOICE_RECORDER = new MediaRecorder(mediaStreamObj);
+                let voice_recorder = SUP_CHAT.VOICE_RECORDER
+                console.log(voice_recorder)
+                voice_recorder.start()
+                voice_recorder.onstart = function (e) {
+                    // Update per 1 sec
+                    if (SUP_CHAT.TIME_RECORDED_VOICE == undefined) {
+                        SUP_CHAT.TIME_RECORDED_VOICE = 0
+                    }
+                    SUP_CHAT.TIMER_TIME_RECORDED_VOICE = setInterval(function () {
+                        SUP_CHAT.TIME_RECORDED_VOICE += 1
+                        SUP_CHAT.set_time_record_voice(SUP_CHAT.TIME_RECORDED_VOICE)
+                    }, 1000)
+                    SUP_CHAT.set_container_type_footer_chat('voice-recording')
+                }
+
+                voice_recorder.ondataavailable = function (ev) {
+                    dataArray.push(ev.data);
+                }
+
+                let dataArray = []
+                voice_recorder.onstop = function (ev) {
+                    clearInterval(SUP_CHAT.TIMER_TIME_RECORDED_VOICE)
+                    console.log(this.TIME_RECORDED_VOICE)
+                    if (SUP_CHAT.TIME_RECORDED_VOICE > 0) {
+                        console.log('awdwadwad12312312312')
+                        SUP_CHAT.set_container_type_footer_chat('voice-send-or-cancel')
+                        let audioData = new Blob(dataArray, {'type': 'audio/mp3'});
+                        audioData = new File([audioData], 'voice.mp3')
+                        SUP_CHAT.VOICE_RECORDER.voice = audioData
+                        dataArray = []
+                    } else {
+                        SUP_CHAT.voice_recorded_cancel()
+                    }
+                    try {
+                        for (let i of SUP_CHAT.VOICE_RECORDER.stream.getTracks()) {
+                            i.stop()
+                        }
+                    } catch (e) {
+                    }
+                    // SUP_CHAT.record_voice_stop()
+                }
+            }).catch(function (e) {
+            throw e
+        });
+    }
+
+    start_record_voice() {
+        this.create_objcet_record_voice()
+    }
+
+    record_voice_stop() {
+        try {
+            for (let i of SUP_CHAT.VOICE_RECORDER.stream.getTracks()) {
+                i.stop()
+            }
+            SUP_CHAT.VOICE_RECORDER.stop()
+        } catch (e) {
+        }
+    }
+
+    voice_recorded_cancel() {
+        SUP_CHAT.set_time_record_voice(0)
+        SUP_CHAT.set_container_type_footer_chat()
+    }
+
+    voice_recorded_sended() {
+        SUP_CHAT.set_time_record_voice(0)
+        SUP_CHAT.set_container_type_footer_chat()
+    }
+
+    send_voice_recorded() {
+        let This = this
+        this.set_container_type_footer_chat('voice-sending')
+        let voice = this.VOICE_RECORDER.voice
+        if (voice) {
+            let data = new FormData()
+            data.append('voice', voice)
+            data.append('voice-time', SUP_CHAT.TIME_RECORDED_VOICE)
+            data.append('type-user', SUP_CHAT.TYPE_USER)
+            SendAjaxSupChat('send-voice-message', data, 'POST', function (response) {
+                console.log(response)
+                SUP_CHAT.voice_recorded_sended()
+                new AudioMessage(response)
+            })
+            // $.ajax({
+            //     type: 'POST',
+            //     url: '/sup-chat/send-voice-message',
+            //     data: Data,
+            //     processData: false,
+            //     contentType: false,
+            //     headers: {
+            //     },
+            //     success: function (response) {
+            //         SUP_CHAT.voice_recorded_sended()
+            //         new AudioMessage(response)
+            //         let data = response.audio
+            //         data['section-id'] = This.INFO_SEND['section-id']
+            //         data['type_send'] = 'send_message_audio'
+            //         data['chat_is_created'] = response.chat_is_created
+            //         This.Socket.send(JSON.stringify(data))
+            //     },
+            //     error: function (err) {
+            //         throw err
+            //     }
+            // })
+            this.VOICE_RECORDER.voice = undefined
+        }
+    }
 
     // Socket
     create_connection() {
         let count_try_create = 5
+        let socket
 
         function create_socket() {
+            if (SUP_CHAT.TYPE_USER == 'USER') {
+                socket = new WebSocket(get_protocol_socket() + (get_only_url_backend() + `/ws/chat/user/${SUP_CHAT.CHAT.id}`))
+            } else if (SUP_CHAT.TYPE_USER == 'ADMIN') {
+                socket = new WebSocket(get_protocol_socket() + (get_only_url_backend() + `/ws/chat/admin/${SUP_CHAT.CHAT.id}`))
+            }
 
-            let socket = new WebSocket(get_protocol_socket() + (get_only_url_backend() + `/ws/chat/user/${SUP_CHAT.CHAT.id}`).replace('//', '/'))
             SUP_CHAT.toggle_loading('show')
             SUP_CHAT.SOCKET = socket
             socket.onmessage = function (e) {
@@ -326,13 +545,13 @@ class SupChat {
     socket_recive(e) {
         let data = JSON.parse(e.data)
         let response_obj = ResponseSupChat.get(data.TYPE_RESPONSE)
-        if(response_obj){
+        if (response_obj) {
             response_obj.run(data)
         }
     }
 
     socket_open(e) {
-        console.log('awd')
+        console.log('Socket Connected')
     }
 
     socket_close(e) {
@@ -343,6 +562,47 @@ class SupChat {
 
     }
 
+}
+
+
+class ChatUser extends SupChat {
+    constructor() {
+        super('USER')
+    }
+
+    run() {
+        let This = this
+        SendAjaxSupChat(`run`, {}, 'POST', function (response) {
+            let status_code = response.status_code
+            if (status_code == 200) {
+                This._set_supchat_info(response)
+                This._create_element_supchat()
+                This._set_elements()
+                This._events()
+                This._init_chat_or_register()
+            }
+        })
+    }
+
+}
+
+class ChatAdmin extends SupChat {
+    constructor(supchat, chat) {
+        super('ADMIN')
+        console.log(supchat)
+        this.context = {
+            'supchat': supchat,
+            'chat': chat
+        }
+    }
+
+    run() {
+        this._set_supchat_info(this.context)
+        this._create_element_supchat()
+        this._set_elements()
+        this._events()
+        this.init_chat()
+    }
 
 }
 
@@ -350,68 +610,61 @@ class SupChat {
 class MessageSupChat {
     static LIST_MESSAGES = []
 
-    static get(id){
-        return MessageSupChat.LIST_MESSAGES.find(function(obj,index,arr){
-            if (obj.id == id){
+    static get(id) {
+        return MessageSupChat.LIST_MESSAGES.find(function (obj, index, arr) {
+            if (obj.id == id) {
                 return obj
             }
-        })    
+        })
     }
-
-
 
     constructor(message) {
         MessageSupChat.LIST_MESSAGES.push(this)
         this.id = message.id
-
         this.ELEMENTS = {}
 
         if (message.sender == 'user') {
             if (SUP_CHAT.TYPE_USER == 'USER') {
                 this.create_message_you(message)
+                SUP_CHAT.scroll_to_down_chat()
             } else {
                 this.create_message_other(message)
             }
         } else {
             if (SUP_CHAT.TYPE_USER == 'ADMIN') {
                 this.create_message_you(message)
+                SUP_CHAT.scroll_to_down_chat()
             } else {
                 this.create_message_other(message)
             }
         }
-
         this._events()
-
     }
 
-    _events(){
+    _events() {
         let This = this
         let btn_delete = this.ELEMENTS.message.querySelector('.btn-delete-message-supchat')
-        if (btn_delete){
-            btn_delete.addEventListener('click',function(){
+        if (btn_delete) {
+            btn_delete.addEventListener('click', function () {
                 This.delete()
             })
         }
     }
 
-
-    delete(){
+    delete() {
         RequestSupChat.delete_message.send(this.id)
     }
 
-    delete_element(){
+    delete_element() {
         this.ELEMENTS.message.remove()
     }
 
 }
 
-
-
 class TextMessage extends MessageSupChat {
     constructor(message) {
         super(message)
     }
-
 
     create_message_you(message) {
         let message_element = document.createElement('div')
@@ -432,7 +685,6 @@ class TextMessage extends MessageSupChat {
     }
 
 }
-
 
 class AudioMessage extends MessageSupChat {
     constructor(message) {

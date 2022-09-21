@@ -101,12 +101,12 @@ function get_node_supchat() {
                         <div class="suggested-message-supchat"></div>
                     </div>
                 </div>
-                <button id="btn-scroll-down-chat-supchat">
+                <button id="btn-scroll-down-chat-supchat" state="hide">
                     <i class="fal fa-angle-down"></i>
                 </button>
             </main>
             <footer>
-                <div class="content-footer-supchat" container-active="send-message-main">
+                <div id="content-footer-supchat" container-active="send-message-main">
                     <!-- Container  -->
                     <!-- send-message-edit-main  -->
                     <!-- send-message-main  -->
@@ -134,6 +134,7 @@ function get_node_supchat() {
                     </div>
                     <div container-type="voice-recording">
                         <p id="time-voice-recording-supchat">0.0</p>
+                        <p>...${SUP_CHAT.TRANSLATE.get('در حال ضبط')}</p>
                     </div> 
                     <div container-type="voice-send-or-cancel">
                         <div>
@@ -141,10 +142,10 @@ function get_node_supchat() {
                             <p id="time-voice-recorded-supchat">0.0</p>
                         </div>
                         <div>
-                            <button>    
+                            <button id="btn-voice-cancel-supchat">    
                                 <i class="fal fa-times"></i>
                             </button>
-                            <button>    
+                            <button id="btn-send-voice-recorded-supchat">    
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"></path>
                                 </svg>
@@ -172,13 +173,13 @@ function get_node_btn_open_supchat() {
 
 function get_node_seen_true() {
     return `
-        <i class="fal fa-check-double"></i>
+        <i class="fal fa-check-double" icon-seen-true></i>
     `
 }
 
 function get_node_seen_false() {
     return `
-        <i class="fal fa-check"></i>
+        <i class="fal fa-check" icon-seen-false ></i>
     `
 }
 
@@ -187,8 +188,13 @@ function get_node_footer_message_you(message) {
          <footer>
             <div class="time-send-message-supchat">${message.time_send}</div> 
             <div>
-                ${message.edited ? `<i class="icon-message-edited-supchat fal fa-pen"></i>` : ''}
-                ${SUP_CHAT.CONFIG.show_seen_message ? `<div class="seen-message-supchat" seen="${message.seen}">${message.seen ? get_node_seen_true() : get_node_seen_false()}</div>` : ''} 
+                <i class="icon-message-edited-supchat fal fa-pen"></i>
+                ${SUP_CHAT.CONFIG.show_seen_message ?
+        `<div class="seen-message-supchat">
+                        ${get_node_seen_true()}
+                        ${get_node_seen_false()}
+                    </div>` : ''
+    }
             </div>
             </footer>  
     `
@@ -204,7 +210,7 @@ function get_node_footer_message_other(message) {
     return footer
 }
 
-function get_node_header_delete_message(){
+function get_node_header_delete_message() {
     let node_header_delete_message = SUP_CHAT.CONFIG.can_delete_message ? `
         <button class="btn-delete-message-supchat" btn-delete-message>
             <i class="fal fa-trash"></i>
@@ -214,7 +220,7 @@ function get_node_header_delete_message(){
     return node_header_delete_message
 }
 
-function get_node_header_edit_message(){
+function get_node_header_edit_message() {
     let node_header_edit_message = SUP_CHAT.CONFIG.can_edit_message ? `
         <button class="btn-edit-message-supchat" btn-edit-message>
             <i class="fal fa-edit"></i>
@@ -229,11 +235,10 @@ function get_node_text_message_you(message) {
     let node_header_delete_message = get_node_header_delete_message()
 
     let node_header_edit_message = get_node_header_edit_message()
-    
-    
+
 
     return `
-        <div class="content-message-supchat">
+        <div class="content-message-supchat" edited="${message.edited ? 'true' : 'false'}" seen="${message.seen ? 'true' : 'false'}">
             <header>
             </header>
             <main>
@@ -244,7 +249,7 @@ function get_node_text_message_you(message) {
                     <button class="btn-show-more-options-message-supchat">
                         <i class="fal fa-ellipsis-v"></i>
                     </button>` : ''
-                    }
+    }
                 <div class="container-more-options-message-supchat">
                     ${node_header_edit_message}
                     ${node_header_delete_message}
@@ -270,11 +275,9 @@ function get_node_text_message_other(message) {
 
 function get_node_audio_message_you(message) {
 
-    
+
     let node_header_delete_message = get_node_header_delete_message()
 
-    
-    
 
     return `
         <div class="content-message-supchat">
@@ -288,7 +291,7 @@ function get_node_audio_message_you(message) {
                 <button class="btn-show-more-options-message-supchat">
                     <i class="fal fa-ellipsis-v"></i>
                 </button>` : ''
-                }
+    }
                 <div class="container-more-options-message-supchat">
                     ${node_header_delete_message}
                 </div>
@@ -306,6 +309,18 @@ function get_node_audio_message_other(message) {
                 <audio src="${message.audio}" time-duration="${message.audio_time}" preload="none"></audio>
             </main>
             ${get_node_footer_message_other(message)}
+        </div>
+    `
+}
+
+function get_node_is_typing_element() {
+    return `
+        <div class="content-message-supchat">
+            <main>
+                <span></span>
+                <span></span>
+                <span></span>
+            </main>
         </div>
     `
 }

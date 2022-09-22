@@ -43,7 +43,7 @@ class TranslateSupChat {
         'در حال ضبط': [
             'Recording'
         ],
-        'در حال ارسال':[
+        'در حال ارسال': [
             'Sending'
         ]
     }
@@ -364,18 +364,49 @@ class SupChat {
         }
     }
 
-    // Is Typing or Voicing Element
+    // Is Typing Element
     effect_is_typing(state) {
+        try {
+            let eff_is_typing = document.getElementById('container-effect-is-typing')
+            eff_is_typing.setAttribute('state', 'hide')
+            setTimeout(function () {
+                eff_is_typing.remove()
+            }, 300)
+        } catch (e) {
+        }
         if (state == true) {
             let element_is_typing = document.createElement('div')
-            this.ELEMENTS.supchat_messages_chat.appendChild(element_is_typing)
             element_is_typing.id = 'container-effect-is-typing'
-            element_is_typing.setAttribute('state', 'show')
-            element_is_typing.classList.add('container-message-supchat')
-            element_is_typing.setAttribute('sender-type', 'other')
-            element_is_typing.innerHTML = get_node_is_typing_element()
-        } else {
-            document.getElementById('container-effect-is-typing').remove()
+            this.ELEMENTS.supchat_messages_chat.appendChild(element_is_typing)
+            setTimeout(function () {
+                element_is_typing.setAttribute('state', 'show')
+                element_is_typing.classList.add('container-message-supchat')
+                element_is_typing.setAttribute('sender-type', 'other')
+                element_is_typing.innerHTML = get_node_is_typing_element()
+            }, 300)
+        }
+    }
+
+    // Is Voicing Element
+    effect_is_voicing(state) {
+        try {
+            let eff_is_voicing = document.getElementById('container-effect-is-voicing')
+            eff_is_voicing.setAttribute('state', 'hide')
+            setTimeout(function () {
+                eff_is_voicing.remove()
+            }, 300)
+        } catch (e) {
+        }
+        if (state == true) {
+            let element_is_voicing = document.createElement('div')
+            element_is_voicing.id = 'container-effect-is-voicing'
+            this.ELEMENTS.supchat_messages_chat.appendChild(element_is_voicing)
+            setTimeout(function () {
+                element_is_voicing.setAttribute('state', 'show')
+                element_is_voicing.classList.add('container-message-supchat')
+                element_is_voicing.setAttribute('sender-type', 'other')
+                element_is_voicing.innerHTML = get_node_is_voicing_element()
+            }, 300)
         }
     }
 
@@ -401,6 +432,8 @@ class SupChat {
                 let voice_recorder = SUP_CHAT.VOICE_RECORDER
                 voice_recorder.start()
                 voice_recorder.onstart = function (e) {
+                    // Send effect is voicing
+                    RequestSupChat.is_voicing.send(true)
                     // Update per 1 sec
                     SUP_CHAT.TIMER_TIME_RECORDED_VOICE = setInterval(function () {
                         SUP_CHAT.TIME_RECORDED_VOICE += 1
@@ -415,6 +448,9 @@ class SupChat {
 
                 let dataArray = []
                 voice_recorder.onstop = function (ev) {
+                    // Stop effect is voicing
+                    RequestSupChat.is_voicing.send(false)
+
                     clearInterval(SUP_CHAT.TIMER_TIME_RECORDED_VOICE)
                     if (SUP_CHAT.TIME_RECORDED_VOICE > 0) {
                         SUP_CHAT.set_container_type_footer_chat('voice-send-or-cancel')
@@ -468,11 +504,13 @@ class SupChat {
             let data = new FormData()
             data.append('voice', voice)
             data.append('voice_time', SUP_CHAT.TIME_RECORDED_VOICE)
+            data.append('type_user', SUP_CHAT.TYPE_USER)
             data.append('chat_id', SUP_CHAT.CHAT.id)
             SendAjaxSupChat('send-voice-message', data, 'POST', function (response) {
                 SUP_CHAT.voice_recorded_sended()
                 RequestSupChat.audio_message.send(response.message)
-            },function (response) {},false)
+            }, function (response) {
+            }, false)
             this.VOICE_RECORDER.voice = undefined
         }
     }
@@ -572,7 +610,6 @@ class ChatUser extends SupChat {
 class ChatAdmin extends SupChat {
     constructor(supchat, chat) {
         super('ADMIN')
-        console.log(supchat)
         this.context = {
             'supchat': supchat,
             'chat': chat

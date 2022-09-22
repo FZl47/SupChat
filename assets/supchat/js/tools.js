@@ -22,7 +22,7 @@ function set_cookie(Name, Value, ExpireDay = 30, Path = '/') {
 }
 
 // Send Ajax
-function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed) {
+function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed,convert_json=true) {
     let This = this
 
     if (Success == undefined) {
@@ -38,8 +38,10 @@ function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed) {
     // this.loadingEffect('Show')
     $.ajax({
         url: URL_BACKEND_SUPCHAT + '/' + SUP_CHAT.URL_SUPCHAT + '/' + Url,
-        data: JSON.stringify(Data),
+        data: convert_json ? JSON.stringify(Data) : Data,
         type: Method,
+        processData: false,
+        contentType: false,
         headers: {
             // 'X-CSRFToken': window.CSRF_TOKEN
         },
@@ -192,7 +194,7 @@ function get_protocol_socket() {
 }
 
 function get_only_url_backend() {
-    return URL_BACKEND_SUPCHAT.replace('https://', '').replace('http://', '').replace('/','')
+    return URL_BACKEND_SUPCHAT.replace('https://', '').replace('http://', '').replace('/', '')
 }
 
 

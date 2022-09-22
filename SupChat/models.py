@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import F, Max, Count, Sum
+from django.db.models import F, Max, Count, Sum, Q
 from django.urls import reverse, resolve, reverse_lazy
 from django.utils import timezone
 from django.templatetags.static import static
@@ -245,6 +245,15 @@ class ChatGroup(models.Model):
 
     def __str__(self):
         return f"Chat Group {self.user.get_full_name()} - {self.admin.get_full_name()}"
+
+    @classmethod
+    def get_chat_by_type_user(cls,chat_id,user_obj,type_user):
+        if type_user == 'user':
+            lookup = Q(user=user_obj)
+        elif type_user == 'admin':
+            lookup = Q(admin=user_obj)
+        chat = ChatGroup.objects.filter(lookup, id=chat_id, is_active=True).first()
+        return chat
 
     def get_messages(self):
         return self.message_set.filter(deleted=False).select_subclasses().all()

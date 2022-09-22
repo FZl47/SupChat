@@ -1,7 +1,8 @@
-@font-face {
-    src: url("/assets/supchat/font/Kalameh_Black.woff");
-    font-family: 'KalameBlack';
+
+button {
+    outline: none !important;
 }
+
 
 #SupChat {
     font-family: VazirMatn;
@@ -336,12 +337,15 @@
     display: none;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    height: 100%;
+    padding: 10px 20px;
 }
 
-#content-footer-supchat p{
+#content-footer-supchat p {
     margin: 0;
     display: inline-block;
+    color: #777;
+    font-size: 90%;
 }
 
 .container-btns-send-message-voice > button {
@@ -362,6 +366,7 @@
 
 #content-footer-supchat[container-active="voice-recording"] [container-type="send-message-main"] {
     display: block;
+    height: auto;
 }
 
 #content-footer-supchat[container-active="voice-recording"] [container-type="send-message-main"] #btn-send-message-supchat {
@@ -374,24 +379,25 @@
     align-items: center;
 }
 
-#content-footer-supchat[container-active="voice-recording"] p{
+#content-footer-supchat[container-active="voice-recording"] p {
     margin: 0 6px;
     font-size: 85%;
     color: #777;
 }
 
-#time-voice-recording-supchat{
+#time-voice-recording-supchat {
     margin: 0;
     font-size: 95%;
-    color: #555!important;
+    color: #555 !important;
 }
-
 
 #content-footer-supchat[container-active="voice-send-or-cancel"] [container-type="voice-send-or-cancel"] {
     display: flex;
 }
 
-
+#content-footer-supchat[container-active="voice-sending"] [container-type="voice-sending"] {
+    display: flex;
+}
 
 #btn-record-voice-supchat {
     border: none;
@@ -445,6 +451,29 @@
 #input-message-supchat::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 30px;
+}
+
+#btn-voice-cancel-supchat {
+    background: none;
+    border: none;
+    transform: translateY(2px);
+}
+
+#btn-voice-cancel-supchat i {
+    color: #ee524f;
+    font-size: 120%;
+}
+
+#btn-send-voice-recorded-supchat {
+    background: none;
+    border: none;
+    margin-right: 5px;
+}
+
+#btn-send-voice-recorded-supchat svg {
+    width: 23px;
+    fill: #00cdaa;
+    transform: rotate(-180deg);
 }
 
 
@@ -586,7 +615,7 @@
 .container-message-supchat[sender-type='you'] .content-message-supchat > main {
     border-radius: 15px 4px 15px 15px;
     padding: 6px;
-    background: #20c8c1;
+    background: #1dcfbe;
     color: #fff;
     min-width: 120px;
 }
@@ -668,14 +697,13 @@
     display: inline-block;
 }
 
-
 .btn-show-more-options-message-supchat {
     position: absolute;
     top: 5px;
     left: 5px;
     background: none;
     border: none;
-    color: #ddd;
+    color: #eee;
     font-size: 110%;
 }
 
@@ -749,12 +777,12 @@
     transition: all .3s;
 }
 
-#container-effect-is-typing[state='show']{
+#container-effect-is-typing[state='show'] {
     opacity: 1;
     transform: translateX(0);
 }
 
-#container-effect-is-typing[state='hide']{
+#container-effect-is-typing[state='hide'] {
     opacity: 0;
     transform: translateX(-10px);
 }

@@ -641,12 +641,13 @@ button {
 .content-message-supchat pre {
     font-family: VazirMatn;
     white-space: pre-wrap;
+    word-break: break-all;
     text-align: justify;
     color: inherit;
     margin: 0;
     padding: 2px;
     font-size: 94%;
-    max-width: 92%;
+    max-width: 90%;
     overflow: hidden;
 }
 
@@ -828,6 +829,73 @@ button {
         transform: translateY(0);
     }
 }
+
+
+#container-effect-is-voicing {
+    transform: translateX(-10px);
+    transition: all .3s;
+}
+
+#container-effect-is-voicing[state='show'] {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+#container-effect-is-voicing[state='hide'] {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+#container-effect-is-voicing .content-message-supchat {
+    text-align: center;
+    padding: 5px;
+}
+
+#container-effect-is-voicing .content-message-supchat main {
+    min-width: 85px;
+    height: 34px;
+}
+
+#container-effect-is-voicing span {
+    display: inline-block;
+    width: 6px;
+    border-radius: 100px;
+    margin: 2px;
+    background: #888;
+    vertical-align: middle;
+    animation: animation-effect-is-voicing .8s linear infinite;
+}
+
+#container-effect-is-voicing span:nth-of-type(1) {
+    height: 12px;
+    animation-delay: .2s;
+}
+
+#container-effect-is-voicing span:nth-of-type(2) {
+    height: 16px;
+    animation-delay: .3s;
+}
+
+#container-effect-is-voicing span:nth-of-type(3) {
+    height: 7px;
+    animation-delay: .1s;
+}
+
+#container-effect-is-voicing span:nth-of-type(4) {
+    height: 14px;
+    animation-delay: 0;
+}
+
+@keyframes animation-effect-is-voicing {
+    30% {
+        height: 14px;
+        background: #666;
+    }
+    60% {
+        height: 8px;
+    }
+}
+
 
 @media screen and (max-width: 450px) {
     #SupChat[state='open'] {

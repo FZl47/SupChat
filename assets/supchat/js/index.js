@@ -42,6 +42,9 @@ class TranslateSupChat {
         ],
         'در حال ضبط': [
             'Recording'
+        ],
+        'در حال ارسال':[
+            'Sending'
         ]
     }
 
@@ -377,7 +380,7 @@ class SupChat {
     }
 
 
-    set_container_type_footer_chat(type = 'voice-send-or-cancel') {
+    set_container_type_footer_chat(type = 'send-message-main') {
         SUP_CHAT.ELEMENTS.footer_content_chat.setAttribute('container-active', type)
     }
 
@@ -459,40 +462,17 @@ class SupChat {
     }
 
     send_voice_recorded() {
-        let This = this
         this.set_container_type_footer_chat('voice-sending')
         let voice = this.VOICE_RECORDER.voice
         if (voice) {
             let data = new FormData()
             data.append('voice', voice)
-            data.append('voice-time', SUP_CHAT.TIME_RECORDED_VOICE)
-            data.append('type-user', SUP_CHAT.TYPE_USER)
+            data.append('voice_time', SUP_CHAT.TIME_RECORDED_VOICE)
+            data.append('chat_id', SUP_CHAT.CHAT.id)
             SendAjaxSupChat('send-voice-message', data, 'POST', function (response) {
-                console.log(response)
                 SUP_CHAT.voice_recorded_sended()
-                new AudioMessage(response)
-            })
-            // $.ajax({
-            //     type: 'POST',
-            //     url: '/sup-chat/send-voice-message',
-            //     data: Data,
-            //     processData: false,
-            //     contentType: false,
-            //     headers: {
-            //     },
-            //     success: function (response) {
-            //         SUP_CHAT.voice_recorded_sended()
-            //         new AudioMessage(response)
-            //         let data = response.audio
-            //         data['section-id'] = This.INFO_SEND['section-id']
-            //         data['type_send'] = 'send_message_audio'
-            //         data['chat_is_created'] = response.chat_is_created
-            //         This.Socket.send(JSON.stringify(data))
-            //     },
-            //     error: function (err) {
-            //         throw err
-            //     }
-            // })
+                RequestSupChat.audio_message.send(response.message)
+            },function (response) {},false)
             this.VOICE_RECORDER.voice = undefined
         }
     }

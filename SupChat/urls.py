@@ -41,6 +41,9 @@ urlpatterns = [
     path('run',views.sup_chat_run_user),
     path('start-chat',views.start_chat),
 
+    # Voice Message
+    path('send-voice-message',views.send_voice_message),
+
     # Admin
     path('admin/chat/<int:chat_id>',views.view_chat_admin,name='view_chat_admin'),
     path('admin/login',views.view_login_admin,name='view_login_admin'),

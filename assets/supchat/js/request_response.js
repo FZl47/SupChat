@@ -32,6 +32,12 @@ new ResponseSupChat('TEXT_MESSAGE', function (data) {
 })
 
 
+// response audio message
+new ResponseSupChat('AUDIO_MESSAGE', function (data) {
+    new AudioMessage(data.message)
+})
+
+
 // response delete message
 new ResponseSupChat('DELETE_MESSAGE', function (data) {
     let message_obj = MessageSupChat.get(data.message.id)

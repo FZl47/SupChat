@@ -15,14 +15,16 @@
 # from SupChat.core.tools import format_file
 import json
 from django.http import HttpResponse, JsonResponse, Http404
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
-from SupChat.core.decorators.view import admin_authenticated, require_post_and_ajax, get_user
 from SupChat.core.auth.view import create_user
 from SupChat.core import serializers
-from SupChat.models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin
 from SupChat.core import tools
+from SupChat.core.decorators import view as decorators
+# from SupChat.core.decorators.view import admin_authenticated, require_post_and_ajax, get_user
+from SupChat.models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin
 
 
 def get_supchat():
@@ -350,8 +352,8 @@ def get_supchat():
 # ------------------------ V3 ----------------------------
 
 @csrf_exempt
-@require_post_and_ajax
-@get_user
+@decorators.require_post_and_ajax
+@decorators.get_user
 def sup_chat_run_user(request):
     context = {}
     supchat = get_supchat()
@@ -375,7 +377,7 @@ def create_user(phone_or_email):
     return User.objects.create(phone_or_email=phone_or_email)
 
 
-@get_user
+@decorators.get_user
 def get_user_by_request_or_phone_email(request, phone_or_email):
     exists = False
     user = request.user_supchat
@@ -385,8 +387,8 @@ def get_user_by_request_or_phone_email(request, phone_or_email):
 
 
 @csrf_exempt
-@require_post_and_ajax
-@get_user
+@decorators.require_post_and_ajax
+@decorators.get_user
 def start_chat(request):
     context = {}
 
@@ -433,9 +435,42 @@ def start_chat(request):
     return JsonResponse(context)
 
 
+@csrf_exempt
+@decorators.require_post_and_ajax
+@decorators.get_admin
+@decorators.get_user
+def send_voice_message(request):
+    data = request.POST
+    voice = request.FILES.get('voice') or None
+    voice_time = data.get('voice_time') or 0
+    chat_id = data.get('chat_id') or 0
+
+    admin_supchat = request.admin_supchat
+    user_supchat = request.user_supchat
+
+    if admin_supchat or user_supchat:
+        if user_supchat:
+            type_user = 'user'
+        else:
+            type_user = 'admin'
+        if  voice:
+            if tools.format_file(voice) == 'mp3':
+                chat = None
+                if type_user == 'admin':
+                    chat = ChatGroup.get_chat_by_type_user(chat_id,admin_supchat,'admin')
+                elif type_user == 'user':
+                    chat = ChatGroup.get_chat_by_type_user(chat_id,user_supchat,'user')
+                if chat:
+                    context = {}
+                    audio = AudioMessage.objects.create(chat=chat, sender=type_user, audio=voice,
+                                                        audio_time=voice_time)
+                    audio_json = serializers.Serializer_message(audio)
+                    context['message'] = audio_json
+                    return JsonResponse(context)
+    raise PermissionDenied
 
 
-@admin_authenticated
+@decorators.admin_authenticated
 def view_chat_admin(request, chat_id):
     context = {}
     chat = ChatGroup.objects.filter(id=chat_id, admin=request.admin, is_active=True).first()

@@ -56,3 +56,13 @@ def get_user(func):
         setattr(request, 'user_supchat', user)
         return func(request, *args)
     return wrapper
+
+
+def get_admin(func):
+    def wrapper(request,*args,**kwargs):
+        user = request.user
+        admin = Admin.objects.filter(user=user).first()
+        setattr(request,'admin_supchat',admin)
+        return func(request,*args)
+    return wrapper
+

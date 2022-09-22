@@ -11,6 +11,7 @@ class Response:
         # You should define name request and method for response
         # REQUESTS TYPE and REQUEST HANDLER
         'SEND_TEXT_MESSAGE': 'send_text_message',
+        'SEND_AUDIO_MESSAGE': 'send_audio_message',
         'DELETE_MESSAGE': 'delete_message',
         'IS_TYPING': 'is_typing'
     }
@@ -41,6 +42,13 @@ class Response:
                                                         text=text_message)
             self.send_to_group('TEXT_MESSAGE', {
                 'message': serializers.Serializer_message(message_object)
+            })
+
+    def send_audio_message(self, data_request):
+        audio_message = data_request.get('message')
+        if audio_message:
+            self.send_to_group('AUDIO_MESSAGE', {
+                'message': audio_message
             })
 
     def delete_message(self, data_request):

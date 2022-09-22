@@ -54,6 +54,13 @@ new ResponseSupChat('IS_TYPING', function (data) {
 })
 
 
+// response is voicing
+new ResponseSupChat('IS_VOICING', function (data) {
+    let state_is_voicing = data.state_is_voicing
+    SUP_CHAT.effect_is_voicing(state_is_voicing)
+})
+
+
 // --- REQUESTS ---
 
 class _RequestBaseSupChat {
@@ -124,9 +131,23 @@ class RequestIsTypingSupChat extends _RequestBaseSupChat {
     }
 }
 
+class RequestIsVocingSupChat extends _RequestBaseSupChat {
+    constructor() {
+        super('IS_VOICING');
+    }
+
+    send(state_is_voicing) {
+        let data = {
+            'state_is_voicing': state_is_voicing
+        }
+        this.send_to_socket(data)
+    }
+}
+
 const RequestSupChat = {
     'text_message': new RequestSendTextMessageSupChat(),
     'audio_message': new RequestSendAudioMessageSupChat(),
     'delete_message': new RequestDeleteMessageSupChat(),
     'is_typing': new RequestIsTypingSupChat(),
+    'is_voicing': new RequestIsVocingSupChat(),
 }

@@ -79,7 +79,7 @@ def Serializer_message(message, many=False):
 
     def Serializer_audio_messagae(audio_message):
         return {
-            "audio": audio_message.audio,
+            "audio": audio_message.audio.url,
             "audio_time": audio_message.audio_time,
         }
 

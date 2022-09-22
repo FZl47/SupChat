@@ -13,7 +13,8 @@ class Response:
         'SEND_TEXT_MESSAGE': 'send_text_message',
         'SEND_AUDIO_MESSAGE': 'send_audio_message',
         'DELETE_MESSAGE': 'delete_message',
-        'IS_TYPING': 'is_typing'
+        'IS_TYPING': 'is_typing',
+        'IS_VOICING': 'is_voicing'
     }
 
     # Base Method
@@ -65,8 +66,16 @@ class Response:
 
     def is_typing(self, data_request):
         state_is_typing = data_request.get('state_is_typing')
-        if (state_is_typing == True) or (state_is_typing == False) :
+        if (state_is_typing == True) or (state_is_typing == False):
             group_name_reciver = self.chat.get_group_name_admin() if self.type_user == 'user' else self.chat.get_group_name_user()
             self.send_to_group('IS_TYPING', {
                 'state_is_typing': state_is_typing
+            }, group_name_reciver)
+
+    def is_voicing(self, data_request):
+        state_is_voicing = data_request.get('state_is_voicing')
+        if (state_is_voicing == True) or (state_is_voicing == False):
+            group_name_reciver = self.chat.get_group_name_admin() if self.type_user == 'user' else self.chat.get_group_name_user()
+            self.send_to_group('IS_VOICING', {
+                'state_is_voicing': state_is_voicing
             }, group_name_reciver)

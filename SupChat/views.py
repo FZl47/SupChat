@@ -443,17 +443,14 @@ def send_voice_message(request):
     data = request.POST
     voice = request.FILES.get('voice') or None
     voice_time = data.get('voice_time') or 0
+    type_user = str(data.get('type_user')).lower()
     chat_id = data.get('chat_id') or 0
 
     admin_supchat = request.admin_supchat
     user_supchat = request.user_supchat
 
     if admin_supchat or user_supchat:
-        if user_supchat:
-            type_user = 'user'
-        else:
-            type_user = 'admin'
-        if  voice:
+        if voice:
             if tools.format_file(voice) == 'mp3':
                 chat = None
                 if type_user == 'admin':

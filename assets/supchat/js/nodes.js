@@ -246,7 +246,7 @@ function get_node_text_message_you(message) {
 
 
     return `
-        <div class="content-message-supchat" edited="${message.edited ? 'true' : 'false'}" seen="${message.seen ? 'true' : 'false'}">
+        <div class="content-message-supchat" edited="${message.edited}" seen="${message.seen}">
             <header>
             </header>
             <main>
@@ -288,7 +288,7 @@ function get_node_audio_message_you(message) {
 
 
     return `
-        <div class="content-message-supchat" edited="false">
+        <div class="content-message-supchat" edited="false" seen="${message.seen}">
             <header>
             </header>
             <main>
@@ -325,6 +325,19 @@ function get_node_is_typing_element() {
     return `
         <div class="content-message-supchat">
             <main>
+                <span></span>
+                <span></span>
+                <span></span>
+            </main>
+        </div>
+    `
+}
+
+function get_node_is_voicing_element() {
+    return `
+        <div class="content-message-supchat">
+            <main>
+                <span></span>
                 <span></span>
                 <span></span>
                 <span></span>

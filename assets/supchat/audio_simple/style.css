@@ -3,15 +3,16 @@
     justify-content: space-between;
     align-items: center;
     text-align: center;
-    padding: 10px;
-    width: 100%;
-    min-width: 200px;
+    padding: 7px 10px;
+    width: 95%;
+    margin: auto;
+    max-width: 195px;
     border-radius: 10px;
     direction: ltr;
 }
 
-.container-audio-simple>* {
-    padding: 5px;
+.container-audio-simple > * {
+    padding: 3px;
     margin: 0 5px;
 }
 
@@ -35,7 +36,7 @@
 
 .btn-state-audio-simple[state='play'] [play] {
     display: block;
-    color: rgb(17, 252, 201);
+    color: rgb(0, 241, 188);
 }
 
 .btn-state-audio-simple[state='pause'] [pause] {
@@ -45,7 +46,7 @@
 
 .time-played-audio-simple,
 .time-total-audio-simple {
-    color: #aaa!important;
-    font-size: 80%!important;
+    color: inherit;
+    font-size: 80% !important;
     margin: 0;
 }

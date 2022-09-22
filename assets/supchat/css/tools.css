@@ -66,6 +66,16 @@ input::placeholder {
     animation: loading-circle-supchat-animation 1s linear infinite;
 }
 
+.loading-circle-supchat-small {
+    border: 2px solid transparent;
+    border-top: 2px solid var(--Loading--color);
+    border-right: 2px solid var(--Loading--color);
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    animation: loading-circle-supchat-animation 1s linear infinite;
+}
+
 @keyframes loading-circle-supchat-animation {
     0% {
         transform: rotate(0deg);

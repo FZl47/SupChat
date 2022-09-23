@@ -601,7 +601,7 @@ button {
 
 
 .container-message-supchat {
-    margin: 7px 0;
+    margin: 9px 0;
 }
 
 .container-message-supchat[sender-type='you'] {
@@ -657,7 +657,7 @@ button {
     align-items: center;
     width: 95%;
     margin: auto;
-    margin-top: 3px;
+    margin-top: 2px;
     color: #888;
 }
 

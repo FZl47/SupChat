@@ -56,9 +56,10 @@ def Serializer_chat(chat):
     if chat:
         return {
             "id": chat.id,
-            "user": "",
-            "admin": "",
-            "messages":Serializer_message(chat.get_messages(),True)
+            "user": Serializer_user_chat(chat.user),
+            "admin": Serializer_admin_chat(chat.admin),
+            "messages": Serializer_message(chat.get_messages(), True),
+            'section_name':chat.section.title
         }
     return None
 
@@ -68,10 +69,29 @@ def Serializer_user_basic(user):
         "session_key": user.session_key
     }
 
+def Serializer_status(user):
+    return {
+        "last_seen":user.get_last_seen(),
+        "is_online":user.is_online,
+    }
+
+def Serializer_user_chat(user):
+    return {
+        "session_key": user.session_key,
+        "name": user.get_full_name(),
+        "image": user.get_image(),
+        **Serializer_status(user)
+    }
+
+def Serializer_admin_chat(admin):
+    return {
+        "name": admin.get_full_name(),
+        "image": admin.get_image(),
+        **Serializer_status(admin)
+    }
 
 
 def Serializer_message(message, many=False):
-
     def Serializer_text_messagae(text_message):
         return {
             "text": text_message.text

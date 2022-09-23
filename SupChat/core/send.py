@@ -9,13 +9,18 @@ from SupChat.models import Message, TextMessage
 class Response:
     RESPONSES = {
         # You should define name request and method for response
-        # REQUESTS TYPE and REQUEST HANDLER
+        # REQUESTS TYPE and RESPONSE HANDLER
         'SEND_TEXT_MESSAGE': 'send_text_message',
         'SEND_AUDIO_MESSAGE': 'send_audio_message',
         'DELETE_MESSAGE': 'delete_message',
         'IS_TYPING': 'is_typing',
         'IS_VOICING': 'is_voicing',
         'SEEN_MESSAGE': 'seen_message'
+    }
+
+    RESPONSES_CONSUMER = {
+        # Useless | Created for readibility
+        'SEND_STATUS': 'send_status'
     }
 
     # Base Method
@@ -91,3 +96,13 @@ class Response:
             self.chat.seen_message_admin()
 
         self.send_to_group('SEEN_MESSAGE', {}, group_name_reciver)
+
+    # Requests in Consumer
+    def send_status(self, data_request):
+        group_name_reciver = ''
+        if self.type_user == 'user':
+            group_name_reciver = self.chat.get_group_name_admin()
+        else:
+            group_name_reciver = self.chat.get_group_name_user()
+
+        self.send_to_group('SEND_STATUS', data_request, group_name_reciver)

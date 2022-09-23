@@ -258,6 +258,14 @@ class ChatGroup(models.Model):
     def get_messages(self):
         return self.message_set.filter(deleted=False).select_subclasses().all()
 
+    def seen_message_admin(self):
+        self.message_set.filter(sender='user',seen=False).update(seen=True)
+
+    def seen_message_user(self):
+        self.message_set.filter(sender='admin',seen=False).update(seen=True)
+
+
+
     # def get_messages_by_user(self):
     #     messages = self.message_set.filter(deleted=False).select_subclasses().all()
     #     return messages

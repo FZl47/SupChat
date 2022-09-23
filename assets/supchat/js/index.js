@@ -206,6 +206,8 @@ class SupChat {
 
         elements.btn_open_supchat.addEventListener('click', function () {
             toggle_state_supchat('open')
+            // Seen message request
+            RequestSupChat.seen_message.send()
         })
 
         elements.btn_close_supchat.addEventListener('click', function () {
@@ -394,7 +396,7 @@ class SupChat {
             eff_is_voicing.setAttribute('state', 'hide')
             setTimeout(function () {
                 eff_is_voicing.remove()
-            }, 300)
+            }, 200)
         } catch (e) {
         }
         if (state == true) {
@@ -406,7 +408,7 @@ class SupChat {
                 element_is_voicing.classList.add('container-message-supchat')
                 element_is_voicing.setAttribute('sender-type', 'other')
                 element_is_voicing.innerHTML = get_node_is_voicing_element()
-            }, 300)
+            }, 200)
         }
     }
 
@@ -577,6 +579,7 @@ class SupChat {
 
     socket_close(e) {
         console.log(e)
+        this.create_connection()
     }
 
     socket_error(e) {
@@ -638,6 +641,13 @@ class MessageSupChat {
         })
     }
 
+    static seen_message() {
+        let all_message_you = document.querySelectorAll(".container-message-supchat[sender-type='you'] .content-message-supchat[seen='false']")
+        for (let message of all_message_you) {
+            message.setAttribute('seen', 'true')
+        }
+    }
+
     constructor(message) {
         MessageSupChat.LIST_MESSAGES.push(this)
         this.id = message.id
@@ -647,14 +657,18 @@ class MessageSupChat {
             if (SUP_CHAT.TYPE_USER == 'USER') {
                 this.create_message_you(message)
                 SUP_CHAT.scroll_to_down_chat()
+                this.SENDER = 'you'
             } else {
+                this.SENDER = 'other'
                 this.create_message_other(message)
             }
         } else {
             if (SUP_CHAT.TYPE_USER == 'ADMIN') {
                 this.create_message_you(message)
                 SUP_CHAT.scroll_to_down_chat()
+                this.SENDER = 'you'
             } else {
+                this.SENDER = 'other'
                 this.create_message_other(message)
             }
         }

@@ -14,7 +14,8 @@ class Response:
         'SEND_AUDIO_MESSAGE': 'send_audio_message',
         'DELETE_MESSAGE': 'delete_message',
         'IS_TYPING': 'is_typing',
-        'IS_VOICING': 'is_voicing'
+        'IS_VOICING': 'is_voicing',
+        'SEEN_MESSAGE': 'seen_message'
     }
 
     # Base Method
@@ -79,3 +80,14 @@ class Response:
             self.send_to_group('IS_VOICING', {
                 'state_is_voicing': state_is_voicing
             }, group_name_reciver)
+
+    def seen_message(self, data_request):
+        group_name_reciver = ''
+        if self.type_user == 'user':
+            group_name_reciver = self.chat.get_group_name_admin()
+            self.chat.seen_message_user()
+        else:
+            group_name_reciver = self.chat.get_group_name_user()
+            self.chat.seen_message_admin()
+
+        self.send_to_group('SEEN_MESSAGE', {}, group_name_reciver)

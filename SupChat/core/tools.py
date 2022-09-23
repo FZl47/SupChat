@@ -107,23 +107,23 @@ def GetDifferenceTime(Time):
                                                                             Time.minute)
 
     DifferenceTimeSecond = DifferenceTime.total_seconds()
-    Second = DifferenceTimeSecond % 60
-    Minute = DifferenceTimeSecond // 60 % 60
-    Hour = DifferenceTimeSecond // 3600
-    Day = DifferenceTime.days
-    Str = ''
-    if Minute > 0:
-        Str = f'{Minute} Minutes'
-    else:
-        Str = f'Now'
+    # Second = DifferenceTimeSecond % 60
+    # Minute = DifferenceTimeSecond // 60 % 60
+    # Hour = DifferenceTimeSecond // 3600
+    # Day = DifferenceTime.days
+    # Str = ''
+    # if Minute > 0:
+    #     Str = f'{Minute} Minutes'
+    # else:
+    #     Str = f'Now'
+    #
+    # if Hour > 0:
+    #     Str = f'{Hour} Hour'
+    #
+    # if Day > 0:
+    #     Str = f'{Day} Days'
 
-    if Hour > 0:
-        Str = f'{Hour} Hour'
-
-    if Day > 0:
-        Str = f'{Day} Days'
-
-    return Str , DifferenceTimeSecond
+    return DifferenceTimeSecond
 
 
 

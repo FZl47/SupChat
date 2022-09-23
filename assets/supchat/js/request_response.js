@@ -28,13 +28,21 @@ class ResponseSupChat {
 
 // response text message
 new ResponseSupChat('TEXT_MESSAGE', function (data) {
-    new TextMessage(data.message)
+    let message = new TextMessage(data.message)
+    if (message.SENDER == 'other') {
+        // Seen message request
+        RequestSupChat.seen_message.send()
+    }
 })
 
 
 // response audio message
 new ResponseSupChat('AUDIO_MESSAGE', function (data) {
-    new AudioMessage(data.message)
+    let message = new AudioMessage(data.message)
+    if (message.SENDER == 'other') {
+        // Seen message request
+        RequestSupChat.seen_message.send()
+    }
 })
 
 
@@ -61,6 +69,12 @@ new ResponseSupChat('IS_VOICING', function (data) {
 })
 
 
+// response seen message
+new ResponseSupChat('SEEN_MESSAGE', function (data) {
+    MessageSupChat.seen_message()
+})
+
+
 // --- REQUESTS ---
 
 class _RequestBaseSupChat {
@@ -68,7 +82,7 @@ class _RequestBaseSupChat {
         this.TYPE_REQUEST = TYPE_REQUEST
     }
 
-    send_to_socket(data) {
+    send_to_socket(data = {}) {
         if (SUP_CHAT.SOCKET.readyState == 1) {
             data['TYPE_REQUEST'] = this.TYPE_REQUEST
             SUP_CHAT.SOCKET.send(JSON.stringify(data))
@@ -144,10 +158,24 @@ class RequestIsVocingSupChat extends _RequestBaseSupChat {
     }
 }
 
+
+class RequestSeenMessageSupChat extends _RequestBaseSupChat {
+    constructor() {
+        super('SEEN_MESSAGE');
+    }
+
+    send() {
+        if (SUP_CHAT.IS_OPEN == true && SUP_CHAT.CHAT) {
+            this.send_to_socket()
+        }
+    }
+}
+
 const RequestSupChat = {
     'text_message': new RequestSendTextMessageSupChat(),
     'audio_message': new RequestSendAudioMessageSupChat(),
     'delete_message': new RequestDeleteMessageSupChat(),
     'is_typing': new RequestIsTypingSupChat(),
     'is_voicing': new RequestIsVocingSupChat(),
+    'seen_message': new RequestSeenMessageSupChat(),
 }

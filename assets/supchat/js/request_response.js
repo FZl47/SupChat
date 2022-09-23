@@ -75,6 +75,14 @@ new ResponseSupChat('SEEN_MESSAGE', function (data) {
 })
 
 
+// response status
+new ResponseSupChat('SEND_STATUS', function (data) {
+    let is_online = data.is_online
+    let last_seen = data.last_seen
+    SUP_CHAT.set_status_element(is_online,last_seen)
+})
+
+
 // --- REQUESTS ---
 
 class _RequestBaseSupChat {

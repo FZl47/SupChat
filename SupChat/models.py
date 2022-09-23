@@ -144,7 +144,7 @@ class Admin(models.Model):
     # You can remove field image and get this from user model
     image = models.ImageField(upload_to=upload_image_admin_chat)
     sections = models.ManyToManyField('Section')
-    lastSeen = models.DateTimeField(default=timezone.now)
+    last_seen = models.DateTimeField(default=timezone.now)
     status_online = models.CharField(max_length=10, choices=STATUS_ONLINE,default='offline')
     is_busy = models.BooleanField(default=False)
     group_name = models.CharField(max_length=40, default=RandomString,editable=False)
@@ -152,23 +152,26 @@ class Admin(models.Model):
     def __str__(self):
         return self.get_full_name()
 
+    @property
+    def is_online(self):
+        return self.status_online == 'online'
+
+    def get_image(self):
+        return self.image.url
+
+
     def get_full_name(self):
         try:
             return self.user.get_full_name() or 'Unknown'
         except:
             return 'Unknown'
 
-    # def get_image(self):
-    #     return self.image.url
-    #
-    # def get_last_seen_status(self):
-    #     difference_str, difference_second = GetDifferenceTime(self.lastSeen)
-    #     return {
-    #         'chat_is_exists': True,
-    #         'last_seen': difference_str,
-    #         'last_seen_second': difference_second,
-    #         'is_online': (self.status_online == 'online')
-    #     }
+    def get_last_seen(self):
+        diff_sec = GetDifferenceTime(self.last_seen)
+        return diff_sec
+
+
+
     #
     # def get_group_name_admin_in_section(self, section):
     #     """
@@ -220,12 +223,19 @@ class User(models.Model):
     def __str__(self):
         return self.get_full_name()
 
+    @property
+    def is_online(self):
+        return self.status_online == 'online'
+
     def get_image(self):
         return static('supchat/images/default/iconUser.png')
 
     def get_full_name(self):
         return 'Unknown'
 
+    def get_last_seen(self):
+        diff_sec = GetDifferenceTime(self.last_seen)
+        return diff_sec
 
 
 class ChatGroup(models.Model):

@@ -473,6 +473,9 @@ def view_chat_admin(request, chat_id):
     chat = ChatGroup.objects.filter(id=chat_id, admin=request.admin, is_active=True).first()
     supchat = get_supchat()
     if chat and supchat:
+        # Seen Message
+        chat.seen_message_admin()
+
         chat_serializer = serializers.Serializer_chat(chat)
         supchat_serialized = serializers.Serializer_supchat(supchat)
         context['chat'] = json.dumps(chat_serializer)

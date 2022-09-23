@@ -45,6 +45,21 @@ class TranslateSupChat {
         ],
         'در حال ارسال': [
             'Sending'
+        ],
+        'اخرین بازدید':[
+            'Last seen'
+        ],
+        'دقیقه پیش':[
+            'Minute ago'
+        ],
+        'لحظاتی پیش':[
+            'Now'
+        ],
+        'ساعت پیش':[
+            'Hour ago'
+        ],
+        'روز پیش':[
+            'Day ago'
         ]
     }
 
@@ -96,7 +111,6 @@ class SupChat {
 
         // Add Theme Css
         _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
-
     }
 
     _create_element_supchat() {
@@ -141,7 +155,11 @@ class SupChat {
             time_voice_recording: document.getElementById('time-voice-recording-supchat'),
             btn_cancel_voice: document.getElementById('btn-voice-cancel-supchat'),
             btn_send_voice_recorded: document.getElementById('btn-send-voice-recorded-supchat'),
-
+            image_user_chat_supchat: document.getElementById('image-user-chat-supchat'),
+            name_user_info_chat_supchat: document.getElementById('name-user-info-chat-supchat'),
+            name_section_info_chat_supchat: document.getElementById('name-section-info-chat-supchat'),
+            status_online_info_chat_supchat: document.getElementById('status-online-info-chat-supchat'),
+            last_seen_info_chat_supchat: document.getElementById('last-seen-info-chat-supchat'),
         }
     }
 
@@ -412,6 +430,48 @@ class SupChat {
         }
     }
 
+    // Set Status | online - offline
+    set_status_element(state,last_seen_second) {
+        // state be should boolean
+
+        // Delete timer update last seen
+        try {
+            clearInterval(this.TIMER_UPDATE_LAST_SEEN)
+        } catch (e) {
+        }
+        if (!state) {
+            let status_result
+            let suffix = SUP_CHAT.TRANSLATE.get('اخرین بازدید')
+            let time_second = parseInt(last_seen_second)
+
+            function update_last_seen() {
+                let second = Math.floor(time_second % 60)
+                let minute = Math.floor(time_second / 60 % 60)
+                let hour = Math.floor(time_second / 3600)
+                let day = Math.floor((time_second / (3600 * 24)))
+                if (minute > 0) {
+                    status_result = `${suffix} ${minute} ${SUP_CHAT.TRANSLATE.get('دقیقه پیش')} `
+                } else {
+                    status_result = `${suffix} ${SUP_CHAT.TRANSLATE.get('لحظاتی پیش')} `
+                }
+                if (hour > 0) {
+                    status_result = `${suffix} ${hour} ${SUP_CHAT.TRANSLATE.get('ساعت پیش')} `
+                }
+                if (day > 0) {
+                    status_result = `${suffix} ${day} ${SUP_CHAT.TRANSLATE.get('روز پیش')} `
+                }
+                SUP_CHAT.ELEMENTS.last_seen_info_chat_supchat.innerText = status_result
+                time_second += 60
+            }
+            this.TIMER_UPDATE_LAST_SEEN = setInterval(() => {
+                update_last_seen()
+            }, 60000)
+            update_last_seen()
+        }
+        state = state ? 'online' : 'offline'
+        this.ELEMENTS.status_online_info_chat_supchat.setAttribute('state', state)
+    }
+
 
     set_container_type_footer_chat(type = 'send-message-main') {
         SUP_CHAT.ELEMENTS.footer_content_chat.setAttribute('container-active', type)
@@ -535,7 +595,7 @@ class SupChat {
                 SUP_CHAT.socket_recive(e)
             }
             socket.onopen = function (e) {
-                count_try_create = 5
+                count_try_create = 1
                 SUP_CHAT.toggle_loading('hide')
                 SUP_CHAT.socket_open(e)
             }
@@ -579,11 +639,10 @@ class SupChat {
 
     socket_close(e) {
         console.log(e)
-        this.create_connection()
     }
 
     socket_error(e) {
-
+        this.create_connection()
     }
 
 }
@@ -602,11 +661,21 @@ class ChatUser extends SupChat {
                 This._set_supchat_info(response)
                 This._create_element_supchat()
                 This._set_elements()
+                This._set_info_chat()
                 This._events()
                 This._init_chat_or_register()
             }
         })
     }
+
+    _set_info_chat() {
+        let admin = this.CHAT.admin
+        this.ELEMENTS.image_user_chat_supchat.src = admin.image
+        this.ELEMENTS.name_user_info_chat_supchat.innerText = admin.name
+        this.ELEMENTS.name_section_info_chat_supchat.innerText = this.CHAT.section_name
+        this.set_status_element(admin.is_online,admin.last_seen)
+    }
+
 
 }
 
@@ -623,8 +692,17 @@ class ChatAdmin extends SupChat {
         this._set_supchat_info(this.context)
         this._create_element_supchat()
         this._set_elements()
+        this._set_info_chat()
         this._events()
         this.init_chat()
+    }
+
+    _set_info_chat() {
+        let user = this.CHAT.user
+        this.ELEMENTS.image_user_chat_supchat.src = user.image
+        this.ELEMENTS.name_user_info_chat_supchat.innerText = user.name
+        this.ELEMENTS.name_section_info_chat_supchat.classList.add('d-none') // Hide name section
+        this.set_status_element(user.is_online,user.last_seen)
     }
 
 }

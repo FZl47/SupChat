@@ -67,6 +67,7 @@ class ChatUser(SupChat):
         self._send_status()
         self.accept()
 
+
     def _set_status(self,status):
         assert status in ['online','offline']
         self.user_supchat.status_online = status

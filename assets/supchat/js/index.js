@@ -46,19 +46,19 @@ class TranslateSupChat {
         'در حال ارسال': [
             'Sending'
         ],
-        'اخرین بازدید':[
+        'اخرین بازدید': [
             'Last seen'
         ],
-        'دقیقه پیش':[
+        'دقیقه پیش': [
             'Minute ago'
         ],
-        'لحظاتی پیش':[
+        'لحظاتی پیش': [
             'Now'
         ],
-        'ساعت پیش':[
+        'ساعت پیش': [
             'Hour ago'
         ],
-        'روز پیش':[
+        'روز پیش': [
             'Day ago'
         ]
     }
@@ -342,7 +342,6 @@ class SupChat {
             SUP_CHAT.scroll_to_down_chat()
         })
 
-
     }
 
     init_chat() {
@@ -351,6 +350,7 @@ class SupChat {
         SUP_CHAT.toggle_container_supchat_content('show')
         this.create_connection()
         this.scroll_to_down_chat()
+        this._set_info_chat()
     }
 
     scroll_to_down_chat() {
@@ -431,7 +431,7 @@ class SupChat {
     }
 
     // Set Status | online - offline
-    set_status_element(state,last_seen_second) {
+    set_status_element(state, last_seen_second) {
         // state be should boolean
 
         // Delete timer update last seen
@@ -463,6 +463,7 @@ class SupChat {
                 SUP_CHAT.ELEMENTS.last_seen_info_chat_supchat.innerText = status_result
                 time_second += 60
             }
+
             this.TIMER_UPDATE_LAST_SEEN = setInterval(() => {
                 update_last_seen()
             }, 60000)
@@ -661,7 +662,6 @@ class ChatUser extends SupChat {
                 This._set_supchat_info(response)
                 This._create_element_supchat()
                 This._set_elements()
-                This._set_info_chat()
                 This._events()
                 This._init_chat_or_register()
             }
@@ -673,7 +673,7 @@ class ChatUser extends SupChat {
         this.ELEMENTS.image_user_chat_supchat.src = admin.image
         this.ELEMENTS.name_user_info_chat_supchat.innerText = admin.name
         this.ELEMENTS.name_section_info_chat_supchat.innerText = this.CHAT.section_name
-        this.set_status_element(admin.is_online,admin.last_seen)
+        this.set_status_element(admin.is_online, admin.last_seen)
     }
 
 
@@ -702,7 +702,7 @@ class ChatAdmin extends SupChat {
         this.ELEMENTS.image_user_chat_supchat.src = user.image
         this.ELEMENTS.name_user_info_chat_supchat.innerText = user.name
         this.ELEMENTS.name_section_info_chat_supchat.classList.add('d-none') // Hide name section
-        this.set_status_element(user.is_online,user.last_seen)
+        this.set_status_element(user.is_online, user.last_seen)
     }
 
 }

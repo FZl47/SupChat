@@ -60,6 +60,12 @@ class TranslateSupChat {
         ],
         'روز پیش': [
             'Day ago'
+        ],
+        'شما دسترسی ندارید':[
+            'Access denied'
+        ],
+        'حساب شما در لیست سیاه قرار دارد . برای رفع این مشکل میتوانید با پشتیبانی در ارتباط باشید':[
+            'Your account is in the blacklist . To solve this problem , you can contact support'
         ]
     }
 
@@ -160,6 +166,10 @@ class SupChat {
             name_section_info_chat_supchat: document.getElementById('name-section-info-chat-supchat'),
             status_online_info_chat_supchat: document.getElementById('status-online-info-chat-supchat'),
             last_seen_info_chat_supchat: document.getElementById('last-seen-info-chat-supchat'),
+            supchat_error: document.getElementById('SupChatError'),
+            supchat_error_title: document.querySelector('#SupChatError h4'),
+            supchat_error_img: document.querySelector('#SupChatError img'),
+            supchat_error_description: document.querySelector('#SupChatError p'),
         }
     }
 
@@ -192,6 +202,16 @@ class SupChat {
             this.ELEMENTS.supchat_loading.setAttribute('container-show', '')
         } else {
             this.ELEMENTS.supchat_loading.removeAttribute('container-show')
+        }
+    }
+
+    show_error(status) {
+        this.ELEMENTS.supchat_error.setAttribute('container-show', '')
+        this.ELEMENTS.supchat_error_img.alt = `Error ${status}`
+        if (status == 403) {
+            this.ELEMENTS.supchat_error_img.src = get_link_assets_supchat('images/default/err_403.png', false, true)
+            this.ELEMENTS.supchat_error_title.innerText = SUP_CHAT.TRANSLATE.get('شما دسترسی ندارید')
+            this.ELEMENTS.supchat_error_description.innerText = SUP_CHAT.TRANSLATE.get('حساب شما در لیست سیاه قرار دارد برای رفع این مشکل میتوانید با پشتیبانی در ارتباط باشید')
         }
     }
 
@@ -664,6 +684,12 @@ class ChatUser extends SupChat {
                 This._set_elements()
                 This._events()
                 This._init_chat_or_register()
+            } else if (status_code == 403) {
+                This._set_supchat_info(response)
+                This._create_element_supchat()
+                This._set_elements()
+                This._events()
+                This.show_error(403)
             }
         })
     }

@@ -358,8 +358,9 @@ def sup_chat_run_user(request):
     context = {}
     supchat = get_supchat()
     sections = Section.objects.annotate(admin_count=Count('admin')).filter(is_active=True, admin_count__gt=0)
+    user = request.user_supchat
     if supchat and sections:
-        chat = ChatGroup.objects.filter(user=request.user_supchat, is_active=True).first()
+        chat = ChatGroup.objects.filter(user=user, is_active=True).first()
         supchat_serialized = serializers.Serializer_supchat(supchat)
         section_serialized = serializers.Serializer_section(sections, True)
         chat_serializer = serializers.Serializer_chat(chat)
@@ -367,6 +368,10 @@ def sup_chat_run_user(request):
         context['sections'] = section_serialized
         context['chat'] = chat_serializer
         context['status_code'] = 200
+        if user:
+            if user.in_blacklist():
+                # in blacklist
+                context['status_code'] = 403
     else:
         context['status_code'] = 404
     return JsonResponse(context)

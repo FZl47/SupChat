@@ -335,14 +335,11 @@ class ChatGroup(models.Model):
         return f"GroupName_ChatID_{self.id}_{self.user.group_name}"
 
 class BlackList(models.Model):
-    session_key = models.CharField(max_length=50)
-    phone_or_email = models.CharField(max_length=150,null=True,blank=True)
+    user = models.ForeignKey('User',on_delete=models.CASCADE)
     reason = models.CharField(max_length=300)
 
     def __str__(self):
-        if self.phone_or_email:
-            return self.phone_or_email
-        return self.session_key
+        return self.user.get_full_name()
 
 class MessageBase(models.Model):
     # TYPE_MESSAGE = ['text','audio']

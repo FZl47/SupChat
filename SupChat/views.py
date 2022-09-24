@@ -373,16 +373,13 @@ def sup_chat_run_user(request):
 
 
 
-def create_user(phone_or_email):
-    return User.objects.create(phone_or_email=phone_or_email)
-
 
 @decorators.get_user
 def get_user_by_request_or_phone_email(request, phone_or_email):
     exists = False
     user = request.user_supchat
-    if user == None:
-        user = User.objects.filter(phone_or_email=phone_or_email).first()
+    if user == None and phone_or_email:
+        user = User.objects.filter(phone_or_email=phone_or_email,ip=tools.Get_IP(request)).first()
     return user
 
 
@@ -415,7 +412,7 @@ def start_chat(request):
             if admin:
                 user = get_user_by_request_or_phone_email(request, phone_or_email)
                 if user == None:
-                    user = create_user(phone_or_email)
+                    user = create_user(request,phone_or_email)
                     context['user_created'] = True
                 else:
                     context['user_created'] = False

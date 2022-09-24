@@ -237,6 +237,9 @@ class User(models.Model):
         diff_sec = GetDifferenceTime(self.last_seen)
         return diff_sec
 
+    def in_blacklist(self):
+        return bool(hasattr(self,'blacklist'))
+
 
 class ChatGroup(models.Model):
 
@@ -334,12 +337,14 @@ class ChatGroup(models.Model):
         """
         return f"GroupName_ChatID_{self.id}_{self.user.group_name}"
 
+
 class BlackList(models.Model):
-    user = models.ForeignKey('User',on_delete=models.CASCADE)
+    user = models.OneToOneField('User',on_delete=models.CASCADE)
     reason = models.CharField(max_length=300)
 
     def __str__(self):
         return self.user.get_full_name()
+
 
 class MessageBase(models.Model):
     # TYPE_MESSAGE = ['text','audio']

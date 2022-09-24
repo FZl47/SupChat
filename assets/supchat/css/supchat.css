@@ -54,6 +54,10 @@ button {
     display: flex;
 }
 
+#SupChatError[container-show]{
+    display: block;
+}
+
 #SupChatStart header {
     text-align: right;
     height: 55px;
@@ -487,7 +491,7 @@ button {
     margin: auto;
     margin-top: 30px;
     display: block;
-    border-radius: 8px;
+    border-radius: 6px;
     border: none;
     background: #f5f5f5;
     color: #999;
@@ -501,7 +505,7 @@ button {
 
 #BtnStartChatSupChat[valid='true'] {
     background: linear-gradient(-20deg, #ff5b56, #ff6f77);
-    box-shadow: 0 3px 10px rgba(255, 91, 86, 0.5);
+    box-shadow: 0 1px 2px rgba(255, 91, 86, 0.1);
     color: #fff;
     cursor: pointer;
 }
@@ -901,6 +905,34 @@ button {
     }
 }
 
+
+#SupChatError{
+    padding: 10px;
+}
+
+#SupChatError img{
+    width: 80%;
+    height: 100%;
+    display: block;
+    margin: auto;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    object-fit: cover;
+}
+
+#SupChatError h4{
+    font-size: 'KalamehBlack';
+    text-align: center;
+    font-size: 150%;
+}
+
+#SupChatError p{
+    color: #777;
+    line-height: 28px;
+    font-size: 90%;
+    margin-top: 20px;
+    text-align: center;
+}
 
 @media screen and (max-width: 450px) {
     #SupChat[state='open'] {

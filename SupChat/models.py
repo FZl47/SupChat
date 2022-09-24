@@ -146,7 +146,7 @@ class Admin(models.Model):
     sections = models.ManyToManyField('Section')
     last_seen = models.DateTimeField(default=timezone.now)
     status_online = models.CharField(max_length=10, choices=STATUS_ONLINE,default='offline')
-    is_busy = models.BooleanField(default=False)
+    # is_busy = models.BooleanField(default=False)
     group_name = models.CharField(max_length=40, default=RandomString,editable=False)
 
     def __str__(self):
@@ -158,7 +158,6 @@ class Admin(models.Model):
 
     def get_image(self):
         return self.image.url
-
 
     def get_full_name(self):
         try:
@@ -214,6 +213,7 @@ class User(models.Model):
         ('offline', 'Offline'),
     )
 
+    ip = models.CharField(max_length=20)
     session_key = models.CharField(max_length=50, default=RandomString)
     phone_or_email = models.CharField(max_length=150,null=True,blank=True)
     last_seen = models.DateTimeField(null=True, blank=True, default=timezone.now)
@@ -326,13 +326,13 @@ class ChatGroup(models.Model):
         """
             must use this in consumer chat
         """
-        return f"GroupName_{self.admin.group_name}"
+        return f"GroupName_ChatID_{self.id}_{self.admin.group_name}"
 
     def get_group_name_user(self):
         """
             must use this in consumer chat
         """
-        return f"GroupName_{self.user.group_name}"
+        return f"GroupName_ChatID_{self.id}_{self.user.group_name}"
 
 class BlackList(models.Model):
     session_key = models.CharField(max_length=50)

@@ -79,7 +79,7 @@ new ResponseSupChat('SEEN_MESSAGE', function (data) {
 new ResponseSupChat('SEND_STATUS', function (data) {
     let is_online = data.is_online
     let last_seen = data.last_seen
-    SUP_CHAT.set_status_element(is_online,last_seen)
+    SUP_CHAT.set_status_element(is_online, last_seen)
 })
 
 
@@ -91,9 +91,11 @@ class _RequestBaseSupChat {
     }
 
     send_to_socket(data = {}) {
-        if (SUP_CHAT.SOCKET.readyState == 1) {
-            data['TYPE_REQUEST'] = this.TYPE_REQUEST
-            SUP_CHAT.SOCKET.send(JSON.stringify(data))
+        if (SUP_CHAT.SOCKET) {
+            if (SUP_CHAT.SOCKET.readyState == 1) {
+                data['TYPE_REQUEST'] = this.TYPE_REQUEST
+                SUP_CHAT.SOCKET.send(JSON.stringify(data))
+            }
         }
     }
 }

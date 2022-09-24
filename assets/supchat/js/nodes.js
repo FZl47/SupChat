@@ -45,7 +45,7 @@ function get_node_supchat() {
                 </div>
             </header>
             <main>
-                <img src="${get_link_assets_supchat('gif/customer-service.gif')}" alt="customer service" style="width: ${width_image_startsupchat}">
+                <img src="${get_link_assets_supchat('images/default/start-chat.webp')}" alt="start chat img" style="width: ${width_image_startsupchat}">
                 ${field_form_section}
                 ${field_form_phone_or_email}
                 <button id="BtnStartChatSupChat">
@@ -167,6 +167,11 @@ function get_node_supchat() {
             <div>
                 <div class="loading-circle-supchat"></div>
             </div>
+        </div>
+        <div id="SupChatError">
+            <img src="" alt="">
+            <h4></h4>
+            <p></p>
         </div>
     `
     return node

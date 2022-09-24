@@ -1,28 +1,31 @@
 from SupChat.models import User
-
-def getUserSession(request):
-    session_key_user = request.COOKIES.get('session_key_user_sup_chat') or ''
-    user = User.objects.filter(session_key=session_key_user).first()
-    return user
+from SupChat.core import tools
 
 
-def getUser(request):
-    userDjango = request.user
-    user = None
-    if userDjango.is_authenticated:
-        user = User.objects.filter(user=userDjango).first()
-    if user == None:
-        user = getUserSession(request)
-    return user
+# def getUserSession(request):
+#     session_key_user = request.COOKIES.get('session_key_user_sup_chat') or ''
+#     user = User.objects.filter(session_key=session_key_user).first()
+#     return user
+#
+#
+# def getUser(request):
+#     userDjango = request.user
+#     user = None
+#     if userDjango.is_authenticated:
+#         user = User.objects.filter(user=userDjango).first()
+#     if user == None:
+#         user = getUserSession(request)
+#     return user
+#
+#
+# def loginUser(request, user):
+#     user_session = getUserSession(request)
+#     if user_session:
+#         user_session.user = user
+#         user_session.save()
 
 
-def loginUser(request, user):
-    user_session = getUserSession(request)
-    if user_session:
-        user_session.user = user
-        user_session.save()
-
-
-def create_user(phone_or_email):
-    user = User.objects.create(phone_or_email=phone_or_email)
+def create_user(request, phone_or_email):
+    ip = tools.Get_IP(request)
+    user = User.objects.create(phone_or_email=phone_or_email, ip=ip)
     return user

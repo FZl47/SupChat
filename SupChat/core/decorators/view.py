@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
 from SupChat.models import Admin, User
+from SupChat.core import tools
 
 
 def admin_authenticated(func):
@@ -50,7 +51,7 @@ def get_user(func):
         if session_key_user_sup_chat:
             user = None
             try:
-                user = User.objects.get(session_key=session_key_user_sup_chat)
+                user = User.objects.get(session_key=session_key_user_sup_chat,ip=tools.Get_IP(request))
             except:
                 pass
         setattr(request, 'user_supchat', user)

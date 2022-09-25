@@ -69,8 +69,8 @@ function get_node_supchat() {
                     <div>
                         <img id="image-user-chat-supchat" src="/assets/supchat/images/default/iconUser.png" alt="image user">
                         <div class="container-status-user-chat-supchat">
-                            <span id="status-online-info-chat-supchat" state="online"></span>
-                            ${SUP_CHAT.CONFIG.show_seen_message ? `<span id="last-seen-info-chat-supchat">اخرین بازدید 2 ساعت پیش</span>` : ''}
+                            <span id="status-online-info-chat-supchat"></span>
+                            ${SUP_CHAT.CONFIG.show_last_seen ? `<span id="last-seen-info-chat-supchat">اخرین بازدید 2 ساعت پیش</span>` : ''}
                         </div>
                     </div>
                         <div>
@@ -83,10 +83,10 @@ function get_node_supchat() {
                             <i class="fal fa-ellipsis-v"></i>
                         </button>
                         <div id="container-more-options-chat-supchat">
-                            <button id="btn-end-chat">
+                            <button id="btn-end-chat-supchat">
                                 <i class="fal fa-sign-out-alt"></i>
                                 ${SUP_CHAT.TRANSLATE.get('پایان گفت و گو')}
-                            </button>  
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -130,7 +130,7 @@ function get_node_supchat() {
                                 </svg>
                             </button>
                         </div>
-                        <textarea id="input-message-supchat" dir="${SUP_CHAT.CONFIG.language == 'fa' ? 'rtl' : 'ltr'}" type-message="new" type="text" placeholder="... ${SUP_CHAT.TRANSLATE.get('پیام')}"></textarea>
+                        <textarea id="input-message-supchat" dir="rtl" type-message="new" type="text" placeholder="${SUP_CHAT.TRANSLATE.get('پیام')}..."></textarea>
                     </div>
                     <div container-type="voice-recording">
                         <p id="time-voice-recording-supchat">0.0</p>
@@ -177,12 +177,18 @@ function get_node_supchat() {
     return node
 }
 
+function get_node_notification_supchat() {
+    return `  
+            <i class="fal fa-comment-alt-dots"></i>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo, non!</p>
+        `
+}
+
 function get_node_btn_open_supchat() {
     return `
             <i class="fa fa-comments"></i>
         `
 }
-
 
 function get_node_seen_true() {
     return `
@@ -288,7 +294,6 @@ function get_node_text_message_other(message) {
     `
 }
 
-
 function get_node_audio_message_you(message) {
 
 
@@ -319,12 +324,20 @@ function get_node_audio_message_you(message) {
 
 function get_node_audio_message_other(message) {
     return `
-        <div class="content-message-supchat">
+        <div class="content-message-supchat" edited="${message.edited}">
             <header></header>
             <main>
                 <audio src="${message.audio}" time-duration="${message.audio_time}" preload="none"></audio>
             </main>
             ${get_node_footer_message_other(message)}
+        </div>
+    `
+}
+
+function get_node_message_system(message) {
+    return `
+        <div class="content-message-supchat">
+            <pre>${message.text}</pre>
         </div>
     `
 }

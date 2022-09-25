@@ -32,6 +32,8 @@ new ResponseSupChat('TEXT_MESSAGE', function (data) {
     if (message.SENDER == 'other') {
         // Seen message request
         RequestSupChat.seen_message.send()
+        // Show Notification
+        SUP_CHAT.show_notification(message.text_message)
     }
 })
 
@@ -42,6 +44,8 @@ new ResponseSupChat('AUDIO_MESSAGE', function (data) {
     if (message.SENDER == 'other') {
         // Seen message request
         RequestSupChat.seen_message.send()
+        // Show Notification
+        SUP_CHAT.show_notification(SUP_CHAT.TRANSLATE.get('صدا'))
     }
 })
 
@@ -156,10 +160,10 @@ class RequestEditMessageSupChat extends _RequestBaseSupChat {
         super('EDIT_MESSAGE');
     }
 
-    send(id,new_message) {
+    send(id, new_message) {
         let data = {
             'id': id,
-            'new_message':new_message
+            'new_message': new_message
         }
         this.send_to_socket(data)
     }

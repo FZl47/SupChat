@@ -32,11 +32,12 @@ class SupChat(models.Model):
 class SupChatStyle(models.Model):
     THEME_OPTIONS = (
         # Src file css - name
-        ('/supchat/css/theme/default.css','default'),
+        ('/supchat/css/theme/default.css', 'default'),
     )
 
     background_chat = models.ImageField(upload_to=upload_image_background_chat, null=True, blank=True)
-    theme = models.CharField(choices=THEME_OPTIONS,max_length=200,default=THEME_OPTIONS[0][0])
+    theme = models.CharField(choices=THEME_OPTIONS, max_length=200, default=THEME_OPTIONS[0][0])
+
     def __str__(self):
         try:
             return self.supchat_set.first().title
@@ -52,18 +53,20 @@ class SupChatStyle(models.Model):
 
 class SupChatConfig(models.Model):
     LANGUAGE_CHOICE = (
-        ('fa','فارسی'),
-        ('en','english'),
+        ('fa', 'فارسی'),
+        ('en', 'english'),
     )
-    language = models.CharField(max_length=3,choices=LANGUAGE_CHOICE,default='fa')
+    language = models.CharField(max_length=3, choices=LANGUAGE_CHOICE, default='fa')
     transfer_chat_is_active = models.BooleanField(default=True)
     default_message_is_active = models.BooleanField(default=True)
-    default_message = models.CharField(max_length=200,null=True,blank=True,default=""" پشتیبانی سایت ما در کوتاه ترین زمان ممکن پاسخگوی شما دوست عزیز است لطفا پیام خود را بگذارید .""")
+    default_message = models.CharField(max_length=200, null=True, blank=True,
+                                       default=""" پشتیبانی سایت ما در کوتاه ترین زمان ممکن پاسخگوی شما دوست عزیز است لطفا پیام خود را بگذارید .""")
     notif_message_is_active = models.BooleanField(default=True)
-    notif_message_show_after = models.IntegerField(default=5,help_text='پس از گذشت چند ثانیه نمایش داده شود') # Second
-    notif_message = models.CharField(max_length=200,null=True,blank=True,default="""سلام ، چطور میتوانم کمک کنم ؟""")
+    notif_message_show_after = models.IntegerField(default=5, help_text='پس از گذشت چند ثانیه نمایش داده شود')  # Second
+    notif_message = models.CharField(max_length=200, null=True, blank=True, default="""سلام ، چطور میتوانم کمک کنم ؟""")
     end_chat_auto = models.BooleanField(default=True)
-    end_chat_after = models.IntegerField(default=60,help_text='پس از مدتی بدون فعالیت چت به صورت خودکار بسته میشود') # Second
+    end_chat_after = models.IntegerField(default=60,
+                                         help_text='پس از مدتی بدون فعالیت چت به صورت خودکار بسته میشود')  # Second
     show_title_section = models.BooleanField(default=True)
     show_last_seen = models.BooleanField(default=True)
     show_seen_message = models.BooleanField(default=True)
@@ -84,7 +87,6 @@ class Section(models.Model):
 
     def __str__(self):
         return self.title
-
 
     def get_admin_less_busy(self):
         return self.admin_set.order_by('-chatgroup__is_active').first()
@@ -132,8 +134,6 @@ class Section(models.Model):
     #     return self.get_admins()[:2]
 
 
-
-
 class Admin(models.Model):
     STATUS_ONLINE = (
         ('online', 'Online'),
@@ -145,9 +145,8 @@ class Admin(models.Model):
     image = models.ImageField(upload_to=upload_image_admin_chat)
     sections = models.ManyToManyField('Section')
     last_seen = models.DateTimeField(default=timezone.now)
-    status_online = models.CharField(max_length=10, choices=STATUS_ONLINE,default='offline')
-    # is_busy = models.BooleanField(default=False)
-    group_name = models.CharField(max_length=40, default=RandomString,editable=False)
+    status_online = models.CharField(max_length=10, choices=STATUS_ONLINE, default='offline')
+    group_name = models.CharField(max_length=40, default=RandomString, editable=False)
 
     def __str__(self):
         return self.get_full_name()
@@ -168,8 +167,6 @@ class Admin(models.Model):
     def get_last_seen(self):
         diff_sec = GetDifferenceTime(self.last_seen)
         return diff_sec
-
-
 
     #
     # def get_group_name_admin_in_section(self, section):
@@ -201,13 +198,13 @@ class Admin(models.Model):
     # def seen_log_messages(self):
     #     self.logmessageadmin_set.update(seen=True)
 
+
 #
 # def RandomStringGroupNameUser():
 #     return f"Group_User_{RandomString(25)}"
 
 
 class User(models.Model):
-
     STATUS_ONLINE = (
         ('online', 'Online'),
         ('offline', 'Offline'),
@@ -215,10 +212,10 @@ class User(models.Model):
 
     ip = models.CharField(max_length=20)
     session_key = models.CharField(max_length=50, default=RandomString)
-    phone_or_email = models.CharField(max_length=150,null=True,blank=True)
+    phone_or_email = models.CharField(max_length=150, null=True, blank=True)
     last_seen = models.DateTimeField(null=True, blank=True, default=timezone.now)
     status_online = models.CharField(max_length=10, choices=STATUS_ONLINE, default='offline')
-    group_name = models.CharField(max_length=40, default=RandomString,editable=False)
+    group_name = models.CharField(max_length=40, default=RandomString, editable=False)
 
     def __str__(self):
         return self.get_full_name()
@@ -238,29 +235,28 @@ class User(models.Model):
         return diff_sec
 
     def in_blacklist(self):
-        return bool(hasattr(self,'blacklist'))
+        return bool(hasattr(self, 'blacklist'))
 
 
 class ChatGroup(models.Model):
-
     TYPE_CLOSE_CHOICE = (
-        ('closed_by_user','Closed by User'),
-        ('closed_by_admin','Closed by Admin'),
-        ('closed_auto','Closed Automatically'),
+        ('closed_by_user', 'Closed by User'),
+        ('closed_by_admin', 'Closed by Admin'),
+        ('closed_auto', 'Closed Automatically'),
     )
 
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     admin = models.ForeignKey('Admin', on_delete=models.CASCADE)
     section = models.ForeignKey('Section', on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
-    type_close = models.CharField(max_length=30,choices=TYPE_CLOSE_CHOICE,null=True,blank=True)
-    rate_chat = models.IntegerField(null=True,blank=True,validators=[MinValueValidator(1), MaxValueValidator(5)])
+    type_close = models.CharField(max_length=30, choices=TYPE_CLOSE_CHOICE, null=True, blank=True)
+    rate_chat = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(5)])
 
     def __str__(self):
         return f"Chat Group {self.user.get_full_name()} - {self.admin.get_full_name()}"
 
     @classmethod
-    def get_chat_by_type_user(cls,chat_id,user_obj,type_user):
+    def get_chat_by_type_user(cls, chat_id, user_obj, type_user):
         if type_user == 'user':
             lookup = Q(user=user_obj)
         elif type_user == 'admin':
@@ -272,12 +268,10 @@ class ChatGroup(models.Model):
         return self.message_set.filter(deleted=False).select_subclasses().all()
 
     def seen_message_admin(self):
-        self.message_set.filter(sender='user',seen=False).update(seen=True)
+        self.message_set.filter(sender='user', seen=False).update(seen=True)
 
     def seen_message_user(self):
-        self.message_set.filter(sender='admin',seen=False).update(seen=True)
-
-
+        self.message_set.filter(sender='admin', seen=False).update(seen=True)
 
     # def get_messages_by_user(self):
     #     messages = self.message_set.filter(deleted=False).select_subclasses().all()
@@ -314,6 +308,7 @@ class ChatGroup(models.Model):
 
     def seen_messages_admin(self):
         self.message_set.filter(sender='admin', seen=False).update(seen=True)
+
     #
     # def get_url_absolute_admin(self):
     #     return reverse_lazy('SupChat:admin_panel_chat', args=(self.id, self.user.get_full_name()))
@@ -339,7 +334,7 @@ class ChatGroup(models.Model):
 
 
 class BlackList(models.Model):
-    user = models.OneToOneField('User',on_delete=models.CASCADE)
+    user = models.OneToOneField('User', on_delete=models.CASCADE)
     reason = models.CharField(max_length=300)
 
     def __str__(self):
@@ -350,7 +345,8 @@ class MessageBase(models.Model):
     # TYPE_MESSAGE = ['text','audio']
 
     SENDER_MESSAGE = (
-        ('admin', 'Admin'),
+        ('system', 'System'),
+        ('user', 'User'),
         ('user', 'User'),
     )
     chat = models.ForeignKey('ChatGroup', on_delete=models.CASCADE)
@@ -393,10 +389,14 @@ class AudioMessage(Message):
     audio_time = models.CharField(max_length=5, default='0')
 
 
+class SystemMessage(TextMessage):
+    pass
+
 
 class SuggestedMessage(models.Model):
     message = models.CharField(max_length=200)
     section = models.ManyToManyField('Section')
+
     def __str__(self):
         return self.message[:30]
 
@@ -404,7 +404,7 @@ class SuggestedMessage(models.Model):
 class LogMessageAdmin(models.Model):
     title = models.CharField(max_length=120)
     message = models.TextField()
-    admin = models.ForeignKey('Admin',on_delete=models.CASCADE)
+    admin = models.ForeignKey('Admin', on_delete=models.CASCADE)
     date_time_submit = models.DateTimeField(auto_now_add=True)
     seen = models.BooleanField(default=False)
 
@@ -413,5 +413,3 @@ class LogMessageAdmin(models.Model):
 
     def __str__(self):
         return self.title
-
-

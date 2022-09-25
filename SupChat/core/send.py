@@ -13,6 +13,7 @@ class Response:
         'SEND_TEXT_MESSAGE': 'send_text_message',
         'SEND_AUDIO_MESSAGE': 'send_audio_message',
         'DELETE_MESSAGE': 'delete_message',
+        'EDIT_MESSAGE':'edit_message',
         'IS_TYPING': 'is_typing',
         'IS_VOICING': 'is_voicing',
         'SEEN_MESSAGE': 'seen_message'
@@ -69,6 +70,21 @@ class Response:
                 self.send_to_group('DELETE_MESSAGE', {
                     'message': serializers.Serializer_message(message_object)
                 })
+
+    def edit_message(self, data_request):
+        message_id = data_request.get('id')
+        new_message = data_request.get('new_message')
+        if message_id and new_message:
+            message_object = Message.objects.filter(id=message_id, chat=self.chat,
+                                                    sender=self.type_user).select_subclasses().first()
+            if message_object:
+                message_object.edited = True
+                message_object.text = new_message
+                message_object.save()
+                self.send_to_group('EDIT_MESSAGE', {
+                    'message': serializers.Serializer_message(message_object)
+                })
+
 
     def is_typing(self, data_request):
         state_is_typing = data_request.get('state_is_typing')

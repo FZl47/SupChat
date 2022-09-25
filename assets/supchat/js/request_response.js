@@ -55,6 +55,15 @@ new ResponseSupChat('DELETE_MESSAGE', function (data) {
 })
 
 
+// response edit message
+new ResponseSupChat('EDIT_MESSAGE', function (data) {
+    let message_obj = MessageSupChat.get(data.message.id)
+    if (message_obj) {
+        message_obj.edit_element(data.message.text)
+    }
+})
+
+
 // response is typing
 new ResponseSupChat('IS_TYPING', function (data) {
     let state_is_typing = data.state_is_typing
@@ -142,6 +151,20 @@ class RequestDeleteMessageSupChat extends _RequestBaseSupChat {
     }
 }
 
+class RequestEditMessageSupChat extends _RequestBaseSupChat {
+    constructor() {
+        super('EDIT_MESSAGE');
+    }
+
+    send(id,new_message) {
+        let data = {
+            'id': id,
+            'new_message':new_message
+        }
+        this.send_to_socket(data)
+    }
+}
+
 class RequestIsTypingSupChat extends _RequestBaseSupChat {
     constructor() {
         super('IS_TYPING');
@@ -185,6 +208,7 @@ const RequestSupChat = {
     'text_message': new RequestSendTextMessageSupChat(),
     'audio_message': new RequestSendAudioMessageSupChat(),
     'delete_message': new RequestDeleteMessageSupChat(),
+    'edit_message': new RequestEditMessageSupChat(),
     'is_typing': new RequestIsTypingSupChat(),
     'is_voicing': new RequestIsVocingSupChat(),
     'seen_message': new RequestSeenMessageSupChat(),

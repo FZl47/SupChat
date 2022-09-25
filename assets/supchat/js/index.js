@@ -61,10 +61,10 @@ class TranslateSupChat {
         'روز پیش': [
             'Day ago'
         ],
-        'شما دسترسی ندارید':[
+        'شما دسترسی ندارید': [
             'Access denied'
         ],
-        'حساب شما در لیست سیاه قرار دارد . برای رفع این مشکل میتوانید با پشتیبانی در ارتباط باشید':[
+        'حساب شما در لیست سیاه قرار دارد . برای رفع این مشکل میتوانید با پشتیبانی در ارتباط باشید': [
             'Your account is in the blacklist . To solve this problem , you can contact support'
         ]
     }
@@ -170,6 +170,8 @@ class SupChat {
             supchat_error_title: document.querySelector('#SupChatError h4'),
             supchat_error_img: document.querySelector('#SupChatError img'),
             supchat_error_description: document.querySelector('#SupChatError p'),
+            content_message_for_edit_chat_supchat: document.querySelector('#content-message-for-edit-chat-supchat'),
+            btn_set_default_edit_message: document.querySelector('#btn-set-default-edit-message'),
         }
     }
 
@@ -203,6 +205,30 @@ class SupChat {
         } else {
             this.ELEMENTS.supchat_loading.removeAttribute('container-show')
         }
+    }
+
+    toggle_container_edit(state) {
+        if (state == 'show') {
+            this.set_container_type_footer_chat('send-message-edit-main')
+        } else {
+            this.set_container_type_footer_chat()
+        }
+    }
+
+    set_info_for_edit_message(id, old_message) {
+        this.toggle_container_edit('show')
+        this.ELEMENTS.input_message_supchat.setAttribute('type-message', 'edit')
+        this.ELEMENTS.input_message_supchat.setAttribute('message-id-edit', id)
+        this.ELEMENTS.input_message_supchat.value = old_message
+        this.ELEMENTS.content_message_for_edit_chat_supchat.innerText = old_message
+    }
+
+    set_default_info_for_edit_message() {
+        this.toggle_container_edit('hide')
+        this.ELEMENTS.input_message_supchat.setAttribute('type-message', 'new')
+        this.ELEMENTS.input_message_supchat.removeAttribute('message-id-edit')
+        this.ELEMENTS.content_message_for_edit_chat_supchat.innerText = ''
+        this.ELEMENTS.input_message_supchat.value = ''
     }
 
     show_error(status) {
@@ -279,10 +305,20 @@ class SupChat {
 
         elements.btn_send_message_supchat.addEventListener('click', function () {
             let state = this.getAttribute('state') || 'false'
+            let type_send_message = SUP_CHAT.ELEMENTS.input_message_supchat.getAttribute('type-message')
             if (state == 'true') {
-                RequestSupChat.text_message.send(elements.input_message_supchat.value)
-                elements.input_message_supchat.value = ''
+                if (type_send_message == 'new') {
+                    RequestSupChat.text_message.send(elements.input_message_supchat.value)
+                    elements.input_message_supchat.value = ''
+                } else if (type_send_message == 'edit') {
+                    let message_obj = MessageSupChat.get(elements.input_message_supchat.getAttribute('message-id-edit'))
+                    if (message_obj) {
+                        message_obj.edit(elements.input_message_supchat.value)
+                        SUP_CHAT.set_default_info_for_edit_message()
+                    }
+                }
             }
+
             this.setAttribute('state', 'false')
         })
 
@@ -360,6 +396,10 @@ class SupChat {
 
         elements.btn_scroll_down.addEventListener('click', function () {
             SUP_CHAT.scroll_to_down_chat()
+        })
+
+        elements.btn_set_default_edit_message.addEventListener('click', function () {
+            SUP_CHAT.set_default_info_for_edit_message()
         })
 
     }
@@ -766,7 +806,7 @@ class MessageSupChat {
                 this.SENDER = 'other'
                 this.create_message_other(message)
             }
-        } else {
+        } else if (message.sender == 'admin') {
             if (SUP_CHAT.TYPE_USER == 'ADMIN') {
                 this.create_message_you(message)
                 SUP_CHAT.scroll_to_down_chat()
@@ -797,11 +837,13 @@ class MessageSupChat {
         this.ELEMENTS.message.remove()
     }
 
+
 }
 
 class TextMessage extends MessageSupChat {
     constructor(message) {
         super(message)
+        this.text_message = message.text
     }
 
     create_message_you(message) {
@@ -820,6 +862,27 @@ class TextMessage extends MessageSupChat {
         message_element.innerHTML = get_node_text_message_other(message)
         this.ELEMENTS.message = message_element
         SUP_CHAT.ELEMENTS.supchat_messages_chat.appendChild(message_element)
+    }
+
+    _events() {
+        super._events()
+        let This = this
+        let btn_edit = this.ELEMENTS.message.querySelector('.btn-edit-message-supchat')
+        if (btn_edit) {
+            btn_edit.addEventListener('click', function () {
+                SUP_CHAT.set_info_for_edit_message(This.id, This.text_message)
+            })
+        }
+    }
+
+    edit(new_message) {
+        RequestSupChat.edit_message.send(this.id, new_message)
+    }
+
+    edit_element(new_message) {
+        this.text_message = new_message
+        this.ELEMENTS.message.querySelector('pre').innerText = new_message
+        this.ELEMENTS.message.querySelector('.content-message-supchat').setAttribute('edited','true')
     }
 
 }

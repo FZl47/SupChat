@@ -54,7 +54,7 @@ button {
     display: flex;
 }
 
-#SupChatError[container-show]{
+#SupChatError[container-show] {
     display: block;
 }
 
@@ -184,7 +184,7 @@ button {
     background: #ff7b8a;
 }
 
-#status-online-info-chat-supchat[state='online'] + #last-seen-info-chat-supchat{
+#status-online-info-chat-supchat[state='online'] + #last-seen-info-chat-supchat {
     display: none;
 }
 
@@ -218,6 +218,7 @@ button {
     box-shadow: 0 2px 8px rgba(100, 100, 100, 0.6);
     transform: translateX(10px);
     transition: all .25s;
+    z-index: 12;
 }
 
 #btn-more-option-chat-supchat:focus + #container-more-options-chat-supchat {
@@ -233,30 +234,26 @@ button {
 }
 
 #container-more-options-chat-supchat > * {
+    color: #777;
     width: 100%;
-    padding: 10px !important;
-}
-
-#btn-end-chat {
+    padding: 11px;
+    border-radius: 2px;
+    border: none;
+    background: inherit;
+    font-size: 90%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: none;
-    font-size: 90%;
-    padding: 6px 10px;
-    border-radius: 2px;
-    background: inherit;
-    color: #ff5353;
     transition: all .2s;
 }
 
-#btn-end-chat i {
-    transition: inherit;
-    font-weight: bold;
+#container-more-options-chat-supchat > *:hover {
+    background: #f5f5f5;
+    color: #333;
 }
 
-#btn-end-chat:hover {
-    color: #ff252d;
+#container-more-options-chat-supchat > * > i {
+    transition: all .2s;
 }
 
 
@@ -307,8 +304,8 @@ button {
     left: 10px;
     width: 33px;
     height: 33px;
-    color: #00d2c2;
-    background: rgba(226, 226, 226, 0.8);
+    color: #ffffff;
+    background: #ff524f;
     padding-bottom: 4px;
     border-radius: 50%;
     font-size: 180%;
@@ -392,13 +389,14 @@ button {
     display: none;
 }
 
-#content-footer-supchat[container-active="send-message-edit-main"] [container-type="send-message-edit-main"] i {
+#btn-set-default-edit-message {
     color: #ff314c;
+    cursor: pointer;
 }
 
-#content-message-for-edit-chat-supchat{
-    font-size: 90%!important;
-    color: #aaa!important;
+#content-message-for-edit-chat-supchat {
+    font-size: 90% !important;
+    color: #aaa !important;
     width: 85%;
     text-align: right;
     overflow: hidden;
@@ -428,6 +426,20 @@ button {
     align-items: center;
 }
 
+#content-footer-supchat[container-active="voice-recording"] #btn-record-voice-supchat {
+    animation: animation-btn-record-voice 1.2s linear infinite;
+}
+
+#content-footer-supchat[container-active="voice-recording"] #btn-record-voice-supchat svg {
+    fill: #ff524f;
+}
+
+@keyframes animation-btn-record-voice {
+    50% {
+        opacity: .5;
+    }
+}
+
 #content-footer-supchat[container-active="voice-recording"] p {
     margin: 0 6px;
     font-size: 85%;
@@ -455,7 +467,7 @@ button {
 
 #btn-record-voice-supchat svg {
     width: 23px;
-    fill: #006ae1;
+    fill: #777;
 }
 
 #btn-send-message-supchat {
@@ -465,7 +477,7 @@ button {
 
 #btn-send-message-supchat svg {
     width: 23px;
-    fill: #666;
+    fill: #777;
     transform: rotate(-180deg);
 }
 
@@ -481,7 +493,7 @@ button {
     font-size: 95%;
     outline: none;
     border-radius: 30px;
-    padding: 7px;
+    padding: 9px;
     height: 47px;
     width: 70%;
     resize: none;
@@ -607,6 +619,50 @@ button {
     color: #333333;
 }
 
+
+#NotificationSupChat {
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between !important;
+    align-items: center;
+    background: #ff524f;
+    color: #fff;
+    box-shadow: 0 4px 5px #ddd;
+    position: fixed;
+    bottom: 80px;
+    right: 90px;
+    width: 220px;
+    padding: 12px;
+    border-radius: 10px 10px 2px 10px;
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 2;
+    transition: all .7s;
+    animation: animation-btn-open-supchat 4s infinite ;
+}
+
+#NotificationSupChat[state='show'] {
+    visibility: visible;
+    opacity: 1;
+    transition: all 1.5s;
+}
+
+
+#NotificationSupChat p {
+    margin: 0;
+    width: 82%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: right;
+    /* !!!  Should Complete    */
+}
+
+#NotificationSupChat i {
+    font-size: 110%;
+    color: #320800;
+}
+
 #BtnOpenSupChat {
     position: fixed;
     bottom: 25px;
@@ -615,12 +671,12 @@ button {
     padding: 10px;
     width: 55px;
     height: 55px;
-    z-index: 1;
+    z-index: 2;
     border: none;
     box-shadow: 0 5px 9px #ddd;
     cursor: pointer;
     transition: all .4s;
-    animation: AnimationBtnOpenChat 4s infinite;
+    animation: animation-btn-open-supchat 4s infinite;
 }
 
 #BtnOpenSupChat i {
@@ -631,11 +687,12 @@ button {
     border-radius: 14px;
 }
 
-@keyframes AnimationBtnOpenChat {
+@keyframes animation-btn-open-supchat {
     50% {
         transform: translateY(7px);
     }
 }
+
 
 #BtnCloseSupChat {
     position: absolute;
@@ -662,6 +719,29 @@ button {
     text-align: left;
 }
 
+.container-message-supchat-system {
+    text-align: center;
+    border-radius: 4px;
+    padding: 6px 4px;
+    margin: 15px auto;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(233, 233, 233, 0.5), rgba(255, 255, 255, 0.1));
+}
+
+.container-message-supchat-system .content-message-supchat {
+    width: 100%;
+    display: block;
+    margin: auto;
+}
+
+.container-message-supchat-system pre {
+    width: 100%;
+    display: block;
+    max-width: none !important;
+    text-align: center !important;
+    font-size: 95% !important;
+    color: #515554 !important;
+}
+
 .container-message-supchat[sender-type='you'] .content-message-supchat > main {
     border-radius: 15px 4px 15px 15px;
     padding: 6px;
@@ -676,10 +756,6 @@ button {
     background: #e8e8e8;
     color: #444;
     min-width: 120px;
-}
-
-.container-message-supchat[sender-type='other'] {
-    text-align: left;
 }
 
 .content-message-supchat {
@@ -947,11 +1023,11 @@ button {
 }
 
 
-#SupChatError{
+#SupChatError {
     padding: 10px;
 }
 
-#SupChatError img{
+#SupChatError img {
     width: 80%;
     height: 100%;
     display: block;
@@ -961,13 +1037,13 @@ button {
     object-fit: cover;
 }
 
-#SupChatError h4{
+#SupChatError h4 {
     font-size: 'KalamehBlack';
     text-align: center;
     font-size: 150%;
 }
 
-#SupChatError p{
+#SupChatError p {
     color: #777;
     line-height: 28px;
     font-size: 90%;
@@ -975,18 +1051,19 @@ button {
     text-align: center;
 }
 
-@media screen and (max-width: 450px) {
-    #SupChat[state='open'] {
-        width: 100%;
-        height: 100%;
-        right: 0;
-        bottom: 0;
-        border-radius: 0;
-    }
-}
 
 @media screen and (max-height: 605px) {
     #SupChat[state='open'] {
         height: calc(100% - 35px);
+    }
+}
+
+@media screen and (max-width: 450px) {
+    #SupChat[state='open'] {
+        width: 100% !important;
+        height: 100% !important;
+        right: 0;
+        bottom: 0;
+        border-radius: 0;
     }
 }

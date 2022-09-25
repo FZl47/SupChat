@@ -410,9 +410,8 @@ def start_chat(request):
     if supchat and section:
         phone_or_email_is_valid = False
         if supchat.config.get_phone_or_email:
-            if tools.ValidationEmail(phone_or_email, 3, 100) or tools.ValidationNumber(phone_or_email, 10, 15):
+            if tools.ValidationEmail(phone_or_email, 3, 100) or (tools.ValidationText(phone_or_email, 10, 15) and phone_or_email.isdigit()):
                 phone_or_email_is_valid = True
-
         if (supchat.config.get_phone_or_email == False) or phone_or_email_is_valid:
             if admin:
                 user = get_user_by_request_or_phone_email(request, phone_or_email)

@@ -114,8 +114,8 @@ function get_node_supchat() {
                     <!-- voice-send-or-cancel  -->
                     <!-- voice-sending  -->
                     <div container-type="send-message-edit-main">
+                        <i id="btn-set-default-edit-message" class="fa fa-times"></i>
                         <p id="content-message-for-edit-chat-supchat"></p>
-                        <i class="fa fa-times"></i>
                     </div>
                      <div container-type="send-message-main">
                         <div class="container-btns-send-message-voice">
@@ -130,7 +130,7 @@ function get_node_supchat() {
                                 </svg>
                             </button>
                         </div>
-                        <textarea id="input-message-supchat" type-message="new" type="text" placeholder="... ${SUP_CHAT.TRANSLATE.get('پیام')}"></textarea>
+                        <textarea id="input-message-supchat" dir="${SUP_CHAT.CONFIG.language == 'fa' ? 'rtl' : 'ltr'}" type-message="new" type="text" placeholder="... ${SUP_CHAT.TRANSLATE.get('پیام')}"></textarea>
                     </div>
                     <div container-type="voice-recording">
                         <p id="time-voice-recording-supchat">0.0</p>
@@ -203,11 +203,11 @@ function get_node_footer_message_you(message) {
             <div>
                 <i class="icon-message-edited-supchat fal fa-pen"></i>
                 ${SUP_CHAT.CONFIG.show_seen_message ?
-                    `<div class="seen-message-supchat">
+        `<div class="seen-message-supchat">
                         ${get_node_seen_true()}
                         ${get_node_seen_false()}
                     </div>` : ''
-                }
+    }
             </div>
             </footer>  
     `
@@ -218,6 +218,9 @@ function get_node_footer_message_other(message) {
     let footer = `
          <footer>
             <div class="time-send-message-supchat">${message.time_send}</div>  
+            <div>
+                <i class="icon-message-edited-supchat fal fa-pen"></i>
+            </div>
         </footer>  
     `
     return footer
@@ -275,7 +278,7 @@ function get_node_text_message_you(message) {
 
 function get_node_text_message_other(message) {
     return `
-        <div class="content-message-supchat">
+        <div class="content-message-supchat" edited="${message.edited}">
             <header></header>
             <main>
                 <pre>${message.text}</pre>

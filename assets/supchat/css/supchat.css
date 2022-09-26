@@ -639,7 +639,7 @@ button {
     opacity: 0;
     z-index: 2;
     transition: all .7s;
-    animation: animation-btn-open-supchat 4s infinite ;
+    animation: animation-btn-open-supchat 4s infinite;
 }
 
 #NotificationSupChat[state='show'] {
@@ -655,12 +655,13 @@ button {
     overflow: hidden;
     white-space: nowrap;
     text-align: right;
-    /* !!!  Should Complete    */
+    text-overflow: ellipsis;
 }
 
 #NotificationSupChat i {
     font-size: 110%;
-    color: #320800;
+    /*color: #320800;*/
+    color: #fff;
 }
 
 #BtnOpenSupChat {

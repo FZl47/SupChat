@@ -377,7 +377,22 @@ def sup_chat_run_user(request):
     return JsonResponse(context)
 
 
+@csrf_exempt
+@decorators.require_post_and_ajax
+@decorators.get_user
+def submit_rate_chat(request,chat_id):
+    context = {}
+    chat = ChatGroup.objects.filter(id=chat_id,user=request.user_supchat).first()
+    data = json.loads(request.body)
+    rate = data.get('rate')
+    if chat and rate:
+        chat.rate_chat = rate
+        chat.save()
+        context['status_code'] = 200
+    else:
+        context['status_code'] = 400
 
+    return JsonResponse(context)
 
 @decorators.get_user
 def get_user_by_request_or_phone_email(request, phone_or_email):

@@ -145,8 +145,15 @@ button {
     background: none;
     outline: none;
     border: none;
-    font-size: 150%;
-    margin: 5px 9px;
+    font-size: 200%;
+    margin: 5px;
+    color: #999;
+    transition: all .2s;
+}
+
+.btn-rate-star-supchat:hover{
+    color: #555;
+    transform: scale(1.1);
 }
 
 .content-header-supchat {

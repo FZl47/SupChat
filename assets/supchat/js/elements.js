@@ -73,21 +73,21 @@ function get_node_supchat() {
                 <div>
                     <p>${SUP_CHAT.TRANSLATE.get('امتیاز شما از این گفت و گو')} :</p>
                     <div class="btns-rate-star-supchat">
-                        <button id="btn-rate-5-star-supchat" class="btn-rate-star-supchat">
-                            5
-                        </button>   
-                        <button id="btn-rate-4-star-supchat" class="btn-rate-star-supchat">
-                            4
+                        <button id="btn-rate-1-star-supchat" class="btn-rate-star-supchat">
+                            <i class="fal fa-angry"></i>
+                        </button>
+                         <button id="btn-rate-2-star-supchat" class="btn-rate-star-supchat">
+                            <i class="fal fa-frown"></i>
                         </button>   
                         <button id="btn-rate-3-star-supchat" class="btn-rate-star-supchat">
-                            3
+                            <i class="fal fa-meh-blank"></i>
                         </button>   
-                        <button id="btn-rate-2-star-supchat" class="btn-rate-star-supchat">
-                            2
+                         <button id="btn-rate-4-star-supchat" class="btn-rate-star-supchat">
+                            <i class="fal fa-smile"></i>
                         </button>   
-                        <button id="btn-rate-1-star-supchat" class="btn-rate-star-supchat">
-                            1
-                        </button>
+                         <button id="btn-rate-5-star-supchat" class="btn-rate-star-supchat">
+                            <i class="fal fa-laugh"></i>
+                        </button>    
                     </div>
                 </div>
             </main>

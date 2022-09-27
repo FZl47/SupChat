@@ -54,6 +54,13 @@ button {
     display: flex;
 }
 
+#SupChatRate[container-show] {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+}
+
 #SupChatError[container-show] {
     display: block;
 }
@@ -92,6 +99,54 @@ button {
     margin: 0 auto;
     width: 100%;
     height: 95px;
+}
+
+#SupChatRate header {
+    text-align: right;
+    height: 55px;
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+#SupChatRate > main {
+    height: calc(100% - 55px - 55px);
+    overflow: auto;
+    padding: 10px 15px;
+}
+
+#SupChatRate > main img {
+    width: 95%;
+    height: auto;
+    margin: auto;
+    margin-bottom: 15px;
+    display: block;
+}
+
+#SupChatRate > footer {
+    text-align: center;
+    height: 55px;
+}
+
+#SupChatRate > footer a {
+    display: inline-block;
+}
+
+#SupChatRate main p{
+    font-size: 95%;
+    color: #555;
+}
+
+.btns-rate-star-supchat{
+    text-align: center;
+    margin-top: 25px;
+}
+
+.btn-rate-star-supchat{
+    background: none;
+    outline: none;
+    border: none;
+    font-size: 150%;
+    margin: 5px 9px;
 }
 
 .content-header-supchat {
@@ -597,7 +652,7 @@ button {
 .title-supchat-intro text {
     stroke: #00ebd5;
     font-size: 17px;
-    stroke-width: 1px;
+    stroke-width: .5px;
     fill: transparent;
     animation: title-supchat-intro-animation 5s forwards;
 }
@@ -615,8 +670,8 @@ button {
 
 .title-supchat-site {
     font-size: 140%;
-    font-weight: bold;
-    color: #333333;
+    font-family: KalameBlack;
+    color: #555;
 }
 
 

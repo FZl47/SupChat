@@ -95,6 +95,11 @@ new ResponseSupChat('SEND_STATUS', function (data) {
     SUP_CHAT.set_status_element(is_online, last_seen)
 })
 
+// response status
+new ResponseSupChat('CHAT_ENDED', function (data) {
+    SUP_CHAT.chat_ended()
+})
+
 
 // --- REQUESTS ---
 
@@ -208,6 +213,19 @@ class RequestSeenMessageSupChat extends _RequestBaseSupChat {
     }
 }
 
+class RequestChatEndSupChat extends _RequestBaseSupChat {
+    constructor() {
+        super('CHAT_END');
+    }
+
+    send(close_auto=false) {
+        let data = {
+            'close_auto':close_auto
+        }
+        this.send_to_socket(data)
+    }
+}
+
 const RequestSupChat = {
     'text_message': new RequestSendTextMessageSupChat(),
     'audio_message': new RequestSendAudioMessageSupChat(),
@@ -216,4 +234,5 @@ const RequestSupChat = {
     'is_typing': new RequestIsTypingSupChat(),
     'is_voicing': new RequestIsVocingSupChat(),
     'seen_message': new RequestSeenMessageSupChat(),
+    'chat_end': new RequestChatEndSupChat(),
 }

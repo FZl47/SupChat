@@ -35,7 +35,7 @@ function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed,conver
             // This.loadingEffect('Show')
         }
     }
-    // this.loadingEffect('Show')
+
     $.ajax({
         url: URL_BACKEND_SUPCHAT + '/' + SUP_CHAT.URL_SUPCHAT + '/' + Url,
         data: convert_json ? JSON.stringify(Data) : Data,

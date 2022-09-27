@@ -16,16 +16,17 @@ class Response:
         'EDIT_MESSAGE':'edit_message',
         'IS_TYPING': 'is_typing',
         'IS_VOICING': 'is_voicing',
-        'SEEN_MESSAGE': 'seen_message'
+        'SEEN_MESSAGE': 'seen_message',
+        'CHAT_END': 'chat_end',
+
+        # --- Response in Consumer ---
+        # Useless | Created for readibility
+        # 'SEND_STATUS': 'send_status'
     }
 
-    RESPONSES_CONSUMER = {
-        # Useless | Created for readibility
-        'SEND_STATUS': 'send_status'
-    }
 
     # Base Method
-    def send_to_group(self, type_response, data, group_name=None):
+    def send_to_group(self, type_response, data={}, group_name=None):
         async_to_sync(self.channel_layer.group_send)(
             group_name or self.chat.get_group_name(),
             {
@@ -112,7 +113,22 @@ class Response:
             group_name_reciver = self.chat.get_group_name_user()
             self.chat.seen_message_admin()
 
-        self.send_to_group('SEEN_MESSAGE', {}, group_name_reciver)
+        self.send_to_group('SEEN_MESSAGE',group_name=group_name_reciver)
+
+    def chat_end(self,data_request):
+        chat = self.chat
+        close_auto = data_request.get('close_auto') or False
+        if close_auto == True:
+            chat.type_close = 'closed_auto'
+        else:
+            if self.type_user == 'user':
+                chat.type_close = 'closed_by_user'
+            else:
+                chat.type_close = 'closed_by_admin'
+        chat.is_active = False
+        chat.save()
+        self.send_to_group('CHAT_ENDED')
+
 
     # Requests in Consumer
     def send_status(self, data_request):

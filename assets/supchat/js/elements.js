@@ -62,19 +62,34 @@ function get_node_supchat() {
                 </a>
             </footer>
         </div>
-        <div id="SupChatEnd">
+        <div id="SupChatRate" style="text-align: ${SUP_CHAT.CONFIG.language == 'fa' ? 'right' : 'left'}">
             <header>
                 <div class="title-supchat-site">
                      ${SUP_CHAT.SUPCHAT.title}
                 </div>
             </header>
             <main>
-                <img src="${get_link_assets_supchat('images/default/start-chat.webp')}" alt="end chat img">
-                ${field_form_section}
-                ${field_form_phone_or_email}
-                <button id="BtnStartChatSupChat">
-                    ${SUP_CHAT.TRANSLATE.get('شروع')}
-                </button>
+                <img src="${get_link_assets_supchat('images/default/rate-chat.webp')}" alt="rate chat img">
+                <div>
+                    <p>${SUP_CHAT.TRANSLATE.get('امتیاز شما از این گفت و گو')} :</p>
+                    <div class="btns-rate-star-supchat">
+                        <button id="btn-rate-5-star-supchat" class="btn-rate-star-supchat">
+                            5
+                        </button>   
+                        <button id="btn-rate-4-star-supchat" class="btn-rate-star-supchat">
+                            4
+                        </button>   
+                        <button id="btn-rate-3-star-supchat" class="btn-rate-star-supchat">
+                            3
+                        </button>   
+                        <button id="btn-rate-2-star-supchat" class="btn-rate-star-supchat">
+                            2
+                        </button>   
+                        <button id="btn-rate-1-star-supchat" class="btn-rate-star-supchat">
+                            1
+                        </button>
+                    </div>
+                </div>
             </main>
             <footer>
                 <a href="https://fazelmomeni.codevar.ir" target="_blank">

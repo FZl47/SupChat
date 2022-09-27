@@ -40,6 +40,7 @@ urlpatterns = [
     # ---------------- V3 ----------------
     path('run',views.sup_chat_run_user),
     path('start-chat',views.start_chat),
+    path('submit-rate-chat/<int:chat_id>',views.submit_rate_chat),
 
     # Voice Message
     path('send-voice-message',views.send_voice_message),

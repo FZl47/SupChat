@@ -62,6 +62,30 @@ function get_node_supchat() {
                 </a>
             </footer>
         </div>
+        <div id="SupChatEnd">
+            <header>
+                <div class="title-supchat-site">
+                     ${SUP_CHAT.SUPCHAT.title}
+                </div>
+            </header>
+            <main>
+                <img src="${get_link_assets_supchat('images/default/start-chat.webp')}" alt="end chat img">
+                ${field_form_section}
+                ${field_form_phone_or_email}
+                <button id="BtnStartChatSupChat">
+                    ${SUP_CHAT.TRANSLATE.get('شروع')}
+                </button>
+            </main>
+            <footer>
+                <a href="https://fazelmomeni.codevar.ir" target="_blank">
+                    <svg class="title-supchat-intro">
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">
+                            SupChat
+                        </text>
+                    </svg>
+                </a>
+            </footer>
+        </div>
         <div id="SupChatContent">
             <header>
                 <div class="content-header-supchat">

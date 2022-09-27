@@ -94,6 +94,7 @@ class Response:
                 'state_is_typing': state_is_typing
             }, group_name_reciver)
 
+
     def is_voicing(self, data_request):
         state_is_voicing = data_request.get('state_is_voicing')
         if (state_is_voicing == True) or (state_is_voicing == False):

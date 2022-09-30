@@ -113,6 +113,8 @@ class _RequestBaseSupChat {
             if (SUP_CHAT.SOCKET.readyState == 1) {
                 data['TYPE_REQUEST'] = this.TYPE_REQUEST
                 SUP_CHAT.SOCKET.send(JSON.stringify(data))
+                // Restart timer
+                SUP_CHAT.set_timer_chat_end_auto()
             }
         }
     }

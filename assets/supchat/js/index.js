@@ -109,6 +109,7 @@ class SupChat {
         this.EFFECT_IS_TYPING_SENDED = false
         this.TIMER_UPDATE_LAST_SEEN
         this.TIMER_EFFECT_IS_TYPING
+        this.TIMER_CHAT_END_AUTO
         this.TIMER_HOLD_BUTTON_RECORD_VOICE
         this.TIMER_HIDE_NOTIFICATION
         this.TIMER_TIME_RECORDED_VOICE
@@ -137,6 +138,9 @@ class SupChat {
         this.SECTIONS = response.sections || []
         this.TRANSLATE = new TranslateSupChat(this.CONFIG.language)
         this.IS_OPEN = false
+
+        // Set Timers
+        this.set_timer_chat_end_auto()
 
         // Add Theme Css
         _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
@@ -219,6 +223,25 @@ class SupChat {
         }
     }
 
+    clear_timer_chat_end_auto() {
+        try {
+            clearTimeout(this.TIMER_CHAT_END_AUTO)
+        } catch (e) {
+        }
+    }
+
+    set_timer_chat_end_auto() {
+        this.clear_timer_chat_end_auto()
+        if (this.CONFIG.end_chat_auto) {
+            this.TIMER_CHAT_END_AUTO = setTimeout(function () {
+                // Chat ended auto
+                RequestSupChat.chat_end.send(true)
+            }, this.CONFIG.end_chat_after * 1000)
+        }
+    }
+
+
+
     toggle_container_supchat_content(state) {
         if (state == 'show') {
             this.ELEMENTS.supchat_content.setAttribute('container-show', '')
@@ -287,7 +310,7 @@ class SupChat {
     }
 
     show_notification(message) {
-        const after_sec_hide_notification = 5 // After 5 second notification start hiding
+        const after_sec_hide_notification = 6 // After 6 second notification start hiding
         if (!SUP_CHAT.IS_OPEN) {
             try {
                 clearTimeout(this.TIMER_HIDE_NOTIFICATION)
@@ -505,7 +528,6 @@ class SupChat {
         let chat_element = this.ELEMENTS.supchat_messages_chat
         chat_element.scroll({top: chat_element.scrollHeight, behavior: 'smooth'})
     }
-
 
     start_chat() {
         if (!this.CHAT) {
@@ -842,9 +864,9 @@ class ChatUser extends SupChat {
 
     _set_info_chat() {
         let admin = this.CHAT.admin
-        let el_name_section = this.ELEMENTS.name_section_info_chat_supchat
         this.ELEMENTS.image_user_chat_supchat.src = admin.image
         this.ELEMENTS.name_user_info_chat_supchat.innerText = admin.name
+        let el_name_section = this.ELEMENTS.name_section_info_chat_supchat
         if (el_name_section) {
             el_name_section.innerText = this.CHAT.section_name
         }
@@ -855,7 +877,6 @@ class ChatUser extends SupChat {
         this.toggle_container_supchat_rate('show')
         this.close_socket()
     }
-
 
 }
 
@@ -879,9 +900,9 @@ class ChatAdmin extends SupChat {
 
     _set_info_chat() {
         let user = this.CHAT.user
-        let el_name_section = this.ELEMENTS.name_section_info_chat_supchat
         this.ELEMENTS.image_user_chat_supchat.src = user.image
         this.ELEMENTS.name_user_info_chat_supchat.innerText = user.name
+        let el_name_section = this.ELEMENTS.name_section_info_chat_supchat
         if (el_name_section) {
             el_name_section.classList.add('d-none') // Hide name section
         }

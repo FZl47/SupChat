@@ -14,7 +14,7 @@ button {
     overflow: hidden;
     border-radius: 12px;
     border: 1px solid #e4eeeb;
-    box-shadow: 0 3px 15px rgba(191, 191, 191, 0.6);
+    box-shadow: 0 3px 15px rgba(191, 191, 191, 0.5);
     z-index: 10;
     transition: all .3s;
 }
@@ -79,8 +79,6 @@ button {
 }
 
 #SupChatStart > main img {
-    /* set inline */
-    /*width: 45%;*/
     height: auto;
     margin: auto;
     display: block;
@@ -311,7 +309,6 @@ button {
 
 #container-more-options-chat-supchat > *:hover {
     background: #f5f5f5;
-    color: #333;
 }
 
 #container-more-options-chat-supchat > * > i {
@@ -707,7 +704,7 @@ button {
 #NotificationSupChat[state='show'] {
     visibility: visible;
     opacity: 1;
-    transition: all 1.5s;
+    transition: all 2s;
 }
 
 

@@ -64,9 +64,9 @@ class SupChatConfig(models.Model):
     notif_message_is_active = models.BooleanField(default=True)
     notif_message_show_after = models.IntegerField(default=5, help_text='پس از گذشت چند ثانیه نمایش داده شود')  # Second
     notif_message = models.CharField(max_length=200, null=True, blank=True, default="""سلام ، چطور میتوانم کمک کنم ؟""")
-    end_chat_auto = models.BooleanField(default=True)
-    end_chat_after = models.IntegerField(default=60,
-                                         help_text='پس از مدتی بدون فعالیت چت به صورت خودکار بسته میشود')  # Second
+    end_chat_auto = models.BooleanField(default=False,help_text='ممکن است گاهی چت بسته نشود(کاربر قبل از زمان معین شده صفحه را ببندد)')
+    end_chat_after = models.IntegerField(default=30,
+                                         help_text='پس از مدتی بدون فعالیت چت به صورت خودکار بسته میشود .')  # Second
     show_title_section = models.BooleanField(default=True)
     show_last_seen = models.BooleanField(default=True)
     show_seen_message = models.BooleanField(default=True)

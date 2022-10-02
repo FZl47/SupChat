@@ -41,6 +41,7 @@
 <script src="/assets/supchat/js/index.js"></script>
 <script>
     const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'
+    {#const URL_BACKEND_SUPCHAT = 'http://192.168.1.142:8002'#}
     const ROOT_URL_ASSETS_SUPCHAT = '/assets/'
     let _supchat_json = JSON.parse('{{ supchat|escapejs  }}')
     let _chat_json = JSON.parse('{{ chat|escapejs  }}')

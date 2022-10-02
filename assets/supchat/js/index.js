@@ -75,6 +75,9 @@ class TranslateSupChat {
         ],
         'امتیاز شما از این گفت و گو': [
             'Your rate'
+        ],
+        'از ارسال بازخورد شما سپاسگزاریم': [
+            'Thank you for submitting your feedback'
         ]
     }
 
@@ -94,13 +97,14 @@ class SupChat {
 
     constructor(type_user) {
         this.TYPE_USER = type_user
-        this._set_info_constructor()
+        this._constructor()
     }
 
-    _set_info_constructor() {
+    _constructor() {
         this.SUPCHAT = undefined
         this.SOCKET = undefined
         this.CHAT = undefined
+        this.CHAT_INITED = false
         this.CONFIG = undefined
         this.STYLE = undefined
         this.ELEMENTS = undefined
@@ -117,15 +121,10 @@ class SupChat {
         this.VOICE_RECORDER
     }
 
-    restart() {
-        // Remove Elements
-        this.ELEMENTS.supchat.remove()
-        this.ELEMENTS.btn_open_supchat.remove()
-        this.ELEMENTS.notification_supchat.remove()
 
-        // Init
-        this._set_info_constructor()
-        SUP_CHAT.run()
+    restart_chat() {
+        this.CHAT = undefined
+        this.CHAT_INITED = false
     }
 
 
@@ -179,6 +178,7 @@ class SupChat {
             supchat_messages_chat: document.querySelector('#supchat-messages-chat'),
             supchat_loading: document.getElementById('SupChatLoading'),
             supchat_rate: document.getElementById('SupChatRate'),
+            supchat_rate_submited: document.querySelector('#SupChatRateSubmited'),
             btn_start_chat: document.getElementById('BtnStartChatSupChat'),
             input_choice_section: document.getElementById('input-choice-section-supchat'),
             input_phone_or_email: document.getElementById('input-enter-phone-or-email-supchat'),
@@ -240,7 +240,18 @@ class SupChat {
         }
     }
 
-
+    toggle_supchat(state) {
+        if (state == 'open') {
+            SUP_CHAT.ELEMENTS.supchat.setAttribute('state', 'open')
+            SUP_CHAT.ELEMENTS.btn_open_supchat.classList.add('d-none')
+            SUP_CHAT.scroll_to_down_chat()
+            SUP_CHAT.IS_OPEN = true
+        } else {
+            SUP_CHAT.ELEMENTS.supchat.setAttribute('state', 'close')
+            SUP_CHAT.ELEMENTS.btn_open_supchat.classList.remove('d-none')
+            SUP_CHAT.IS_OPEN = false
+        }
+    }
 
     toggle_container_supchat_content(state) {
         if (state == 'show') {
@@ -264,6 +275,15 @@ class SupChat {
             this.ELEMENTS.supchat_rate.setAttribute('container-show', '')
         } else {
             this.ELEMENTS.supchat_rate.removeAttribute('container-show')
+        }
+    }
+
+    toggle_container_supchat_rate_submited(state) {
+        if (state == 'show') {
+            this.toggle_container_supchat_rate('hide')
+            this.ELEMENTS.supchat_rate_submited.setAttribute('container-show', '')
+        } else {
+            this.ELEMENTS.supchat_rate_submited.removeAttribute('container-show')
         }
     }
 
@@ -337,28 +357,19 @@ class SupChat {
     _events() {
         let elements = SUP_CHAT.ELEMENTS
 
-        function toggle_state_supchat(state) {
-            if (state == 'open') {
-                elements.supchat.setAttribute('state', 'open')
-                elements.btn_open_supchat.classList.add('d-none')
-                SUP_CHAT.scroll_to_down_chat()
-                SUP_CHAT.IS_OPEN = true
-            } else {
-                elements.supchat.setAttribute('state', 'close')
-                elements.btn_open_supchat.classList.remove('d-none')
-                SUP_CHAT.IS_OPEN = false
-            }
-        }
-
 
         elements.btn_open_supchat.addEventListener('click', function () {
-            toggle_state_supchat('open')
+            if (SUP_CHAT.CHAT_INITED == false) {
+                SUP_CHAT._init_chat_or_register()
+            }
+            SUP_CHAT.toggle_supchat('open')
             // Seen message request
             RequestSupChat.seen_message.send()
         })
 
         elements.btn_close_supchat.addEventListener('click', function () {
-            toggle_state_supchat('close')
+            SUP_CHAT.toggle_supchat('close')
+            SUP_CHAT.toggle_container_supchat_rate_submited('hide')
         })
 
         if (elements.input_phone_or_email) {
@@ -562,7 +573,8 @@ class SupChat {
             let status_code = response.status_code
             if (status_code == 200) {
                 SUP_CHAT.toggle_loading('hide')
-                SUP_CHAT.restart()
+                SUP_CHAT.restart_chat()
+                SUP_CHAT.toggle_container_supchat_rate_submited('show')
             }
         }, function (response) {
             // Raise Error
@@ -854,9 +866,7 @@ class ChatUser extends SupChat {
             This._create_element_supchat()
             This._set_elements()
             This._events()
-            if (status_code == 200) {
-                This._init_chat_or_register()
-            } else if (status_code == 403) {
+            if (status_code == 403) {
                 This.show_error(403)
             }
         })

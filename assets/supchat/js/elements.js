@@ -34,11 +34,15 @@ function get_node_supchat() {
         }
     }
 
+    let style_for_specified_lang = `
+          text-align: ${SUP_CHAT.CONFIG.language == 'fa' ? 'right' : 'left'};
+    `
+
     let node = `
         <button id="BtnCloseSupChat">
             <i class="fal fa-times"></i>
         </button>
-        <div id="SupChatStart" style="text-align: ${SUP_CHAT.CONFIG.language == 'fa' ? 'right' : 'left'}" >
+        <div id="SupChatStart" style="${style_for_specified_lang}" >
             <header>
                 <div class="title-supchat-site">
                      ${SUP_CHAT.SUPCHAT.title}
@@ -62,7 +66,7 @@ function get_node_supchat() {
                 </a>
             </footer>
         </div>
-        <div id="SupChatRate" style="text-align: ${SUP_CHAT.CONFIG.language == 'fa' ? 'right' : 'left'}">
+        <div id="SupChatRate" style="${style_for_specified_lang}">
             <header>
                 <div class="title-supchat-site">
                      ${SUP_CHAT.SUPCHAT.title}
@@ -89,6 +93,26 @@ function get_node_supchat() {
                             <i class="fal fa-laugh"></i>
                         </button>    
                     </div>
+                </div>
+            </main>
+            <footer>
+                <a href="https://fazelmomeni.codevar.ir" target="_blank">
+                    <svg class="title-supchat-intro">
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">
+                            SupChat
+                        </text>
+                    </svg>
+                </a>
+            </footer>
+        </div>
+        <div id="SupChatRateSubmited" style="${style_for_specified_lang}">
+            <main>
+                <div class="submited-checkmark">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"></circle>
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"></path>
+                    </svg>
+                    <p>${SUP_CHAT.TRANSLATE.get('از ارسال بازخورد شما سپاسگزاریم')}</p>
                 </div>
             </main>
             <footer>

@@ -61,6 +61,74 @@ button {
     height: 100%;
 }
 
+#SupChatRateSubmited[container-show] {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+}
+
+#SupChatRateSubmited > main{
+    margin: auto 0;
+}
+
+.checkmark__circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: #09bb8f;
+    fill: none;
+    animation: animation-stroke-checkmark 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: #fff;
+    stroke-miterlimit: 10;
+    margin: 10% auto;
+    box-shadow: inset 0px 0px 0px #09bb8f;
+    animation: animation-fill-checkmark .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+.checkmark__check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: animation-stroke-checkmark 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes animation-stroke-checkmark {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+
+@keyframes animation-fill-checkmark {
+    100% {
+        box-shadow: inset 0px 0px 0px 30px #09bb8f;
+    }
+}
+
+.submited-checkmark {
+    width: 300px;
+    max-width: 100%;
+    margin: auto;
+    text-align: center;
+}
+
+.submited-checkmark p {
+    margin-top: -15px;
+    color: #09bb8f;
+}
+
+
 #SupChatError[container-show] {
     display: block;
 }
@@ -129,17 +197,17 @@ button {
     display: inline-block;
 }
 
-#SupChatRate main p{
+#SupChatRate main p {
     font-size: 95%;
     color: #555;
 }
 
-.btns-rate-star-supchat{
+.btns-rate-star-supchat {
     text-align: center;
     margin-top: 25px;
 }
 
-.btn-rate-star-supchat{
+.btn-rate-star-supchat {
     background: none;
     outline: none;
     border: none;
@@ -149,7 +217,7 @@ button {
     transition: all .2s;
 }
 
-.btn-rate-star-supchat:hover{
+.btn-rate-star-supchat:hover {
     color: #555;
     transform: scale(1.1);
 }

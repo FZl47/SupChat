@@ -122,28 +122,13 @@ class SupChat {
     }
 
 
-    restart_chat() {
+    reset_chat() {
         this.CHAT = undefined
         this.CHAT_INITED = false
+        this.ELEMENTS.supchat_messages_chat.innerHTML = ''
+        MessageSupChat.LIST_MESSAGES = []
     }
 
-
-    _set_supchat_info(response) {
-        let supchat = response.supchat
-        this.SUPCHAT = supchat.supchat
-        this.CONFIG = supchat.config
-        this.STYLE = supchat.style
-        this.CHAT = response.chat
-        this.SECTIONS = response.sections || []
-        this.TRANSLATE = new TranslateSupChat(this.CONFIG.language)
-        this.IS_OPEN = false
-
-        // Set Timers
-        this.set_timer_chat_end_auto()
-
-        // Add Theme Css
-        _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
-    }
 
     _create_element_supchat() {
         let supchat = document.createElement('div')
@@ -206,6 +191,7 @@ class SupChat {
             btn_set_default_edit_message: document.querySelector('#btn-set-default-edit-message'),
             notification_supchat: document.getElementById('NotificationSupChat'),
             notification_message_supchat: document.querySelector('#NotificationSupChat p'),
+            notification_sound: new Audio(get_link_assets_supchat('sound/1.mp3', false, true)),
             btn_end_chat_supchat: document.querySelector('#btn-end-chat-supchat'),
             btn_rate_star_1: document.querySelector('#btn-rate-1-star-supchat'),
             btn_rate_star_2: document.querySelector('#btn-rate-2-star-supchat'),
@@ -218,6 +204,7 @@ class SupChat {
     _init_chat_or_register() {
         if (this.CHAT) {
             this.init_chat()
+            this.CHAT_INITED = true
         } else {
             this.toggle_container_supchat_start('show')
         }
@@ -244,6 +231,7 @@ class SupChat {
         if (state == 'open') {
             SUP_CHAT.ELEMENTS.supchat.setAttribute('state', 'open')
             SUP_CHAT.ELEMENTS.btn_open_supchat.classList.add('d-none')
+            SUP_CHAT.hide_notification()
             SUP_CHAT.scroll_to_down_chat()
             SUP_CHAT.IS_OPEN = true
         } else {
@@ -331,16 +319,54 @@ class SupChat {
 
     show_notification(message) {
         const after_sec_hide_notification = 6 // After 6 second notification start hiding
-        if (!SUP_CHAT.IS_OPEN) {
+        const sound_is_active = this.CONFIG.notif_sound_is_active
+        const notif_is_active = this.CONFIG.notif_is_active
+        if (!SUP_CHAT.IS_OPEN && notif_is_active) {
+            try {
+                clearTimeout(SUP_CHAT.TIMER_HIDE_NOTIFICATION)
+            } catch (e) {
+            }
+            SUP_CHAT.ELEMENTS.notification_message_supchat.innerText = message
+            SUP_CHAT.ELEMENTS.notification_supchat.setAttribute('state', 'show')
+            if (sound_is_active) {
+                SUP_CHAT.ELEMENTS.notification_sound.play()
+            }
+            SUP_CHAT.TIMER_HIDE_NOTIFICATION = setTimeout(function () {
+                SUP_CHAT.hide_notification()
+            }, after_sec_hide_notification * 1000)
+        }
+    }
+
+    hide_notification() {
+        SUP_CHAT.ELEMENTS.notification_supchat.removeAttribute('state')
+    }
+
+    show_notification_default() {
+        let after_sec_hide_notification = 15 // After 15 second notification start hiding
+        let sound_is_active = this.CONFIG.notif_sound_is_active
+        let notif_is_active = this.CONFIG.default_notif_is_active
+        let show_after = this.CONFIG.default_notif_show_after
+        let message = this.CONFIG.default_notif_message
+        if (SUP_CHAT.IS_OPEN == false && notif_is_active == true) {
             try {
                 clearTimeout(this.TIMER_HIDE_NOTIFICATION)
             } catch (e) {
             }
-            this.ELEMENTS.notification_message_supchat.innerText = message
-            this.ELEMENTS.notification_supchat.setAttribute('state', 'show')
-            this.TIMER_HIDE_NOTIFICATION = setTimeout(function () {
-                SUP_CHAT.ELEMENTS.notification_supchat.removeAttribute('state')
-            }, after_sec_hide_notification * 1000)
+            setTimeout(function () {
+                notif()
+            }, show_after * 1000)
+
+
+            function notif() {
+                SUP_CHAT.ELEMENTS.notification_message_supchat.innerText = message
+                SUP_CHAT.ELEMENTS.notification_supchat.setAttribute('state', 'show')
+                if (sound_is_active) {
+                    SUP_CHAT.ELEMENTS.notification_sound.play()
+                }
+                SUP_CHAT.TIMER_HIDE_NOTIFICATION = setTimeout(function () {
+                    SUP_CHAT.ELEMENTS.notification_supchat.removeAttribute('state')
+                }, after_sec_hide_notification * 1000)
+            }
         }
     }
 
@@ -573,7 +599,7 @@ class SupChat {
             let status_code = response.status_code
             if (status_code == 200) {
                 SUP_CHAT.toggle_loading('hide')
-                SUP_CHAT.restart_chat()
+                SUP_CHAT.reset_chat()
                 SUP_CHAT.toggle_container_supchat_rate_submited('show')
             }
         }, function (response) {
@@ -866,7 +892,9 @@ class ChatUser extends SupChat {
             This._create_element_supchat()
             This._set_elements()
             This._events()
-            if (status_code == 403) {
+            if (status_code == 200) {
+                This._init_chat_or_register()
+            } else if (status_code == 403) {
                 This.show_error(403)
             }
         })
@@ -881,6 +909,28 @@ class ChatUser extends SupChat {
             el_name_section.innerText = this.CHAT.section_name
         }
         this.set_status_element(admin.is_online, admin.last_seen)
+    }
+
+    _set_supchat_info(response) {
+        let supchat = response.supchat
+        this.SUPCHAT = supchat.supchat
+        this.CONFIG = supchat.config
+        this.STYLE = supchat.style
+        this.CHAT = response.chat
+        this.SECTIONS = response.sections || []
+        this.TRANSLATE = new TranslateSupChat(this.CONFIG.language)
+        this.IS_OPEN = false
+
+        // Set Timers
+        this.set_timer_chat_end_auto()
+
+        // Show Default Notif Message
+        if (!this.CHAT) {
+            this.show_notification_default()
+        }
+
+        // Add Theme Css
+        _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
     }
 
     chat_ended() {
@@ -919,10 +969,29 @@ class ChatAdmin extends SupChat {
         this.set_status_element(user.is_online, user.last_seen)
     }
 
-    chat_ended() {
+    _set_supchat_info(response) {
+        let supchat = response.supchat
+        this.SUPCHAT = supchat.supchat
+        this.CONFIG = supchat.config
+        this.STYLE = supchat.style
+        this.CHAT = response.chat
+        this.CHAT_INITED = true
+        this.SECTIONS = response.sections || []
+        this.TRANSLATE = new TranslateSupChat(this.CONFIG.language)
+        this.IS_OPEN = false
 
+        // Add Theme Css
+        _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
     }
 
+    // Remove notification admin and Added notification web instead
+    // overwrite
+    show_notification() {}
+
+
+    chat_ended() {
+        this.close_socket()
+    }
 
 }
 

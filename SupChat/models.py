@@ -61,9 +61,11 @@ class SupChatConfig(models.Model):
     default_message_is_active = models.BooleanField(default=True)
     default_message = models.CharField(max_length=200, null=True, blank=True,
                                        default=""" پشتیبانی سایت ما در کوتاه ترین زمان ممکن پاسخگوی شما دوست عزیز است لطفا پیام خود را بگذارید .""")
-    notif_message_is_active = models.BooleanField(default=True)
-    notif_message_show_after = models.IntegerField(default=5, help_text='پس از گذشت چند ثانیه نمایش داده شود')  # Second
-    notif_message = models.CharField(max_length=200, null=True, blank=True, default="""سلام ، چطور میتوانم کمک کنم ؟""")
+    default_notif_is_active = models.BooleanField(default=True)
+    default_notif_show_after = models.IntegerField(default=5, help_text='پس از گذشت چند ثانیه نمایش داده شود')  # Second
+    default_notif_message = models.CharField(max_length=200, null=True, blank=True, default="""سلام ، چطور میتوانم کمک کنم ؟""")
+    notif_is_active = models.BooleanField(default=True)
+    notif_sound_is_active = models.BooleanField(default=True)
     end_chat_auto = models.BooleanField(default=False,help_text='ممکن است گاهی چت بسته نشود(کاربر قبل از زمان معین شده صفحه را ببندد)')
     end_chat_after = models.IntegerField(default=30,
                                          help_text='پس از مدتی بدون فعالیت چت به صورت خودکار بسته میشود .')  # Second
@@ -253,7 +255,7 @@ class ChatGroup(models.Model):
     rate_chat = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(5)])
 
     def __str__(self):
-        return f"Chat Group {self.user.get_full_name()} - {self.admin.get_full_name()}"
+        return f"#{self.id} Chat Group {self.user.get_full_name()} - {self.admin.get_full_name()}"
 
     @classmethod
     def get_chat_by_type_user(cls, chat_id, user_obj, type_user):

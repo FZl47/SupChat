@@ -93,6 +93,9 @@ class Section(models.Model):
     def get_admin_less_busy(self):
         return self.admin_set.order_by('-chatgroup__is_active').first()
 
+    def get_count_message_text(self):
+        return self.chatgroup_set.all().count()
+
     # def get_chats(self):
     #     """
     #         sort chats by last message
@@ -169,6 +172,11 @@ class Admin(models.Model):
     def get_last_seen(self):
         diff_sec = GetDifferenceTime(self.last_seen)
         return diff_sec
+
+
+    def get_sections(self):
+        return self.sections.filter(is_active=True).all()
+
 
     #
     # def get_group_name_admin_in_section(self, section):

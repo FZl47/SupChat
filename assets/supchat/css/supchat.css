@@ -853,11 +853,11 @@ button {
     border-radius: 4px;
     padding: 6px 4px;
     margin: 15px auto;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(233, 233, 233, 0.5), rgba(255, 255, 255, 0.1));
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(233, 233, 233, 0.6), rgba(255, 255, 255, 0.1));
 }
 
 .container-message-supchat-system .content-message-supchat {
-    width: 100%;
+    max-width: 95%;
     display: block;
     margin: auto;
 }
@@ -865,10 +865,11 @@ button {
 .container-message-supchat-system pre {
     width: 100%;
     display: block;
+    line-height: 25px;
     max-width: none !important;
     text-align: center !important;
     font-size: 95% !important;
-    color: #515554 !important;
+    color: rgba(43, 47, 46, 0.75) !important;
 }
 
 .container-message-supchat[sender-type='you'] .content-message-supchat > main {

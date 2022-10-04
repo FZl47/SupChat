@@ -370,6 +370,10 @@ class SupChat {
         }
     }
 
+    show_default_message() {
+
+    }
+
     _create_messages(messages) {
         for (let message of messages) {
             if (message.type == 'text') {
@@ -385,7 +389,7 @@ class SupChat {
 
 
         elements.btn_open_supchat.addEventListener('click', function () {
-            if (SUP_CHAT.CHAT_INITED == false) {
+            if (SUP_CHAT.CHAT_INITED == false && !SUP_CHAT.CHAT) {
                 SUP_CHAT._init_chat_or_register()
             }
             SUP_CHAT.toggle_supchat('open')
@@ -566,46 +570,6 @@ class SupChat {
         chat_element.scroll({top: chat_element.scrollHeight, behavior: 'smooth'})
     }
 
-    start_chat() {
-        if (!this.CHAT) {
-            let elements = this.ELEMENTS
-            let data = {}
-            if (this.CONFIG.get_phone_or_email) {
-                data['phone_or_email'] = elements.input_phone_or_email.value
-            }
-            if (this.SECTIONS.length <= 1) {
-                data['section_id'] = this.SECTIONS[0].id
-            } else {
-                data['section_id'] = elements.input_choice_section.value
-            }
-
-            SendAjaxSupChat('start-chat', data, 'POST', function (response) {
-                let status_code = response.status_code
-                if (status_code == 200) {
-                    let user_created = response.user_created || false
-                    set_cookie('session_key_user_sup_chat', response.user.session_key, 365)
-                    SUP_CHAT.CHAT = response.chat
-                    SUP_CHAT.init_chat()
-                }
-            })
-        }
-    }
-
-    submit_rate_chat(rate) {
-        this.toggle_loading('show')
-        SendAjaxSupChat(`submit-rate-chat/` + SUP_CHAT.CHAT.id, {
-            'rate': rate
-        }, 'POST', function (response) {
-            let status_code = response.status_code
-            if (status_code == 200) {
-                SUP_CHAT.toggle_loading('hide')
-                SUP_CHAT.reset_chat()
-                SUP_CHAT.toggle_container_supchat_rate_submited('show')
-            }
-        }, function (response) {
-            // Raise Error
-        })
-    }
 
     // Is Typing Element
     effect_is_typing(state) {
@@ -803,33 +767,31 @@ class SupChat {
         }
     }
 
-    // Socket
+    // Connection
     create_connection() {
+        let supchat_obj = this
         let count_try_create = 5
         let socket
 
         function create_socket() {
-            if (SUP_CHAT.TYPE_USER == 'USER') {
-                socket = new WebSocket(get_protocol_socket() + (get_only_url_backend() + `/ws/chat/user/${SUP_CHAT.CHAT.id}`))
-            } else if (SUP_CHAT.TYPE_USER == 'ADMIN') {
-                socket = new WebSocket(get_protocol_socket() + (get_only_url_backend() + `/ws/chat/admin/${SUP_CHAT.CHAT.id}`))
-            }
 
-            SUP_CHAT.toggle_loading('show')
-            SUP_CHAT.SOCKET = socket
+            socket = new WebSocket(get_protocol_socket() + (get_only_url_backend() + supchat_obj._get_websocket_url()))
+
+            supchat_obj.toggle_loading('show')
+            supchat_obj.SOCKET = socket
             socket.onmessage = function (e) {
-                SUP_CHAT.socket_recive(e)
+                supchat_obj.socket_recive(e)
             }
             socket.onopen = function (e) {
                 count_try_create = 1
-                SUP_CHAT.toggle_loading('hide')
+                supchat_obj.toggle_loading('hide')
                 SUP_CHAT.socket_open(e)
             }
             socket.onclose = function (e) {
-                SUP_CHAT.socket_close(e)
+                supchat_obj.socket_close(e)
             }
             socket.onerror = function (e) {
-                SUP_CHAT.socket_error(e)
+                supchat_obj.socket_error(e)
                 try_create_socket()
             }
         }
@@ -850,7 +812,7 @@ class SupChat {
         }
     }
 
-    // Socket Events
+    // Connection Events
     socket_recive(e) {
         let data = JSON.parse(e.data)
         let response_obj = ResponseSupChat.get(data.TYPE_RESPONSE)
@@ -884,6 +846,11 @@ class ChatUser extends SupChat {
         super('USER')
     }
 
+    _get_websocket_url() {
+        return `/ws/chat/user/${this.CHAT.id}`
+    }
+
+
     run() {
         let This = this
         SendAjaxSupChat(`run`, {}, 'POST', function (response) {
@@ -892,6 +859,7 @@ class ChatUser extends SupChat {
             This._create_element_supchat()
             This._set_elements()
             This._events()
+            This._init_config()
             if (status_code == 200) {
                 This._init_chat_or_register()
             } else if (status_code == 403) {
@@ -921,6 +889,12 @@ class ChatUser extends SupChat {
         this.TRANSLATE = new TranslateSupChat(this.CONFIG.language)
         this.IS_OPEN = false
 
+
+        // Add Theme Css
+        _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
+    }
+
+    _init_config() {
         // Set Timers
         this.set_timer_chat_end_auto()
 
@@ -928,9 +902,53 @@ class ChatUser extends SupChat {
         if (!this.CHAT) {
             this.show_notification_default()
         }
+        // Show Default Message
+        if (this.CHAT && this.CONFIG.default_message_is_active && this.CHAT.messages.length == 0) {
+            new SystemMessage(this.CONFIG.default_message)
+        }
 
-        // Add Theme Css
-        _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
+    }
+
+    start_chat() {
+        if (!this.CHAT) {
+            let elements = this.ELEMENTS
+            let data = {}
+            if (this.CONFIG.get_phone_or_email) {
+                data['phone_or_email'] = elements.input_phone_or_email.value
+            }
+            if (this.SECTIONS.length <= 1) {
+                data['section_id'] = this.SECTIONS[0].id
+            } else {
+                data['section_id'] = elements.input_choice_section.value
+            }
+
+            SendAjaxSupChat('start-chat', data, 'POST', function (response) {
+                let status_code = response.status_code
+                if (status_code == 200) {
+                    let user_created = response.user_created || false
+                    set_cookie('session_key_user_sup_chat', response.user.session_key, 365)
+                    SUP_CHAT.CHAT = response.chat
+                    SUP_CHAT.init_chat()
+                }
+            })
+        }
+    }
+
+    submit_rate_chat(rate) {
+        let supchat_obj = this
+        this.toggle_loading('show')
+        SendAjaxSupChat(`submit-rate-chat/` + supchat_obj.CHAT.id, {
+            'rate': rate
+        }, 'POST', function (response) {
+            let status_code = response.status_code
+            if (status_code == 200) {
+                supchat_obj.toggle_loading('hide')
+                supchat_obj.reset_chat()
+                supchat_obj.toggle_container_supchat_rate_submited('show')
+            }
+        }, function (response) {
+            // Raise Error
+        })
     }
 
     chat_ended() {
@@ -947,6 +965,10 @@ class ChatAdmin extends SupChat {
             'supchat': supchat,
             'chat': chat
         }
+    }
+
+    _get_websocket_url() {
+        return `/ws/chat/admin/${this.CHAT.id}`
     }
 
     run() {
@@ -980,17 +1002,28 @@ class ChatAdmin extends SupChat {
         this.TRANSLATE = new TranslateSupChat(this.CONFIG.language)
         this.IS_OPEN = false
 
-        // Add Theme Css
-        _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
+
+        // Add theme default
+        // _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
+        _add_css_link(get_link_assets_supchat('css/theme/default.css', false, true))
     }
 
     // Remove notification admin and Added notification web instead
     // overwrite
-    show_notification() {}
+    show_notification() {
+    }
 
 
     chat_ended() {
         this.close_socket()
+    }
+
+}
+
+
+class Section extends SupChat {
+    constructor() {
+        super('')
     }
 
 }

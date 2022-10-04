@@ -34,6 +34,8 @@ new ResponseSupChat('TEXT_MESSAGE', function (data) {
         RequestSupChat.seen_message.send()
         // Show Notification
         SUP_CHAT.show_notification(message.text_message)
+        // Restart timer
+        SUP_CHAT.set_timer_chat_end_auto()
     }
 })
 
@@ -46,6 +48,8 @@ new ResponseSupChat('AUDIO_MESSAGE', function (data) {
         RequestSupChat.seen_message.send()
         // Show Notification
         SUP_CHAT.show_notification(SUP_CHAT.TRANSLATE.get('صدا'))
+        // Restart timer
+        SUP_CHAT.set_timer_chat_end_auto()
     }
 })
 
@@ -220,9 +224,9 @@ class RequestChatEndSupChat extends _RequestBaseSupChat {
         super('CHAT_END');
     }
 
-    send(close_auto=false) {
+    send(close_auto = false) {
         let data = {
-            'close_auto':close_auto
+            'close_auto': close_auto
         }
         this.send_to_socket(data)
     }

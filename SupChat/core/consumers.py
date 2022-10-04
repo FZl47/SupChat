@@ -78,6 +78,7 @@ class ChatUser(SupChat):
     def _send_status(self):
         self.send_status(serializers.Serializer_status(self.user_supchat))
 
+
     def disconnect(self, code):
         # Send and Set Status
         self._set_status('offline')

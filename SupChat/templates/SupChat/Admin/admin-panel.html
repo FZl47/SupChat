@@ -1,600 +1,304 @@
-{% extends 'Chat/Base/BaseTemplateSupChat.html' %}
-{% load FilterTagsSupChat %}
 {% load static %}
-{% block Title %}
-    Dashboard - {{ Admin.get_full_name }}
-{% endblock %}
-{% block Link %}
-    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no'/>
-    <link rel="stylesheet" href="{% static 'supchat/admin/vendors/mdi/css/materialdesignicons.min.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/admin/vendors/css/vendor.bundle.base.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/admin/vendors/jvectormap/jquery-jvectormap.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/admin/vendors/flag-icon-css/css/flag-icon.min.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/admin/vendors/owl-carousel-2/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/admin/vendors/owl-carousel-2/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/admin/css/style.css' %}">
-    <link rel="stylesheet" href="{% static SupChat.style.theme %}">
-    <link rel="icon" href="{% static 'supchat/logo/logo.png' %}">
-{% endblock %}
-{% block Content %}
-    <div class="container-scroller">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta charset="UTF-8">
+    <title>SupChat V3 Admin Panel</title>
+    {#    <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro@4cac1a6/css/all.css" rel="stylesheet"#}
+    {#          type="text/css"/>#}
+    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">#}
+    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">#}
+    <link rel="stylesheet" href="/assets/supchat/font_awesome/css/all.css">
+    <link rel="stylesheet" href="/assets/supchat/bootstrap/css/bootstrap.min.css">
+    <style>
+        @font-face {
+            src: url("/assets/supchat/font/Vazir-Regular.woff");
+            font-family: 'VazirMatn';
+        }
+
+        @font-face {
+            src: url("/assets/supchat/font/Kalameh-Black.woff");
+            font-family: 'KalameBlack';
+        }
+    </style>
 
 
-        <!-- partial:partials/_sidebar.html -->
-        <nav class="sidebar sidebar-offcanvas" id="sidebar">
-            <div class="sidebar-brand-wrapper  d-lg-flex align-items-center justify-content-around fixed-top">
-                <p class="p-0 m-0 text-light">{{ SupChat.title }}</p>
-                <img src="{% static 'supchat/logo/logo.png' %}" style="width: 30px" alt="logo">
-            </div>
-            <ul class="nav">
-                <li class="nav-item profile">
-                    <div class="profile-desc">
-                        <div class="profile-pic">
-                            <div class="count-indicator">
-                                <img class="img-xs rounded-circle " style="object-fit: cover"
-                                     src="{{ Admin.get_image }}" alt="{{ Admin.get_full_name }}">
-                                <span class="count bg-success"></span>
-                            </div>
-                            <div class="profile-name">
-                                <h5 class="mb-0 font-weight-normal">{{ Admin.get_full_name }}</h5>
-                            </div>
-                        </div>
+    <link rel="stylesheet" href="/assets/supchat/css/supchat.css">
+    <link rel="stylesheet" href="/assets/supchat/css/tools.css">
+    <link rel="stylesheet" href="/assets/supchat/audio_simple/style.css">
+    <script src="/assets/supchat/audio_simple/js.js"></script>
 
-                        <div class="dropdown">
-                            <button type="button" id="profile-dropdown" class="btn" data-toggle="dropdown">
-                                <i class="mdi mdi-dots-vertical"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list"
-                                 aria-labelledby="profile-dropdown" role="menu">
-                                <div class="dropdown-divider"></div>
-                                <button class="dropdown-item preview-item" onclick="toggleNotification()">
-                                    <div class="preview-thumbnail">
-                                        <div class="preview-icon bg-dark rounded-circle">
-                                            <i class="mdi mdi-message-outline text-info"></i>
-                                        </div>
-                                    </div>
-                                    <div class="preview-item-content">
-                                        <p class="preview-subject ellipsis mb-1 text-small">Notification <i
-                                                id="iconToggleNotification" class="fa fa-check"
-                                                style="margin-left: 10px;"></i></p>
-                                    </div>
-                                </button>
-                                <div class="dropdown-divider"></div>
-                                <a href="{% url 'SupChat:admin_signout' %}" class="dropdown-item preview-item">
-                                    <div class="preview-thumbnail">
-                                        <div class="preview-icon bg-dark rounded-circle">
-                                            <i class="mdi mdi-logout text-danger"></i>
-                                        </div>
-                                    </div>
-                                    <div class="preview-item-content">
-                                        <p class="preview-subject ellipsis mb-1 text-small">Log out</p>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item nav-category">
-                    <span class="nav-link">منو</span>
-                </li>
-                <li class="nav-item menu-items {% if page_active == 'info' %}menu-items-active{% endif %}">
-                    <a class="nav-link" href="{% url 'SupChat:admin_panel_info' %}">
-                    <span class="menu-icon">
-                        <i class="mdi mdi-information"></i>
-                      </span>
-                        <span class="menu-title">اطلاعات</span>
-                    </a>
-                </li>
-                <li class="nav-item nav-category">
-                    <span class="nav-link">بخش های پشتیبانی</span>
-                </li>
-                {% with Section as SectionSelected %}
-                    {% for Section in Admin.get_sections %}
-                        {% if Section|get_count_chats_by_admin:request.admin > 0 %}
-                            <li class="nav-item menu-items menu-item-section {% if Section.id == SectionSelected.id %}menu-items-active{% endif %}">
-                                <a class="nav-link" href="{{ Section.get_absolute_url_admin }}">
-                                <span class="menu-icon">
-                                <i class="mdi mdi-message"></i>
-                              </span>
-                                    <span class="menu-title">{{ Section.title }}</span>
-                                </a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                {% endwith %}
-            </ul>
-        </nav>
-        <!-- partial -->
-        <div class="container-fluid page-body-wrapper">
-            <!-- partial:partials/_navbar.html -->
-            <nav class="navbar p-0 fixed-top d-flex flex-row">
-                <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
-                    <img src="{% static 'supchat/logo/logo.png' %}" style="width: 30px" alt="logo">
-                </div>
-                <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
-                    <button class="navbar-toggler navbar-toggler align-self-center" type="button"
-                            data-toggle="minimize">
-                        <span class="mdi mdi-menu"></span>
-                    </button>
-                    <ul class="navbar-nav navbar-nav-right">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
-                                <div class="navbar-profile">
-                                    <img class="img-xs rounded-circle" style="object-fit: cover"
-                                         src="{{ Admin.get_image }}" alt="{{ Admin.get_full_name }}">
-                                    <p class="mb-0 d-none d-sm-block navbar-profile-name">{{ Admin.get_full_name }}</p>
-                                    <i class="mdi mdi-menu-down d-none d-sm-block"></i>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link" id="profileDropdown" href="{% url 'SupChat:admin_panel_log' %}">
-                                <div class="navbar-profile">
-                                    <i class="mdi mdi-bell d-sm-block {% if Admin.has_log_message %}text-success{% else %}text-muted{% endif %}"></i>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a href="{% url 'SupChat:admin_signout' %}" class="nav-link">
-                                <div class="preview-item-content">
-                                    <p class="preview-subject ellipsis mb-1 text-small text-danger">Log out</p>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
-                            data-toggle="offcanvas">
-                        <span class="mdi mdi-format-line-spacing"></span>
-                    </button>
-                </div>
-            </nav>
-            <!-- partial -->
-            <div class="main-panel">
-                <div class="content-wrapper">
+    <meta name="robots" content="noindex,nofollow">
 
-                    {% if page_active == 'dashboard' %}
-                        <svg class="SvgSupChat">
-                            <text x="0" y="98%">
-                                SupChat
-                            </text>
-                        </svg>
-                        <p class="text-muted text-small ml-2">Support Chat</p>
-                    {% endif %}
-                    {% if page_active == 'log_message' %}
-                        <div class="row p-0">
-                            <div class="col-12">
-                                <div class="card px-2 px-sm-4 py-2 py-sm-4" style="min-height: 700px;max-height: 100vh">
-                                    <div class="card-title text-right">
-                                        <h3>اعلانات</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        {% for LogMessage in Admin.get_log_messages %}
-                                            <div class="LogMessage">
-                                                <header data-toggle="collapse"
-                                                        data-target="#LogMessage-{{ LogMessage.id }}">
-                                                    <div>{{ LogMessage.title }}</div>
-                                                    <div class="text-muted text-small"
-                                                         dir="ltr">{{ LogMessage.dateTimeSubmit|timesince }}</div>
-                                                </header>
-                                                <main id="LogMessage-{{ LogMessage.id }}" class="collapse">
-                                                    <div>
-                                                        {{ LogMessage.message|safe }}
-                                                    </div>
-                                                </main>
-                                            </div>
-                                        {% empty %}
-                                            <div class="text-muted mx-auto d-flex justify-content-center align-items-center"
-                                                 style="height: 400px">
-                                                <i class="mdi mdi-bell-off fa-2x mr-2"></i>
-                                                <h1>اعلانی یافت نشد</h1>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% if page_active == 'info' %}
-                        <div class="ContainerInfo row">
-                            <div class="col-12 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="card-title text-right">اطلاعات</h4>
-                                        <form class="forms-sample" action="{% url 'SupChat:admin_panel_info_update' %}"
-                                              method="post" enctype="multipart/form-data">
-                                            {% csrf_token %}
-                                            <div class="form-group">
-                                                <label for="exampleInputName1">نام</label>
-                                                <input type="text" required minlength="1" maxlength="70"
-                                                       value="{{ Admin.user.first_name }}" name="first-name"
-                                                       class="form-control" id="exampleInputName1"
-                                                       placeholder="نام خود را وارد نمایید">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputName1">نام خانوادگی</label>
-                                                <input type="text" required minlength="3" maxlength="70"
-                                                       value="{{ Admin.user.last_name }}" name="last-name"
-                                                       class="form-control" id="exampleInputName1"
-                                                       placeholder="نام خانوادگی خود را وارد نمایید">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail3">آدرس ایمیل</label>
-                                                <input type="email" required name="email" value="{{ Admin.user.email }}"
-                                                       class="form-control" id="exampleInputEmail3"
-                                                       placeholder="ایمیل خود را وارد نمایید">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleSelectGender">جنسیت</label>
-                                                <select class="form-control" required name="gender"
-                                                        id="exampleSelectGender">
-                                                    <option value="male"
-                                                            {% if Admin.gender == 'male' %}selected{% endif %}>مرد
-                                                    </option>
-                                                    <option value="female"
-                                                            {% if Admin.gender == 'female' %}selected{% endif %}>زن
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>آپلود عکس</label>
-                                                <div class="col-xs-12">
-                                                    <input type="file" accept="image/png, image/jpeg" required
-                                                           name="picture-person" class="form-control p-2">
-                                                </div>
-                                            </div>
-                                            <div class="text-left">
-                                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% if page_active == 'section' %}
-                        <div class="row">
-                            <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <div class="d-flex align-items-center align-self-start">
-                                                    <h3 class="mb-0">{{ Chats.count }}</h3>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="icon icon-box-info">
-                                                    <span class="mdi mdi-chat"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h6 class="text-muted font-weight-normal">تعداد چت ها</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <div class="d-flex align-items-center align-self-start">
-                                                    <h3 class="mb-0">{{ Messages_Unread_Count }}</h3>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="icon icon-box-warning">
-                                                    <span class="mdi mdi-message-outline"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h6 class="text-muted font-weight-normal">تعداد پیام های دیده نشده</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <div class="d-flex align-items-center align-self-start">
-                                                    <h3 class="mb-0">{{ Messages_Count }}</h3>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="icon icon-box-success">
-                                                    <span class="mdi mdi-message icon-item"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h6 class="text-muted font-weight-normal">تعداد کل پیام ها</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body text-center">
-                                        <h1 class="font-kalame-black">{{ Section.title }}</h1>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row Height-Max-1700 Height-Min-850">
-                            <div class="col-12 grid-margin stretch-card order-md-1 order-xl-0">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title text-right">چت ها</h3>
-                                        {% include 'Chat/Admin/filter-chats.html' with Filter_by=Filter_by %}
-                                        <div class="ChatsSection row" id="ChatsSection">
-                                            {% for Chat in Chats %}
-                                                {% include 'Chat/Admin/chat-section.html' with Chat=Chat UrlFilterBy=Url_Filter_by %} {% empty %}
-                                                <div class="text-muted mx-auto d-flex justify-content-center align-items-center"
-                                                     style="height: 400px">
-                                                    <i class="mdi mdi-chat-alert fa-2x mr-2"></i>
-                                                    <h1>چتی یافت نشد</h1>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% if page_active == 'chat' %}
-                        <div class="row">
-                            <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <div class="d-flex align-items-center align-self-start">
-                                                    {% if SupChat.config.transfer_chat_is_active and Section.get_admins.count > 1 %}
-                                                        <button class="btn btn-outline-light px-4 py-2 mb-3"
-                                                                onclick="transferChatToOtherAdmin()">انتقال
-                                                            <i class="far fa-arrow-alt-right"></i>
-                                                            <i class="fa fa-user"></i>
-                                                        </button> {% else %}
-                                                        <button class="btn btn-outline-light px-4 py-2 mb-3 disabled"
-                                                                style="cursor:not-allowed;">انتقال
-                                                        </button> {% endif %}
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="icon icon-box-primary">
-                                                    <span class="mdi mdi-account-multiple-plus icon-item"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h6 class="text-muted font-weight-normal">انتقال چت</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <div class="d-flex align-items-center align-self-start">
-                                                    <h3 class="mb-0">{{ Chat.get_count_messages }}</h3>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="icon icon-box-success ">
-                                                    <span class="mdi mdi-message icon-item"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h6 class="text-muted font-weight-normal">تعداد کل پیام ها</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <div class="d-flex align-items-center align-self-start">
-                                                    <h5 class="mb-0">{{ Chat.user.get_full_name }}</h5>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <img style="width: 35px;height: 35px;background: #fff2c7;border-radius: 6px"
-                                                     src="{{ Chat.user.get_image }}"
-                                                     alt="{{ Chat.user.get_full_name }}">
-                                            </div>
-                                        </div>
-                                        <h6 class="text-muted font-weight-normal">اطلاعات کاربر</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body text-center">
-                                        <h1 class="font-kalame-black">{{ Section.title }}</h1>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row Height-Max-1000 Height-Min-850">
-                            <div class="col-md-12 col-lg-12 col-xl-4 grid-margin stretch-card order-3 order-xl-0">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title text-right">چت ها</h3>
-                                        {% include 'Chat/Admin/filter-chats.html' with Filter_by=Filter_by %}
-                                        <div class="ChatsSection row" id="ChatsSection">
-                                            {% with Chat as ChatBase %} {% for Chat in Chats %}
-                                                {% include 'Chat/Admin/chat-section.html' with Chat=Chat UrlFilterBy=Url_Filter_by %}
-                                            {% empty %}
-                                                <div class="text-muted mx-auto d-flex justify-content-center align-items-center"
-                                                     style="height: 400px">
-                                                    <i class="mdi mdi-chat-alert fa-2x mr-2"></i>
-                                                    <h1>چتی یافت نشد</h1>
-                                                </div>
-                                            {% endfor %} {% endwith %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 col-lg-12 col-xl-8 grid-margin stretch-card" style="height: 885px">
-                                <div class="card">
-                                    <div id="SupChat" state="open">
-                                        <div id="ContainerBaseSupChat">
-                                            <div id="ContainerChatMessagesSupChat" class="ContainerSupChat">
-                                                <header id="HeaderSupChat">
-                                                    <div class="InfoUserChatHeader">
-                                                        <div>
-                                                            <h4 class="TitleSupportChat">{{ Chat.user.get_full_name }}</h4>
-                                                            <div class="ContainerStatusUser" status="default">
-                                                                <p id="StatusUserChat">-</p>
-                                                                <span></span>
-                                                            </div>
-                                                        </div>
-                                                        <img src="{{ Chat.user.get_image }}"
-                                                             alt="{{ Chat.user.get_full_name }}">
-                                                    </div>
-                                                </header>
-                                                <main id="MainSupChat"
-                                                      style="background: url('{{ SupChat.style.get_background_chat }}')">
-                                                    <div id="MessagesSupChat-{{ Chat.section.id }}"
-                                                         class="MessagesSupChat">
-                                                        {% for Message in Chat.get_messages_by_admin %}
-                                                            {% include 'Chat/Admin/message-chat-for-admin.html' with Message=Message %}
-                                                        {% endfor %}
-                                                    </div>
-                                                </main>
-                                                <footer id="FooterSupChat">
-                                                    <div id="TextEditedFooterSupChat">
-                                                        <p></p>
-                                                        <i class="fa fa-times"
-                                                           onclick="SUP_CHAT.editMessageTextCanceled()"></i>
-                                                    </div>
-                                                    <textarea id="InputTextMessageSupChat" type="text"
-                                                              placeholder="پیام . . ."></textarea>
-                                                    <div id="VoiceIsRecordingSupChat">
-                                                        <p class="TitleVoiceIsRecording">
-                                                            در حال ضبط صدا ...
-                                                        </p>
-                                                        <p id="ValueVoiceIsRecordingSupChat">0.0</p>
-                                                    </div>
-                                                    <div id="VoiceSendOrCancelSupChat" class="col-12">
-                                                        <div>
-                                                            <p>صدای ضبط شده</p>
-                                                            <p id="ValueVoiceIsRecordedSupChat">0.0</p>
-                                                        </div>
-                                                        <div>
-                                                            <button button-cancel-voice-supchat
-                                                                    onclick="SUP_CHAT.voiceRecordedCancel()"><i
-                                                                    class="fa fa-times"></i></button>
-                                                            <button button-send-voice-supchat
-                                                                    onclick="SUP_CHAT.sendVoiceRecorded()">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20px"
-                                                                     height="20px" viewBox="0 0 32 32">
-                                                                    <path d="M27.45,15.11l-22-11a1,1,0,0,0-1.08.12,1,1,0,0,0-.33,1L7,16,4,26.74A1,1,0,0,0,5,28a1,1,0,0,0,.45-.11l22-11a1,1,0,0,0,0-1.78Zm-20.9,10L8.76,17H18V15H8.76L6.55,6.89,24.76,16Z"/>
-                                                                </svg>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div id="VoiceInSendingSupChat">
-                                                        <p class="TitleVoiceIsRecording">
-                                                            در حال ارسال
-                                                        </p>
-                                                        <div class="VoiceInSendingSupChatLoading"><span></span>
-                                                        </div>
-                                                    </div>
-                                                    <div id="BtnsSendMessageFooterSupChat">
-                                                        <button id="ButtonSendMessageTextSupChat">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20px"
-                                                                 height="20px" viewBox="0 0 32 32">
-                                                                <path d="M27.45,15.11l-22-11a1,1,0,0,0-1.08.12,1,1,0,0,0-.33,1L7,16,4,26.74A1,1,0,0,0,5,28a1,1,0,0,0,.45-.11l22-11a1,1,0,0,0,0-1.78Zm-20.9,10L8.76,17H18V15H8.76L6.55,6.89,24.76,16Z"/>
-                                                            </svg>
-                                                        </button>
-                                                        <button id="ButtonRecordVoiceSupChat">
-                                                            <i class="fa fa-microphone-alt"></i>
-                                                        </button>
-                                                    </div>
-                                                </footer>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-                <!-- content-wrapper ends -->
-                <!-- partial:partials/_footer.html -->
-                <footer class="footer">
-                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                    <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © SupChat 2022 - <a
-                            href="http://fazelmomeni.codevar.ir">Fazel Momeni</a></span>
-                    </div>
-                </footer>
-                <!-- partial -->
-            </div>
-            <!-- main-panel ends -->
-        </div>
-        <!-- page-body-wrapper ends -->
+    <link rel="canonical" href="https://www.wrappixel.com/templates/adminwrap-lite/"/>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" href="{% static 'supchat/logo/logo.png' %}">
+    <!-- Bootstrap Core CSS -->
+    <link href="/assets/supchat/admin/node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/supchat/admin/node_modules/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
+    <!-- This page CSS -->
+    <!-- chartist CSS -->
+    <link href="/assets/supchat/admin/node_modules/morrisjs/morris.css" rel="stylesheet">
+    <!--c3 CSS -->
+    <link href="/assets/supchat/admin/node_modules/c3-master/c3.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/assets/supchat/admin/css/style.css" rel="stylesheet">
+    <!-- Dashboard 1 Page CSS -->
+    <link href="/assets/supchat/admin/css/pages/dashboard1.css" rel="stylesheet">
+    <!-- You can change the theme colors from here -->
+    <link href="/assets/supchat/admin/css/colors/default.css" id="theme" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <style>
+        @font-face {
+            src: url("/assets/supchat/font/Vazir-Regular.woff");
+            font-family: 'VazirMatn';
+        }
+
+        @font-face {
+            src: url("/assets/supchat/font/Kalameh-Black.woff");
+            font-family: 'KalameBlack';
+        }
+    </style>
+
+</head>
+
+
+<body class="fix-header fix-sidebar card-no-border">
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<div class="preloader">
+    <div class="loader">
+        <div class="loader__figure"></div>
+        <p class="loader__label">SupChat</p>
     </div>
-
-    {% if page_active == 'chat' %}
-        <div id="ContainerAdminsTransfer" class="col-12 col-md-6  offset-0 offset-md-3 ">
-            <div class="text-right">
-                <i class="fa fa-times" onclick="transferChatToOtherAdmin()"></i>
-            </div>
-            <div class="content" style="min-height: 90%">
-                <div class="text-center mb-5 text-warning col-12 col-md-9 mx-auto">
-                    <div class="d-flex justify-content-center align-items-center ">
-                        <i class="mdi mdi-account-multiple mx-2"></i>
-                        <h2 class="d-inline-block mx-2">لیست ادمین ها</h2>
-                    </div>
-                    <p class="text-muted text-center">انتقال چت</p>
+</div>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    {% include 'SupChat/Admin/components/header.html' %}
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    {% include 'SupChat/Admin/components/menu.html' %}
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="row page-titles text-right" dir="rtl">
+                <div class="col-12 align-self-center">
+                    <h2 class="text-themecolor">گفت و گو ها و بخش ها</h2>
                 </div>
-                {% for Admin in Section.get_admins %}
-                    {% if Admin.id != request.admin.id %}
-                        <button class="AdminSection" onclick="setIDAdminForTransferChat(this,'{{ Admin.id }}')">
-                            <img src="{{ Admin.get_image }}" alt="{{ Admin.get_full_name }}">
-                            <h5>{{ Admin.get_full_name }}</h5>
-                        </button>
-                    {% endif %}
-                {% endfor %}
-                <form action="{% url 'SupChat:admin_transfer_chat' %}" method="post" id="FormTransferChat"
-                      class="d-none">
-                    {% csrf_token %}
-                    <input type="hidden" name="chat-id" value="{{ Chat.id }}">
-                    <input type="hidden" name="admin-id">
-                </form>
             </div>
-            <button id="ButtonTransferChatSubmit">انتقال
-            </button>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Sales Chart and browser state-->
+            <!-- ============================================================== -->
+            {% for section in admin.get_sections %}
+                <div id="section-{{ section.id }}" class="section-chat row"
+                     count-message-text="{{ section.get_count_message_text }}">
+                    <!-- Column -->
+                    <div class="col-12">
+                        <div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-block d-sm-flex mb-4 no-block text-right justify-content-between align-items-center col-12" dir="rtl">
+                                        <h2 class="card-title mb-0 align-self-center">{{ section.title }}</h2>
+                                        <a href="" class="btn btn-success d-block font-16 mt-4">
+                                            <span>مشاهده گفت و گو ها</span>
+                                            <i class="fal fa-angle-left pt-1 pr-2 font-20 font-weight-bold"></i>
+                                        </a>
+                                    </div>
+                                    <div class="last-activity">
+                                        <span>اخرین فعالیت شما :</span>
+                                        <p> 3 روز پیش</p>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex no-block justify-content-between">
+                                        <div>
+                                            <ul class="list-inline text-center font-12">
+                                                <li><i class="fa fa-circle text-success"></i> پیام های متنی</li>
+                                                <li><i class="fa fa-circle text-primary"></i> پیام های صوتی</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h5 class="card-title mb-0">پیام های ارسال شده </h5>
+                                        </div>
+                                    </div>
+                                    <div class="" id="sales-chart" style="height: 330px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <!-- ============================================================== -->
+            <!-- End Sales Chart -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Notification And Feeds -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <!-- Start Notification -->
+                <div class="col-lg-12 col-md-12">
+                    <div class="card card-body mailbox">
+                        <h5 class="card-title">Notification</h5>
+                        <div class="message-center" style="height: 420px !important;">
+                            <!-- Message -->
+                            <a href="#">
+                                <div class="btn btn-danger btn-circle"><i class="fa fa-link"></i></div>
+                                <div class="mail-contnet">
+                                    <h6 class="text-dark font-medium mb-0">Luanch Admin</h6> <span class="mail-desc">Just see the my new admin!</span>
+                                    <span class="time">9:30 AM</span>
+                                </div>
+                            </a>
+                            <!-- Message -->
+                            <a href="#">
+                                <div class="btn btn-success btn-circle"><i class="fa fa-calendar-check-o"></i></div>
+                                <div class="mail-contnet">
+                                    <h6 class="text-dark font-medium mb-0">Event today</h6> <span class="mail-desc">Just a reminder that you have
+                                            event</span> <span class="time">9:10 AM</span>
+                                </div>
+                            </a>
+                            <!-- Message -->
+                            <a href="#">
+                                <div class="btn btn-info btn-circle"><i class="fa fa-cog text-white"></i></div>
+                                <div class="mail-contnet">
+                                    <h6 class="text-dark font-medium mb-0">Settings</h6> <span class="mail-desc">You can customize this template as you
+                                            want</span> <span class="time">9:08 AM</span>
+                                </div>
+                            </a>
+                            <!-- Message -->
+                            <a href="#">
+                                <div class="btn btn-primary btn-circle"><i class="fa fa-user"></i></div>
+                                <div class="mail-contnet">
+                                    <h6 class="text-dark font-medium mb-0">Pavan kumar</h6> <span class="mail-desc">Just see the my admin!</span>
+                                    <span
+                                            class="time">9:02 AM</span>
+                                </div>
+                            </a>
+                            <!-- Message -->
+                            <a href="#">
+                                <div class="btn btn-info btn-circle"><i class="fa fa-cog text-white"></i></div>
+                                <div class="mail-contnet">
+                                    <h6 class="text-dark font-medium mb-0">Customize Themes</h6> <span
+                                        class="mail-desc">You can customize this template as you
+                                            want</span> <span class="time">9:08 AM</span>
+                                </div>
+                            </a>
+                            <!-- Message -->
+                            <a href="#">
+                                <div class="btn btn-primary btn-circle"><i class="fa fa-user"></i></div>
+                                <div class="mail-contnet">
+                                    <h6 class="text-dark font-medium mb-0">Pavan kumar</h6> <span class="mail-desc">Just see the my admin!</span>
+                                    <span
+                                            class="time">9:02 AM</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Notification -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Notification And Feeds -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- End Page Content -->
+            <!-- ============================================================== -->
         </div>
-    {% endif %}
-{% endblock %}
-{% block Js %}
-    <script src="{% static 'supchat/admin/vendors/chart.js/Chart.min.js' %}"></script>
-    <script src="{% static 'supchat/jq/jquery.min.js' %}"></script>
-    <script src="{% static 'supchat/admin/vendors/progressbar.js/progressbar.min.js' %}"></script>
-    <script src="{% static 'supchat/admin/js/off-canvas.js' %}"></script>
-    <script src="{% static 'supchat/admin/js/misc.js' %}"></script>
-    <script src="{% static 'supchat/admin/js/dashboard.js' %}"></script>
-    <script src="{% static 'supchat/admin/js/admin/index.js' %}"></script>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/footer.html' %}
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<script src="/assets/supchat/admin/node_modules/jquery/jquery.min.js"></script>
+<!-- Bootstrap popper Core JavaScript -->
+<script src="/assets/supchat/admin/node_modules/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script src="/assets/supchat/admin/js/perfect-scrollbar.jquery.min.js"></script>
+<!--Wave Effects -->
+<script src="/assets/supchat/admin/js/waves.js"></script>
+<!--Menu sidebar -->
+<script src="/assets/supchat/admin/js/sidebarmenu.js"></script>
+<!--Custom JavaScript -->
+<script src="/assets/supchat/admin/js/custom.min.js"></script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!--morris JavaScript -->
+<script src="/assets/supchat/admin/node_modules/raphael/raphael-min.js"></script>
+<script src="/assets/supchat/admin/node_modules/morrisjs/morris.min.js"></script>
+<!--c3 JavaScript -->
+<script src="/assets/supchat/admin/node_modules/d3/d3.min.js"></script>
+<script src="/assets/supchat/admin/node_modules/c3-master/c3.min.js"></script>
+<!-- Chart JS -->
+<script src="/assets/supchat/admin/js/dashboard1.js"></script>
 
-    {% if page_active == 'chat' %}
-        <script>
-            window.ID_CHAT = '{{ Chat.id }}'
-            window.ID_SECTION = '{{ Chat.section_id }}'
-            ScrollToDownContainer(document.querySelector('.MessagesSupChat'))
-            let SUP_CHAT = new ChatAdmin(window.ID_SECTION, window.ID_CHAT)
-            {% if Filter_by == 'all' %}
-                let SUP_CHAT_SECTION = new ChatAdminSection(window.ID_SECTION)
-            {% endif %}
-        </script>
-    {% endif %}
-    {% if page_active == 'section' %}
-        <script>
-            window.ID_SECTION = '{{ Section.id }}'
-            {% if Filter_by == 'all' %}
-                let SUP_CHAT_SECTION = new ChatAdminSection(window.ID_SECTION)
-            {% endif %}
-        </script>
-    {% endif %}
-{% endblock %}
+
+<script src="/assets/supchat/js/elements.js"></script>
+<script src="/assets/supchat/js/tools.js"></script>
+<script src="/assets/supchat/js/request_response.js"></script>
+<script src="/assets/supchat/js/index.js"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+<script>
+    {#const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'#}
+    {#const URL_BACKEND_SUPCHAT = 'http://192.168.1.142:8002'#}
+    {#const ROOT_URL_ASSETS_SUPCHAT = '/assets/'#}
+    {#let _supchat_json = JSON.parse('{{ supchat|escapejs  }}')#}
+    {#let _chat_json = JSON.parse('{{ chat|escapejs  }}')#}
+    {#const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)#}
+    {#SUP_CHAT.run()#}
+</script>
+</body>
+</html>
+
+

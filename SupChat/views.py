@@ -484,6 +484,12 @@ def send_voice_message(request):
 
 
 @decorators.admin_authenticated
+def view_admin(request):
+    context = {}
+    context['admin'] = request.admin
+    return render(request,'SupChat/Admin/admin-panel.html',context)
+
+@decorators.admin_authenticated
 def view_chat_admin(request, chat_id):
     context = {}
     chat = ChatGroup.objects.filter(id=chat_id, admin=request.admin, is_active=True).first()

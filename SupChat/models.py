@@ -1,6 +1,6 @@
 from django.db import models
-from django.db.models import F, Max, Count, Sum, Q
-from django.urls import reverse, resolve, reverse_lazy
+from django.db.models import F, Max, Count, Sum, Q, Value
+from django.db.models.functions import TruncDay, ExtractDay
 from django.utils import timezone
 from django.templatetags.static import static
 from model_utils.managers import InheritanceManager
@@ -8,6 +8,7 @@ from SupChat.core.tools import RandomString, GetDifferenceTime
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from SupChat.config import USER
+import json
 
 
 def upload_image_background_chat(instance, path):
@@ -63,10 +64,12 @@ class SupChatConfig(models.Model):
                                        default=""" پشتیبانی سایت ما در کوتاه ترین زمان ممکن پاسخگوی شما دوست عزیز است لطفا پیام خود را بگذارید .""")
     default_notif_is_active = models.BooleanField(default=True)
     default_notif_show_after = models.IntegerField(default=5, help_text='پس از گذشت چند ثانیه نمایش داده شود')  # Second
-    default_notif_message = models.CharField(max_length=200, null=True, blank=True, default="""سلام ، چطور میتوانم کمک کنم ؟""")
+    default_notif_message = models.CharField(max_length=200, null=True, blank=True,
+                                             default="""سلام ، چطور میتوانم کمک کنم ؟""")
     notif_is_active = models.BooleanField(default=True)
     notif_sound_is_active = models.BooleanField(default=True)
-    end_chat_auto = models.BooleanField(default=False,help_text='ممکن است گاهی چت بسته نشود(کاربر قبل از زمان معین شده صفحه را ببندد)')
+    end_chat_auto = models.BooleanField(default=False,
+                                        help_text='ممکن است گاهی چت بسته نشود(کاربر قبل از زمان معین شده صفحه را ببندد)')
     end_chat_after = models.IntegerField(default=30,
                                          help_text='پس از مدتی بدون فعالیت چت به صورت خودکار بسته میشود .')  # Second
     show_title_section = models.BooleanField(default=True)
@@ -93,50 +96,13 @@ class Section(models.Model):
     def get_admin_less_busy(self):
         return self.admin_set.order_by('-chatgroup__is_active').first()
 
-    def get_count_message_text(self):
-        return self.chatgroup_set.all().count()
-
-    # def get_chats(self):
-    #     """
-    #         sort chats by last message
-    #     """
-    #     chats = self.chatgroup_set.filter(isActive=True).annotate(last_message=Max('message__id')).order_by(
-    #         '-last_message')
-    #     return chats
-    #
-    # def get_chats_by_admin(self, admin):
-    #     return self.get_chats().filter(admin=admin,message__deleted=False)
-    #
-    # def get_messages_by_user(self, user):
-    #     chat = self.chatgroup_set.filter(user=user).first()
-    #     if chat:
-    #         return chat.get_messages_by_user()
-    #     return []
-    #
-    # def get_messages_by_admin(self, section):
-    #     chat = self.chatgroup_set.filter(section=section).first()
-    #     if chat:
-    #         return chat.get_messages_by_admin()
-    #     return []
-    #
-    # def get_messages_unread_count_by_admin(self,admin):
-    #     return self.chatgroup_set.filter(isActive=True,message__seen=False,message__deleted=False,message__sender='user',admin=admin).aggregate(count=Count('message'))['count']
-    #
-    # def get_messages_count_by_admin(self,admin):
-    #     return self.chatgroup_set.filter(isActive=True,message__deleted=False,admin=admin).aggregate(
-    #         count=Count('message'))['count']
-    #
-    # def get_title_as_slug(self):
-    #     return str(self.title).replace(' ', '-')
-    #
-    # def get_absolute_url_admin(self):
-    #     return reverse('SupChat:admin_panel_section', args=(self.id, self.get_title_as_slug()))
-    #
-    # def get_admins(self):
-    #     return self.admin_set.all()
-    #
-    # def get_last_two_admins(self):
-    #     return self.get_admins()[:2]
+    def get_data_chart_count_chats(self, admin=None):
+        lookup = ''
+        if admin:
+            lookup = Q(admin=admin)
+        chats = self.chatgroup_set.filter(lookup).annotate(day=ExtractDay('date_time_created')).values('day').annotate(
+                count_chat=Count('id')).values('day', 'count_chat')
+        return json.dumps(list(chats))
 
 
 class Admin(models.Model):
@@ -173,10 +139,12 @@ class Admin(models.Model):
         diff_sec = GetDifferenceTime(self.last_seen)
         return diff_sec
 
-
     def get_sections(self):
-        return self.sections.filter(is_active=True).all()
-
+        sections = self.sections.filter(is_active=True).all()
+        # Add data for charts and more ...
+        for section in sections:
+            setattr(section, 'data_chart_messages', section.get_data_chart_count_chats(self))
+        return sections
 
     #
     # def get_group_name_admin_in_section(self, section):
@@ -258,6 +226,7 @@ class ChatGroup(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     admin = models.ForeignKey('Admin', on_delete=models.CASCADE)
     section = models.ForeignKey('Section', on_delete=models.CASCADE)
+    date_time_created = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     type_close = models.CharField(max_length=30, choices=TYPE_CLOSE_CHOICE, null=True, blank=True)
     rate_chat = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(5)])
@@ -282,6 +251,12 @@ class ChatGroup(models.Model):
 
     def seen_message_user(self):
         self.message_set.filter(sender='admin', seen=False).update(seen=True)
+
+    def get_count_textmessage(self):
+        return self.message_set.select_subclasses().filter(textmessage__type='text').count()
+
+    def get_count_audiomessage(self):
+        return self.message_set.select_subclasses().filter(audiomessage__type='audio').count()
 
     # def get_messages_by_user(self):
     #     messages = self.message_set.filter(deleted=False).select_subclasses().all()
@@ -359,6 +334,7 @@ class MessageBase(models.Model):
         ('user', 'User'),
         ('user', 'User'),
     )
+
     chat = models.ForeignKey('ChatGroup', on_delete=models.CASCADE)
     date_time_send = models.DateTimeField(auto_now_add=True)
     sender = models.CharField(max_length=10, choices=SENDER_MESSAGE)

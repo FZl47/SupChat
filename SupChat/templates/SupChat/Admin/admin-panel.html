@@ -123,13 +123,15 @@
             <!-- ============================================================== -->
             {% for section in admin.get_sections %}
                 <div id="section-{{ section.id }}" class="section-chat row"
-                     count-message-text="{{ section.get_count_message_text }}">
+                     section-id="{{ section.id }}"
+                     data-chart="{{ section.data_chart_messages }}">
                     <!-- Column -->
                     <div class="col-12">
                         <div>
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="d-block d-sm-flex mb-4 no-block text-right justify-content-between align-items-center col-12" dir="rtl">
+                                    <div class="d-block d-sm-flex mb-4 no-block text-right justify-content-between align-items-center col-12"
+                                         dir="rtl">
                                         <h2 class="card-title mb-0 align-self-center">{{ section.title }}</h2>
                                         <a href="" class="btn btn-success d-block font-16 mt-4">
                                             <span>مشاهده گفت و گو ها</span>
@@ -144,16 +146,20 @@
                                 <div class="card-body">
                                     <div class="d-flex no-block justify-content-between">
                                         <div>
-                                            <ul class="list-inline text-center font-12">
-                                                <li><i class="fa fa-circle text-success"></i> پیام های متنی</li>
-                                                <li><i class="fa fa-circle text-primary"></i> پیام های صوتی</li>
+                                            <ul class="list-inline text-center font-10">
+                                                <li><i class="fa fa-circle" style="color:rgb(78,213,213) "></i> تعداد
+                                                    گفت و گو ها
+                                                </li>
                                             </ul>
                                         </div>
                                         <div>
-                                            <h5 class="card-title mb-0">پیام های ارسال شده </h5>
+                                            <h5 class="card-title mb-0">تعداد گفت و گو ها</h5>
                                         </div>
                                     </div>
-                                    <div class="" id="sales-chart" style="height: 330px;"></div>
+                                    {#                                    <div class="" id="section-chart-{{ section.id }}" style="height: 300px;"></div>#}
+                                    <div style="height: 300px!important;">
+                                        <canvas id="section-chart-{{ section.id }}"></canvas>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -280,6 +286,8 @@
 <script src="/assets/supchat/admin/js/dashboard1.js"></script>
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
 <script src="/assets/supchat/js/elements.js"></script>
 <script src="/assets/supchat/js/tools.js"></script>
 <script src="/assets/supchat/js/request_response.js"></script>
@@ -288,6 +296,15 @@
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    // ======================
+    //      Init Charts
+    let all_section = document.querySelectorAll('.section-chat')
+    for (let section of all_section) {
+        create_chart_section_chats(`${section.getAttribute('section-id')}`, section.getAttribute('data-chart'))
+    }
+    //=======================
+
 </script>
 <script>
     {#const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'#}

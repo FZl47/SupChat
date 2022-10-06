@@ -1,0 +1,149 @@
+{% extends 'SupChat/Base/BaseTemplateSupChat.html' %}
+{% load static %}
+{% load supchat_filter %}
+
+
+{% block Title %}
+    <title>SupChat Admin - #گفت و گو {{ chat.id }}</title>
+{% endblock %}
+
+
+{% block Content %}
+    <body class="fix-header fix-sidebar card-no-border">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">SupChat</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/header.html' %}
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/menu.html' %}
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+
+                <div class="row page-titles text-right" dir="rtl">
+                    <div class="col-12 align-self-center">
+                        <h1 class="text-themecolor"> گفت و گو </h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'SupChat:view_admin' %}">گفت و گو ها</a></li>
+                            <li class="breadcrumb-item"><a
+                                    href="{{ chat.section.get_absolute_url }}">بخش {{ chat.section.title }}</a></li>
+                            <li class="breadcrumb-item active"> گفت و گو {{ chat.id }}#</li>
+                        </ol>
+                    </div>
+                </div>
+                <div>
+                    <div class="card">
+                        <div class="card-body text-right">
+                            <h5 class="card-title text-right mb-4">تنظیمات</h5>
+                            <div class="container-settings-chat">
+                                <button class="btn btn-primary font-14 mx-2">
+                                    <i class="fal fa-user-headset"></i>
+                                    انتقال گفت و گو
+                                </button>
+                                <button class="btn btn-danger font-14 mx-2">
+                                    <i class="fal fa-ban"></i>
+                                    افزودن به لیست سیاه
+                                </button>
+                                <button class="btn btn-light font-14 mx-2">
+                                    <i class="fal fa-sign-out-alt"></i>
+                                    پایان گفت و گو
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-7 order-1 order-md-0">
+                        <div class="card card-body mailbox">
+                            <h5 class="card-title text-right">گفت و گو ها</h5>
+                            <div class="chats-list" style="height: 530px !important;">
+                                <!-- Chat list -->
+                                {% for chat in chat.section.get_chats_active %}
+                                    {% include 'SupChat/Admin/components/chat-list.html' with chat=chat %}
+                                {% empty %}
+                                    <div class="d-flex-force flex-column justify-content-center align-items-center">
+                                        <img src="{% static 'supchat/images/default/chat-not-found.png' %}"
+                                             alt="Chat not found" class="mx-auto" style="width: 400px;max-width: 100%">
+                                        <p class="text-gray font-20">گفت و گویی یافت نشد</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5">
+                        <div class="card card-body mailbox text-center d-flex-force justify-content-center"
+                             style="height: 600px !important;">
+                            <div id="SupChat" state="open">
+                                <!-- SupChat elements -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Notification And Feeds -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- End Page Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            {% include 'SupChat/Admin/components/footer.html' %}
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+
+    </body>
+{% endblock %}
+
+
+{% block Js %}
+    <script>
+        const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'
+        const ROOT_URL_ASSETS_SUPCHAT = '/assets/'
+        let _supchat_json = JSON.parse('{{ supchat_json|escapejs  }}')
+        let _chat_json = JSON.parse('{{ chat_json|escapejs  }}')
+        const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)
+        SUP_CHAT.run()
+    </script>
+{% endblock %}
+

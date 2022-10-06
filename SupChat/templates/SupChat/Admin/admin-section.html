@@ -1,0 +1,220 @@
+{% extends 'SupChat/Base/BaseTemplateSupChat.html' %}
+{% load static %}
+{% load supchat_filter %}
+
+
+{% block Title %}
+    <title>SupChat Admin - {{ section.title }}</title>
+{% endblock %}
+
+
+{% block Content %}
+    <body class="fix-header fix-sidebar card-no-border">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">SupChat</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/header.html' %}
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/menu.html' %}
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles text-right" dir="rtl">
+                    <div class="col-12 align-self-center">
+                        <h1 class="text-themecolor">بخش {{ section.title }}</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'SupChat:view_admin' %}">گفت و گو ها</a></li>
+                            <li class="breadcrumb-item active">بخش {{ section.title }}</li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Sales Chart and browser state-->
+                <!-- ============================================================== -->
+                <div id="section-{{ section.id }}" class="section-chat row"
+                     section-id="{{ section.id }}"
+                     data-chart-count-chats="{{ section|get_data_chart_section_count_charts:request.admin }}"
+                     data-chart-rate-chats="{{ section|get_data_chart_section_rate_chats:request.admin }}"
+                >
+                    <!-- Column -->
+                    <div class="col-12">
+                        <div>
+                            <div class="card">
+                                <div class="card-body text-right">
+                                    <div class="d-block d-sm-flex mb-4 no-block text-right justify-content-between align-items-center col-12"
+                                         dir="rtl">
+                                        <h2 class="card-title mb-0 align-self-center">اطلاعات</h2>
+                                    </div>
+                                    <div>
+                                        <span class="font-18">
+                                             <i class="fal fa-user-friends"></i>
+                                             12
+                                        </span>
+                                        <span class="d-inline-block font-12 text-gray" style="width: 100px">
+                                            : تعداد گفت و گو ها
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span class="font-18">
+                                             <i class="fal fa-comments"></i>
+                                             12
+                                        </span>
+                                        <span class="d-inline-block font-12 text-gray" style="width: 100px">
+                                            : تعداد پیام ها
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="d-block d-lg-flex justify-content-around align-items-start">
+                                    <div class="card-body col-12 col-lg-7">
+                                        <div class="d-flex no-block justify-content-between mb-4">
+                                            <div>
+                                                <ul class="list-inline text-center font-10">
+                                                    <li><i class="fa fa-circle" style="color:rgb(78,213,213) "></i>
+                                                        تعداد
+                                                        گفت و گو ها
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h5 class="card-title mb-0">تعداد گفت و گو ها</h5>
+                                            </div>
+                                        </div>
+                                        <div style="height: 270px!important;">
+                                            <canvas id="section-chart-count-chats-{{ section.id }}"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="card-body col-12 col-lg-4">
+                                        <div class="d-flex no-block mb-4" dir="rtl">
+                                            <div>
+                                                <h5 class="card-title mb-0">نظرسنجی گفت و گو ها</h5>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <canvas class="m-auto" id="section-chart-rate-chats-{{ section.id }}"
+                                                    style="width: 270px;height: 270px;max-width: 100%;max-height: 100%"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- End Sales Chart -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Notification And Feeds -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-12 col-md-8 order-1 order-md-0">
+                        <div class="card card-body mailbox">
+                            <h5 class="card-title text-right">گفت و گو ها</h5>
+                            <div class="chats-list" style="height: 520px !important;">
+                                <!-- Chat list -->
+                                {% for chat in section.get_chats_active %}
+                                    {% include 'SupChat/Admin/components/chat-list.html' with chat=chat %}
+                                {% empty %}
+                                    <div class="d-flex-force flex-column justify-content-center align-items-center">
+                                        <img src="{% static 'supchat/images/default/chat-not-found.png' %}"
+                                             alt="Chat not found" class="mx-auto" style="width: 400px;max-width: 100%">
+                                        <p class="text-gray font-20">گفت و گویی یافت نشد</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="card card-body mailbox text-center d-flex-force justify-content-center"
+                             style="height: 580px !important;">
+                            <img src="{% static 'supchat/images/default/chat-not-found.png' %}" alt="Chat not found"
+                                 class="mx-auto" style="width: 300px;max-width: 100%">
+                            <p class="text-gray font-20">گفت و گویی یافت نشد</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Notification And Feeds -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- End Page Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            {% include 'SupChat/Admin/components/footer.html' %}
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+
+    </body>
+{% endblock %}
+
+
+{% block Js %}
+    <script>
+        // ======================
+        //      Init Charts
+        let all_section = document.querySelectorAll('.section-chat')
+        for (let section of all_section) {
+            create_chart_section_count_chats(`${section.getAttribute('section-id')}`, section.getAttribute('data-chart-count-chats'))
+            create_chart_section_rate_chats(`${section.getAttribute('section-id')}`, section.getAttribute('data-chart-rate-chats'))
+        }
+        //=======================
+    </script>
+    <script>
+        {#const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'#}
+        {#const URL_BACKEND_SUPCHAT = 'http://192.168.1.142:8002'#}
+        {#const ROOT_URL_ASSETS_SUPCHAT = '/assets/'#}
+        {#let _supchat_json = JSON.parse('{{ supchat|escapejs  }}')#}
+        {#let _chat_json = JSON.parse('{{ chat|escapejs  }}')#}
+        {#const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)#}
+        {#SUP_CHAT.run()#}
+    </script>
+{% endblock %}
+

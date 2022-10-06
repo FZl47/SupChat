@@ -1,0 +1,38 @@
+{% with chat.get_last_message as last_message %}
+    <a class="chat-list content-message-supchat" id="chat-{{ chat.id }}" href="{{ chat.get_absolute_url }}"
+       title="{{ chat.user.get_full_name }}"
+            {% if last_message.sender == 'admin' %}
+       seen="{{ last_message.seen|yesno:'true,false' }}"
+            {% endif %}
+       edited="{{ last_message.edited|yesno:'true,false' }}"
+    >
+        <img class="btn-circle" style="width: 60px;height: 60px;background: rgba(236,236,236,0.1)"
+             src="{{ chat.user.get_image }}" alt="{{ chat.user.get_full_name }}">
+        <div class="mail-contnet">
+            <div>
+                <p class="text-dark font-16 mb-0">{{ chat.user.get_full_name }}</p>
+                <span container-message class="mail-desc"
+                      style="font-size: 110%!important;">{{ last_message.get_text }}</span>
+                <span container-time class="time mt-2">{{ last_message.get_time }}</span>
+                {% if last_message.sender == 'user' %}
+                    {% if chat.get_count_unread_message_by_admin %}
+                        <span class="position-absolute text-purple text-center" style="bottom: 10px;right: 10px">
+                            {{ chat.get_count_unread_message_by_admin }}
+                            <i class="fal fa-comment-plus"></i>
+                        </span>
+                    {% endif %}
+                {% elif last_message.sender == 'admin' %}
+                    <div class="position-absolute" style="right: 10px;bottom: 10px">
+                        <i class="fal fa-check-double" icon-seen-true></i>
+                        <i class="fal fa-check" icon-seen-false></i>
+                    </div>
+                {% elif last_message.sender == 'system' %}
+
+                {% endif %}
+                <i container-icon-edited
+                   class="position-absolute icon-message-edited-supchat fal fa-pen text-gray font-12"
+                   style="bottom: 13px;right: 32px"></i>
+            </div>
+        </div>
+    </a>
+{% endwith %}

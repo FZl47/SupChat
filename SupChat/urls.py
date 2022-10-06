@@ -15,7 +15,6 @@ websocket_urlpatterns = [
 ]
 
 urlpatterns = [
-    # ---------------- V3 ----------------
     path('run',views.sup_chat_run_user),
     path('start-chat',views.start_chat),
     path('submit-rate-chat/<int:chat_id>',views.submit_rate_chat),
@@ -25,6 +24,7 @@ urlpatterns = [
 
     # Admin
     path('admin',views.view_admin,name='view_admin'),
+    path('admin/section/<int:section_id>',views.view_section_admin,name='view_section_admin'),
     path('admin/chat/<int:chat_id>',views.view_chat_admin,name='view_chat_admin'),
     path('admin/login',views.view_login_admin,name='view_login_admin'),
 ]

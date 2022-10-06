@@ -5556,39 +5556,39 @@ File: scss
     padding-top: 15px;
 }
 
-.mailbox .message-center {
+.mailbox .chats-list {
     height: 317px;
     overflow: auto;
     position: relative;
 }
 
-.mailbox .message-center a {
+.mailbox .chats-list a {
     border-bottom: 1px solid rgba(120, 130, 140, 0.13);
     display: block;
     text-decoration: none;
     padding: 9px 15px;
 }
 
-.mailbox .message-center a:hover {
+.mailbox .chats-list a:hover {
     background: #f6f9fa;
 }
 
-.mailbox .message-center a div {
+.mailbox .chats-list a div {
     white-space: normal;
 }
 
-.mailbox .message-center a .user-img {
+.mailbox .chats-list a .user-img {
     width: 40px;
     position: relative;
     display: inline-block;
     margin: 0 10px 15px 0;
 }
 
-.mailbox .message-center a .user-img img {
+.mailbox .chats-list a .user-img img {
     width: 100%;
 }
 
-.mailbox .message-center a .user-img .profile-status {
+.mailbox .chats-list a .user-img .profile-status {
     border: 2px solid #ffffff;
     border-radius: 50%;
     display: inline-block;
@@ -5599,35 +5599,35 @@ File: scss
     width: 10px;
 }
 
-.mailbox .message-center a .user-img .online {
+.mailbox .chats-list a .user-img .online {
     background: #24d2b5;
 }
 
-.mailbox .message-center a .user-img .busy {
+.mailbox .chats-list a .user-img .busy {
     background: #ff5c6c;
 }
 
-.mailbox .message-center a .user-img .away {
+.mailbox .chats-list a .user-img .away {
     background: #ff9041;
 }
 
-.mailbox .message-center a .user-img .offline {
+.mailbox .chats-list a .user-img .offline {
     background: #ff9041;
 }
 
-.mailbox .message-center a .mail-contnet {
+.mailbox .chats-list a .mail-contnet {
     display: inline-block;
     width: 75%;
     padding-left: 10px;
     vertical-align: middle;
 }
 
-.mailbox .message-center a .mail-contnet h5 {
+.mailbox .chats-list a .mail-contnet h5 {
     margin: 5px 0px 0;
 }
 
-.mailbox .message-center a .mail-contnet .mail-desc,
-.mailbox .message-center a .mail-contnet .time {
+.mailbox .chats-list a .mail-contnet .mail-desc,
+.mailbox .chats-list a .mail-contnet .time {
     font-size: 12px;
     display: block;
     margin: 1px 0;
@@ -6283,6 +6283,10 @@ File: scss
     color: #ffffff;
 }
 
+.d-flex-force {
+    display: flex !important;
+}
+
 /*
 Template Name: Admin Pro Admin
 Author: Wrappixel
@@ -6652,12 +6656,75 @@ File: scss
     }
 }
 
-.last-activity{
+
+.container-settings-chat {
+    white-space: nowrap;
+    overflow: auto;
+    padding-bottom: 20px;
+}
+
+.container-settings-chat::-webkit-scrollbar {
+    height: 4px;
+    width: 10px;
+    border-radius: 10px;
+}
+
+.container-settings-chat::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.container-settings-chat::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 10px;
+}
+
+.container-settings-chat::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+#SupChat {
+    position: static;
+    width: 100% !important;
+    height: 100% !important;
+    box-shadow: none;
+    background: none;
+    font-size: 110%;
+    /*border: none;*/
+}
+
+
+#btn-scroll-down-chat-supchat {
+    bottom: 118px;
+    left: 7px;
+}
+
+#BtnCloseSupChat {
+    display: none;
+}
+
+#btn-more-option-chat-supchat {
+    display: none;
+}
+
+.chat-list {
+    position: relative;
+}
+
+.chats-list .content-message-supchat {
+    max-width: 100%;
+}
+
+.text-gray {
+    color: #999999 !important;
+}
+
+.last-activity {
     text-align: right;
     direction: rtl;
 }
 
-.last-activity span{
+.last-activity span {
     font-size: 90%;
     color: rgba(136, 136, 136, 0.6);
 }
@@ -6673,15 +6740,15 @@ File: scss
 
 }
 
-.items-info-section li{
+.items-info-section li {
     position: relative;
     width: 120px;
     font-size: 120%;
     margin: 10px 10px;
-    padding: 10px!important;
+    padding: 10px !important;
     border-radius: 3px;
 }
 
-.items-info-section li:nth-of-type(1){
-    background: linear-gradient(to right,transparent,rgba(255,104,87,0.1),transparent);
+.items-info-section li:nth-of-type(1) {
+    background: linear-gradient(to right, transparent, rgba(255, 104, 87, 0.1), transparent);
 }

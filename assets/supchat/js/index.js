@@ -227,19 +227,6 @@ class SupChat {
         }
     }
 
-    toggle_supchat(state) {
-        if (state == 'open') {
-            SUP_CHAT.ELEMENTS.supchat.setAttribute('state', 'open')
-            SUP_CHAT.ELEMENTS.btn_open_supchat.classList.add('d-none')
-            SUP_CHAT.hide_notification()
-            SUP_CHAT.scroll_to_down_chat()
-            SUP_CHAT.IS_OPEN = true
-        } else {
-            SUP_CHAT.ELEMENTS.supchat.setAttribute('state', 'close')
-            SUP_CHAT.ELEMENTS.btn_open_supchat.classList.remove('d-none')
-            SUP_CHAT.IS_OPEN = false
-        }
-    }
 
     toggle_container_supchat_content(state) {
         if (state == 'show') {
@@ -387,15 +374,17 @@ class SupChat {
     _events() {
         let elements = SUP_CHAT.ELEMENTS
 
+        if (elements.btn_open_supchat) {
+            elements.btn_open_supchat.addEventListener('click', function () {
+                if (SUP_CHAT.CHAT_INITED == false && !SUP_CHAT.CHAT) {
+                    SUP_CHAT._init_chat_or_register()
+                }
+                SUP_CHAT.toggle_supchat('open')
+                // Seen message request
+                RequestSupChat.seen_message.send()
+            })
+        }
 
-        elements.btn_open_supchat.addEventListener('click', function () {
-            if (SUP_CHAT.CHAT_INITED == false && !SUP_CHAT.CHAT) {
-                SUP_CHAT._init_chat_or_register()
-            }
-            SUP_CHAT.toggle_supchat('open')
-            // Seen message request
-            RequestSupChat.seen_message.send()
-        })
 
         elements.btn_close_supchat.addEventListener('click', function () {
             SUP_CHAT.toggle_supchat('close')
@@ -526,9 +515,12 @@ class SupChat {
             SUP_CHAT.set_default_info_for_edit_message()
         })
 
-        elements.notification_supchat.addEventListener('click', function () {
-            SUP_CHAT.ELEMENTS.btn_open_supchat.click()
-        })
+        if (elements.notification_supchat) {
+            elements.notification_supchat.addEventListener('click', function () {
+                SUP_CHAT.ELEMENTS.btn_open_supchat.click()
+            })
+        }
+
 
         elements.btn_end_chat_supchat.addEventListener('click', function () {
             RequestSupChat.chat_end.send()
@@ -868,6 +860,20 @@ class ChatUser extends SupChat {
         })
     }
 
+    toggle_supchat(state) {
+        if (state == 'open') {
+            SUP_CHAT.ELEMENTS.supchat.setAttribute('state', 'open')
+            SUP_CHAT.ELEMENTS.btn_open_supchat.classList.add('d-none')
+            SUP_CHAT.hide_notification()
+            SUP_CHAT.scroll_to_down_chat()
+            SUP_CHAT.IS_OPEN = true
+        } else {
+            SUP_CHAT.ELEMENTS.supchat.setAttribute('state', 'close')
+            SUP_CHAT.ELEMENTS.btn_open_supchat.classList.remove('d-none')
+            SUP_CHAT.IS_OPEN = false
+        }
+    }
+
     _set_info_chat() {
         let admin = this.CHAT.admin
         this.ELEMENTS.image_user_chat_supchat.src = admin.image
@@ -978,6 +984,29 @@ class ChatAdmin extends SupChat {
         this._set_info_chat()
         this._events()
         this.init_chat()
+        this.toggle_supchat('open')
+    }
+
+    toggle_supchat(state) {
+        if (state == 'open') {
+            SUP_CHAT.ELEMENTS.supchat.setAttribute('state', 'open')
+            SUP_CHAT.scroll_to_down_chat()
+            SUP_CHAT.IS_OPEN = true
+        } else {
+            SUP_CHAT.ELEMENTS.supchat.setAttribute('state', 'close')
+            SUP_CHAT.IS_OPEN = false
+        }
+    }
+
+    _create_element_supchat() {
+        let supchat = document.getElementById('SupChat')
+        if (this.CONFIG.language == 'fa') {
+            supchat.dir = 'rtl'
+        } else {
+            supchat.dir = 'ltr'
+        }
+        supchat.id = 'SupChat'
+        supchat.innerHTML = get_node_supchat()
     }
 
     _set_info_chat() {
@@ -1004,8 +1033,8 @@ class ChatAdmin extends SupChat {
 
 
         // Add theme default
-        // _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
-        _add_css_link(get_link_assets_supchat('css/theme/default.css', false, true))
+        _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
+        // _add_css_link(get_link_assets_supchat('css/theme/default.css', false, true))
     }
 
     // Remove notification admin and Added notification web instead

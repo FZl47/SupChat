@@ -3,77 +3,117 @@
 <html lang="en">
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <meta charset="UTF-8">
-    <title>
-        {% block Title %}
-        {% endblock %}
-    </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-
-    -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="{% static 'supchat/font_awesome/css/all.css' %}">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="{% static 'supchat/css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/audio_simple/style.css' %}">
-    <script src="{% static 'supchat/audio_simple/js.js' %}"></script>
-    {% block Link %}
+    {% block Title %}
 
     {% endblock %}
+    {#    <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro@4cac1a6/css/all.css" rel="stylesheet"#}
+    {#          type="text/css"/>#}
+    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">#}
+    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">#}
+    <link rel="stylesheet" href="/assets/supchat/font_awesome/css/all.css">
+    <link rel="stylesheet" href="/assets/supchat/bootstrap/css/bootstrap.min.css">
+    <style>
+        @font-face {
+            src: url("/assets/supchat/font/Vazir-Regular.woff");
+            font-family: 'VazirMatn';
+        }
+
+        @font-face {
+            src: url("/assets/supchat/font/Kalameh-Black.woff");
+            font-family: 'KalameBlack';
+        }
+    </style>
+
+
+    <link rel="stylesheet" href="/assets/supchat/css/supchat.css">
+    <link rel="stylesheet" href="/assets/supchat/css/tools.css">
+    <link rel="stylesheet" href="/assets/supchat/audio_simple/style.css">
+    <script src="/assets/supchat/audio_simple/js.js"></script>
+
+    <meta name="robots" content="noindex,nofollow">
+
+    <link rel="canonical" href="https://www.wrappixel.com/templates/adminwrap-lite/"/>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" href="{% static 'supchat/logo/logo.png' %}">
+    <!-- Bootstrap Core CSS -->
+    <link href="/assets/supchat/admin/node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/supchat/admin/node_modules/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
+    <!-- This page CSS -->
+    <!-- chartist CSS -->
+    <link href="/assets/supchat/admin/node_modules/morrisjs/morris.css" rel="stylesheet">
+    <!--c3 CSS -->
+    <link href="/assets/supchat/admin/node_modules/c3-master/c3.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/assets/supchat/admin/css/style.css" rel="stylesheet">
+    <!-- Dashboard 1 Page CSS -->
+    <link href="/assets/supchat/admin/css/pages/dashboard1.css" rel="stylesheet">
+    <!-- You can change the theme colors from here -->
+    <link href="/assets/supchat/admin/css/colors/default.css" id="theme" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
     <style>
         @font-face {
-            font-family: 'Shabnam';
-            src: url("{% static 'supchat/font/Shabnam.woff' %}");
+            src: url("/assets/supchat/font/Vazir-Regular.woff");
+            font-family: 'VazirMatn';
         }
 
         @font-face {
+            src: url("/assets/supchat/font/Kalameh-Black.woff");
             font-family: 'KalameBlack';
-            src: url("{% static 'supchat/font/Kalameh_Black.woff' %}");
-        }
-
-        @font-face {
-            font-family: 'MjBeirutMd';
-            src: url("{% static 'supchat/font/MjBeirutMd.woff' %}");
-        }
-
-        @font-face {
-            font-family: 'MjCasablancaHeavy';
-            src: url("{% static 'supchat/font/Mj-Casablanca-Heavy.woff' %}");
-        }
-
-        @font-face {
-            font-family: 'Koodak';
-            src: url("{% static 'supchat/font/Koodak.woff' %}");
-        }
-
-        @font-face {
-            font-family: 'Vazir';
-            src: url("{% static 'supchat/font/Vazir-Regular.woff' %}");
         }
     </style>
-    {% block Css %}
 
-    {% endblock %}
 </head>
 
-<body>
 {% block Content %}
 
 {% endblock %}
-<script src="{% static 'supchat/js/base.js' %}"></script>
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<script src="/assets/supchat/admin/node_modules/jquery/jquery.min.js"></script>
+<!-- Bootstrap popper Core JavaScript -->
+<script src="/assets/supchat/admin/node_modules/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script src="/assets/supchat/admin/js/perfect-scrollbar.jquery.min.js"></script>
+<!--Wave Effects -->
+<script src="/assets/supchat/admin/js/waves.js"></script>
+<!--Menu sidebar -->
+<script src="/assets/supchat/admin/js/sidebarmenu.js"></script>
+<!--Custom JavaScript -->
+<script src="/assets/supchat/admin/js/custom.min.js"></script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!--morris JavaScript -->
+<script src="/assets/supchat/admin/node_modules/raphael/raphael-min.js"></script>
+<script src="/assets/supchat/admin/node_modules/morrisjs/morris.min.js"></script>
+<!--c3 JavaScript -->
+<script src="/assets/supchat/admin/node_modules/d3/d3.min.js"></script>
+<script src="/assets/supchat/admin/node_modules/c3-master/c3.min.js"></script>
+<!-- Chart JS -->
+<script src="/assets/supchat/admin/js/dashboard1.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+<script src="/assets/supchat/js/elements.js"></script>
+<script src="/assets/supchat/js/tools.js"></script>
+<script src="/assets/supchat/js/request_response.js"></script>
+<script src="/assets/supchat/js/index.js"></script>
+{% block Js %}
+{% endblock %}
 <script>
     window.CSRF_TOKEN = '{{ csrf_token }}'
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
 </script>
-{% block Js %}
-
-{% endblock %}
-</body>
-
 </html>

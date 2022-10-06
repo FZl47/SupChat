@@ -1,321 +1,225 @@
+{% extends 'SupChat/Base/BaseTemplateSupChat.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <meta charset="UTF-8">
-    <title>SupChat V3 Admin Panel</title>
-    {#    <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro@4cac1a6/css/all.css" rel="stylesheet"#}
-    {#          type="text/css"/>#}
-    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">#}
-    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">#}
-    <link rel="stylesheet" href="/assets/supchat/font_awesome/css/all.css">
-    <link rel="stylesheet" href="/assets/supchat/bootstrap/css/bootstrap.min.css">
-    <style>
-        @font-face {
-            src: url("/assets/supchat/font/Vazir-Regular.woff");
-            font-family: 'VazirMatn';
-        }
+{% load supchat_filter %}
 
-        @font-face {
-            src: url("/assets/supchat/font/Kalameh-Black.woff");
-            font-family: 'KalameBlack';
-        }
-    </style>
+{% block Title %}
+    <title>SupChat Admin - {{ request.admin.get_full_name }}</title>
+{% endblock %}
 
 
-    <link rel="stylesheet" href="/assets/supchat/css/supchat.css">
-    <link rel="stylesheet" href="/assets/supchat/css/tools.css">
-    <link rel="stylesheet" href="/assets/supchat/audio_simple/style.css">
-    <script src="/assets/supchat/audio_simple/js.js"></script>
-
-    <meta name="robots" content="noindex,nofollow">
-
-    <link rel="canonical" href="https://www.wrappixel.com/templates/adminwrap-lite/"/>
-    <!-- Favicon icon -->
-    <link rel="icon" type="image/png" href="{% static 'supchat/logo/logo.png' %}">
-    <!-- Bootstrap Core CSS -->
-    <link href="/assets/supchat/admin/node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/supchat/admin/node_modules/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
-    <!-- This page CSS -->
-    <!-- chartist CSS -->
-    <link href="/assets/supchat/admin/node_modules/morrisjs/morris.css" rel="stylesheet">
-    <!--c3 CSS -->
-    <link href="/assets/supchat/admin/node_modules/c3-master/c3.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="/assets/supchat/admin/css/style.css" rel="stylesheet">
-    <!-- Dashboard 1 Page CSS -->
-    <link href="/assets/supchat/admin/css/pages/dashboard1.css" rel="stylesheet">
-    <!-- You can change the theme colors from here -->
-    <link href="/assets/supchat/admin/css/colors/default.css" id="theme" rel="stylesheet">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-
-    <style>
-        @font-face {
-            src: url("/assets/supchat/font/Vazir-Regular.woff");
-            font-family: 'VazirMatn';
-        }
-
-        @font-face {
-            src: url("/assets/supchat/font/Kalameh-Black.woff");
-            font-family: 'KalameBlack';
-        }
-    </style>
-
-</head>
-
-
-<body class="fix-header fix-sidebar card-no-border">
-<!-- ============================================================== -->
-<!-- Preloader - style you can find in spinners.css -->
-<!-- ============================================================== -->
-<div class="preloader">
-    <div class="loader">
-        <div class="loader__figure"></div>
-        <p class="loader__label">SupChat</p>
+{% block Content %}
+    <body class="fix-header fix-sidebar card-no-border">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">SupChat</p>
+        </div>
     </div>
-</div>
-<!-- ============================================================== -->
-<!-- Main wrapper - style you can find in pages.scss -->
-<!-- ============================================================== -->
-<div id="main-wrapper">
     <!-- ============================================================== -->
-    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
-    {% include 'SupChat/Admin/components/header.html' %}
-    <!-- ============================================================== -->
-    <!-- End Topbar header -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- Left Sidebar - style you can find in sidebar.scss  -->
-    <!-- ============================================================== -->
-    {% include 'SupChat/Admin/components/menu.html' %}
-    <!-- ============================================================== -->
-    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- Page wrapper  -->
-    <!-- ============================================================== -->
-    <div class="page-wrapper">
+    <div id="main-wrapper">
         <!-- ============================================================== -->
-        <!-- Container fluid  -->
+        <!-- Topbar header - style you can find in pages.scss -->
         <!-- ============================================================== -->
-        <div class="container-fluid">
+        {% include 'SupChat/Admin/components/header.html' %}
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/menu.html' %}
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
             <!-- ============================================================== -->
-            <!-- Bread crumb and right sidebar toggle -->
+            <!-- Container fluid  -->
             <!-- ============================================================== -->
-            <div class="row page-titles text-right" dir="rtl">
-                <div class="col-12 align-self-center">
-                    <h2 class="text-themecolor">گفت و گو ها و بخش ها</h2>
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles text-right" dir="rtl">
+                    <div class="col-12 align-self-center">
+                        <h2 class="text-themecolor">گفت و گو ها و بخش ها</h2>
+                    </div>
                 </div>
-            </div>
-            <!-- ============================================================== -->
-            <!-- End Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- Sales Chart and browser state-->
-            <!-- ============================================================== -->
-            {% for section in admin.get_sections %}
-                <div id="section-{{ section.id }}" class="section-chat row"
-                     section-id="{{ section.id }}"
-                     data-chart="{{ section.data_chart_messages }}">
-                    <!-- Column -->
-                    <div class="col-12">
-                        <div>
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-block d-sm-flex mb-4 no-block text-right justify-content-between align-items-center col-12"
-                                         dir="rtl">
-                                        <h2 class="card-title mb-0 align-self-center">{{ section.title }}</h2>
-                                        <a href="" class="btn btn-success d-block font-16 mt-4">
-                                            <span>مشاهده گفت و گو ها</span>
-                                            <i class="fal fa-angle-left pt-1 pr-2 font-20 font-weight-bold"></i>
-                                        </a>
-                                    </div>
-                                    <div class="last-activity">
-                                        <span>اخرین فعالیت شما :</span>
-                                        <p> 3 روز پیش</p>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="d-flex no-block justify-content-between">
-                                        <div>
-                                            <ul class="list-inline text-center font-10">
-                                                <li><i class="fa fa-circle" style="color:rgb(78,213,213) "></i> تعداد
-                                                    گفت و گو ها
-                                                </li>
-                                            </ul>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Sales Chart and browser state-->
+                <!-- ============================================================== -->
+                {% for section in request.admin.get_sections %}
+                    <div id="section-{{ section.id }}" class="section-chat row"
+                         section-id="{{ section.id }}"
+                         data-chart-count-chats="{{ section|get_data_chart_section_count_charts:request.admin }}">
+                        <!-- Column -->
+                        <div class="col-12">
+                            <div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-block d-sm-flex mb-4 no-block text-right justify-content-between align-items-center col-12"
+                                             dir="rtl">
+                                            <h2 class="card-title mb-0 align-self-center">{{ section.title }}</h2>
+                                            <a href="{{ section.get_absolute_url }}"
+                                               class="btn btn-success d-block font-16 mt-4">
+                                                <span>مشاهده گفت و گو ها</span>
+                                                <i class="fal fa-angle-left pt-1 pr-2 font-20 font-weight-bold"></i>
+                                            </a>
                                         </div>
-                                        <div>
-                                            <h5 class="card-title mb-0">تعداد گفت و گو ها</h5>
+                                        <div class="last-activity">
+                                            <span>اخرین فعالیت شما :</span>
+                                            <p> 3 روز پیش</p>
                                         </div>
                                     </div>
-                                    {#                                    <div class="" id="section-chart-{{ section.id }}" style="height: 300px;"></div>#}
-                                    <div style="height: 300px!important;">
-                                        <canvas id="section-chart-{{ section.id }}"></canvas>
+                                    <div class="card-body">
+                                        <div class="d-flex no-block justify-content-between">
+                                            <div>
+                                                <ul class="list-inline text-center font-10">
+                                                    <li><i class="fa fa-circle" style="color:rgb(78,213,213) "></i>
+                                                        تعداد
+                                                        گفت و گو ها
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h5 class="card-title mb-0">تعداد گفت و گو ها</h5>
+                                            </div>
+                                        </div>
+                                        <div style="height: 300px!important;">
+                                            <canvas id="section-chart-count-chats-{{ section.id }}"></canvas>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-            <!-- ============================================================== -->
-            <!-- End Sales Chart -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- Notification And Feeds -->
-            <!-- ============================================================== -->
-            <div class="row">
-                <!-- Start Notification -->
-                <div class="col-lg-12 col-md-12">
-                    <div class="card card-body mailbox">
-                        <h5 class="card-title">Notification</h5>
-                        <div class="message-center" style="height: 420px !important;">
-                            <!-- Message -->
-                            <a href="#">
-                                <div class="btn btn-danger btn-circle"><i class="fa fa-link"></i></div>
-                                <div class="mail-contnet">
-                                    <h6 class="text-dark font-medium mb-0">Luanch Admin</h6> <span class="mail-desc">Just see the my new admin!</span>
-                                    <span class="time">9:30 AM</span>
-                                </div>
-                            </a>
-                            <!-- Message -->
-                            <a href="#">
-                                <div class="btn btn-success btn-circle"><i class="fa fa-calendar-check-o"></i></div>
-                                <div class="mail-contnet">
-                                    <h6 class="text-dark font-medium mb-0">Event today</h6> <span class="mail-desc">Just a reminder that you have
+                {% endfor %}
+                <!-- ============================================================== -->
+                <!-- End Sales Chart -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Notification And Feeds -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- Start Notification -->
+                    <div class="col-lg-12 col-md-12">
+                        <div class="card card-body mailbox">
+                            <h5 class="card-title">Notification</h5>
+                            <div class="message-center" style="height: 420px !important;">
+                                <!-- Message -->
+                                <a href="#">
+                                    <div class="btn btn-danger btn-circle"><i class="fa fa-link"></i></div>
+                                    <div class="mail-contnet">
+                                        <h6 class="text-dark font-medium mb-0">Luanch Admin</h6> <span
+                                            class="mail-desc">Just see the my new admin!</span>
+                                        <span class="time">9:30 AM</span>
+                                    </div>
+                                </a>
+                                <!-- Message -->
+                                <a href="#">
+                                    <div class="btn btn-success btn-circle"><i class="fa fa-calendar-check-o"></i></div>
+                                    <div class="mail-contnet">
+                                        <h6 class="text-dark font-medium mb-0">Event today</h6> <span class="mail-desc">Just a reminder that you have
                                             event</span> <span class="time">9:10 AM</span>
-                                </div>
-                            </a>
-                            <!-- Message -->
-                            <a href="#">
-                                <div class="btn btn-info btn-circle"><i class="fa fa-cog text-white"></i></div>
-                                <div class="mail-contnet">
-                                    <h6 class="text-dark font-medium mb-0">Settings</h6> <span class="mail-desc">You can customize this template as you
+                                    </div>
+                                </a>
+                                <!-- Message -->
+                                <a href="#">
+                                    <div class="btn btn-info btn-circle"><i class="fa fa-cog text-white"></i></div>
+                                    <div class="mail-contnet">
+                                        <h6 class="text-dark font-medium mb-0">Settings</h6> <span class="mail-desc">You can customize this template as you
                                             want</span> <span class="time">9:08 AM</span>
-                                </div>
-                            </a>
-                            <!-- Message -->
-                            <a href="#">
-                                <div class="btn btn-primary btn-circle"><i class="fa fa-user"></i></div>
-                                <div class="mail-contnet">
-                                    <h6 class="text-dark font-medium mb-0">Pavan kumar</h6> <span class="mail-desc">Just see the my admin!</span>
-                                    <span
-                                            class="time">9:02 AM</span>
-                                </div>
-                            </a>
-                            <!-- Message -->
-                            <a href="#">
-                                <div class="btn btn-info btn-circle"><i class="fa fa-cog text-white"></i></div>
-                                <div class="mail-contnet">
-                                    <h6 class="text-dark font-medium mb-0">Customize Themes</h6> <span
-                                        class="mail-desc">You can customize this template as you
+                                    </div>
+                                </a>
+                                <!-- Message -->
+                                <a href="#">
+                                    <div class="btn btn-primary btn-circle"><i class="fa fa-user"></i></div>
+                                    <div class="mail-contnet">
+                                        <h6 class="text-dark font-medium mb-0">Pavan kumar</h6> <span class="mail-desc">Just see the my admin!</span>
+                                        <span
+                                                class="time">9:02 AM</span>
+                                    </div>
+                                </a>
+                                <!-- Message -->
+                                <a href="#">
+                                    <div class="btn btn-info btn-circle"><i class="fa fa-cog text-white"></i></div>
+                                    <div class="mail-contnet">
+                                        <h6 class="text-dark font-medium mb-0">Customize Themes</h6> <span
+                                            class="mail-desc">You can customize this template as you
                                             want</span> <span class="time">9:08 AM</span>
-                                </div>
-                            </a>
-                            <!-- Message -->
-                            <a href="#">
-                                <div class="btn btn-primary btn-circle"><i class="fa fa-user"></i></div>
-                                <div class="mail-contnet">
-                                    <h6 class="text-dark font-medium mb-0">Pavan kumar</h6> <span class="mail-desc">Just see the my admin!</span>
-                                    <span
-                                            class="time">9:02 AM</span>
-                                </div>
-                            </a>
+                                    </div>
+                                </a>
+                                <!-- Message -->
+                                <a href="#">
+                                    <div class="btn btn-primary btn-circle"><i class="fa fa-user"></i></div>
+                                    <div class="mail-contnet">
+                                        <h6 class="text-dark font-medium mb-0">Pavan kumar</h6> <span class="mail-desc">Just see the my admin!</span>
+                                        <span
+                                                class="time">9:02 AM</span>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
+                    <!-- End Notification -->
                 </div>
-                <!-- End Notification -->
+                <!-- ============================================================== -->
+                <!-- End Notification And Feeds -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- End Page Content -->
+                <!-- ============================================================== -->
             </div>
             <!-- ============================================================== -->
-            <!-- End Notification And Feeds -->
+            <!-- End Container fluid  -->
             <!-- ============================================================== -->
             <!-- ============================================================== -->
-            <!-- End Page Content -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            {% include 'SupChat/Admin/components/footer.html' %}
+            <!-- ============================================================== -->
+            <!-- End footer -->
             <!-- ============================================================== -->
         </div>
         <!-- ============================================================== -->
-        <!-- End Container fluid  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- footer -->
-        <!-- ============================================================== -->
-        {% include 'SupChat/Admin/components/footer.html' %}
-        <!-- ============================================================== -->
-        <!-- End footer -->
+        <!-- End Page wrapper  -->
         <!-- ============================================================== -->
     </div>
     <!-- ============================================================== -->
-    <!-- End Page wrapper  -->
+    <!-- End Wrapper -->
     <!-- ============================================================== -->
-</div>
-<!-- ============================================================== -->
-<!-- End Wrapper -->
-<!-- ============================================================== -->
-<!-- ============================================================== -->
-<!-- All Jquery -->
-<!-- ============================================================== -->
-<script src="/assets/supchat/admin/node_modules/jquery/jquery.min.js"></script>
-<!-- Bootstrap popper Core JavaScript -->
-<script src="/assets/supchat/admin/node_modules/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- slimscrollbar scrollbar JavaScript -->
-<script src="/assets/supchat/admin/js/perfect-scrollbar.jquery.min.js"></script>
-<!--Wave Effects -->
-<script src="/assets/supchat/admin/js/waves.js"></script>
-<!--Menu sidebar -->
-<script src="/assets/supchat/admin/js/sidebarmenu.js"></script>
-<!--Custom JavaScript -->
-<script src="/assets/supchat/admin/js/custom.min.js"></script>
-<!-- ============================================================== -->
-<!-- This page plugins -->
-<!-- ============================================================== -->
-<!--morris JavaScript -->
-<script src="/assets/supchat/admin/node_modules/raphael/raphael-min.js"></script>
-<script src="/assets/supchat/admin/node_modules/morrisjs/morris.min.js"></script>
-<!--c3 JavaScript -->
-<script src="/assets/supchat/admin/node_modules/d3/d3.min.js"></script>
-<script src="/assets/supchat/admin/node_modules/c3-master/c3.min.js"></script>
-<!-- Chart JS -->
-<script src="/assets/supchat/admin/js/dashboard1.js"></script>
+    </body>
+{% endblock %}
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-
-<script src="/assets/supchat/js/elements.js"></script>
-<script src="/assets/supchat/js/tools.js"></script>
-<script src="/assets/supchat/js/request_response.js"></script>
-<script src="/assets/supchat/js/index.js"></script>
-<script>
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-
-    // ======================
-    //      Init Charts
-    let all_section = document.querySelectorAll('.section-chat')
-    for (let section of all_section) {
-        create_chart_section_chats(`${section.getAttribute('section-id')}`, section.getAttribute('data-chart'))
-    }
-    //=======================
-
-</script>
-<script>
-    {#const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'#}
-    {#const URL_BACKEND_SUPCHAT = 'http://192.168.1.142:8002'#}
-    {#const ROOT_URL_ASSETS_SUPCHAT = '/assets/'#}
-    {#let _supchat_json = JSON.parse('{{ supchat|escapejs  }}')#}
-    {#let _chat_json = JSON.parse('{{ chat|escapejs  }}')#}
-    {#const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)#}
-    {#SUP_CHAT.run()#}
-</script>
-</body>
-</html>
+{% block Js %}
+    <script>
+        // ======================
+        //      Init Charts
+        let all_section = document.querySelectorAll('.section-chat')
+        for (let section of all_section) {
+            create_chart_section_count_chats(`${section.getAttribute('section-id')}`, section.getAttribute('data-chart-count-chats'))
+        }
+        //=======================
+    </script>
+    <script>
+        {#const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'#}
+        {#const URL_BACKEND_SUPCHAT = 'http://192.168.1.142:8002'#}
+        {#const ROOT_URL_ASSETS_SUPCHAT = '/assets/'#}
+        {#let _supchat_json = JSON.parse('{{ supchat|escapejs  }}')#}
+        {#let _chat_json = JSON.parse('{{ chat|escapejs  }}')#}
+        {#const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)#}
+        {#SUP_CHAT.run()#}
+    </script>
+{% endblock %}
 
 

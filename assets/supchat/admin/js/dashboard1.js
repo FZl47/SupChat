@@ -258,16 +258,16 @@ $(function () {
 
 });
 
-function create_chart_section_chats(id, data) {
+function create_chart_section_count_chats(id, data) {
     let data_list = JSON.parse(data)
-    let ctx = document.getElementById(`section-chart-${id}`).getContext('2d')
+    let ctx = document.getElementById(`section-chart-count-chats-${id}`).getContext('2d')
     let labels = []
     let data_num = []
     for (let data of data_list) {
         labels.push(`${data.day} روز `)
         data_num.push(data.count_chat)
     }
-    if(labels.length == 1){
+    if (labels.length == 1) {
         labels[1] = labels[0]
         data_num[1] = data_num[0]
     }
@@ -310,6 +310,45 @@ function create_chart_section_chats(id, data) {
                     }
                 }
             }
+        }
+    }
+    new Chart(ctx, config)
+}
+
+function create_chart_section_rate_chats(id, data) {
+    let data_list = JSON.parse(data)
+    let ctx = document.getElementById(`section-chart-rate-chats-${id}`).getContext('2d')
+    let labels = []
+    let data_num = []
+    for (let data of data_list) {
+        if (data.rate_chat == 0) {
+            labels.push(`بدون امتیاز `)
+        } else {
+            labels.push(` امتیاز ${data.rate_chat} `)
+        }
+        data_num.push(data.count_rate)
+    }
+    let data_conf = {
+        labels: labels,
+        datasets: [{
+            label: 'امتیاز گفت و گو ها',
+            data: data_num,
+            backgroundColor: [
+                'rgb(221,221,221)',
+                'rgb(255,85,108)',
+                'rgb(255,202,10)',
+                'rgb(186,255,76)',
+                'rgb(107,255,169)',
+                'rgb(24,234,195)',
+            ],
+        }]
+    };
+    let config = {
+        type: 'doughnut',
+        data: data_conf,
+        options: {
+            responsive: false,
+            hoverOffset:10
         }
     }
     new Chart(ctx, config)

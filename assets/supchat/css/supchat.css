@@ -69,7 +69,7 @@ button {
     overflow: auto;
 }
 
-#SupChatRateSubmited > main{
+#SupChatRateSubmited > main {
     margin: auto 0;
 }
 
@@ -889,7 +889,7 @@ button {
 }
 
 .content-message-supchat {
-    max-width: 75%;
+    max-width: 80%;
     position: relative;
     display: inline-block;
 }
@@ -905,6 +905,8 @@ button {
     font-size: 98%;
     max-width: 90%;
     overflow: hidden;
+    direction: rtl;
+    box-shadow: none;
 }
 
 .content-message-supchat > footer {
@@ -930,8 +932,14 @@ button {
     display: none;
 }
 
-.seen-message-supchat [icon-seen-true] {
+[icon-seen-true] {
     color: #006ae1;
+    display: none;
+}
+
+[icon-seen-false] {
+    color: #999;
+    display: none;
 }
 
 .icon-message-edited-supchat {
@@ -1195,5 +1203,19 @@ button {
         right: 0;
         bottom: 0;
         border-radius: 0;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #input-message-supchat{
+        width: 60%;
+    }
+
+    #btn-record-voice-supchat svg{
+        width: 19px;
+    }
+
+    #btn-send-message-supchat svg{
+        width: 19px;
     }
 }

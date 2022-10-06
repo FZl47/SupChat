@@ -486,8 +486,16 @@ def send_voice_message(request):
 @decorators.admin_authenticated
 def view_admin(request):
     context = {}
-    context['admin'] = request.admin
     return render(request,'SupChat/Admin/admin-panel.html',context)
+
+@decorators.admin_authenticated
+def view_section_admin(request,section_id):
+    context = {}
+    section = Section.objects.filter(id=section_id,admin=request.admin).first()
+    context['section'] = section
+    if not section:
+        raise Http404
+    return render(request,'SupChat/Admin/admin-section.html',context)
 
 @decorators.admin_authenticated
 def view_chat_admin(request, chat_id):
@@ -497,12 +505,12 @@ def view_chat_admin(request, chat_id):
     if chat and supchat:
         # Seen Message
         chat.seen_message_admin()
-
         chat_serializer = serializers.Serializer_chat(chat)
         supchat_serialized = serializers.Serializer_supchat(supchat)
-        context['chat'] = json.dumps(chat_serializer)
-        context['supchat'] = json.dumps(supchat_serialized)
-        return render(request,'admin.html',context)
+        context['chat'] = chat
+        context['chat_json'] = json.dumps(chat_serializer)
+        context['supchat_json'] = json.dumps(supchat_serialized)
+        return render(request,'SupChat/Admin/admin-chat.html',context)
     raise Http404
 
 

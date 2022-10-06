@@ -3,10 +3,10 @@ from django.db.models import F, Max, Count, Sum, Q, Value
 from django.db.models.functions import TruncDay, ExtractDay
 from django.utils import timezone
 from django.templatetags.static import static
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.urls import reverse
 from model_utils.managers import InheritanceManager
 from SupChat.core.tools import RandomString, GetDifferenceTime
-
-from django.core.validators import MaxValueValidator, MinValueValidator
 from SupChat.config import USER
 import json
 
@@ -93,15 +93,33 @@ class Section(models.Model):
     def __str__(self):
         return self.title
 
+    def get_chats_active(self):
+        # Chat active with minimum 1 message
+        return self.chatgroup_set.filter(is_active=True).annotate(count_message=Count('message')).filter(
+            count_message__gt=0)
+
+    def get_all_chats(self):
+        return self.chatgroup_set.all()
+
     def get_admin_less_busy(self):
         return self.admin_set.order_by('-chatgroup__is_active').first()
+
+    def get_absolute_url(self):
+        return reverse('SupChat:view_section_admin', args=(self.id,))
 
     def get_data_chart_count_chats(self, admin=None):
         lookup = ''
         if admin:
             lookup = Q(admin=admin)
         chats = self.chatgroup_set.filter(lookup).annotate(day=ExtractDay('date_time_created')).values('day').annotate(
-                count_chat=Count('id')).values('day', 'count_chat')
+            count_chat=Count('id')).values('day', 'count_chat')
+        return json.dumps(list(chats))
+
+    def get_data_chart_rate_chats(self, admin=None):
+        lookup = ''
+        if admin:
+            lookup = Q(admin=admin)
+        chats = self.chatgroup_set.filter(lookup).values('rate_chat').annotate(count_rate=Count('rate_chat'))
         return json.dumps(list(chats))
 
 
@@ -141,9 +159,6 @@ class Admin(models.Model):
 
     def get_sections(self):
         sections = self.sections.filter(is_active=True).all()
-        # Add data for charts and more ...
-        for section in sections:
-            setattr(section, 'data_chart_messages', section.get_data_chart_count_chats(self))
         return sections
 
     #
@@ -229,7 +244,8 @@ class ChatGroup(models.Model):
     date_time_created = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     type_close = models.CharField(max_length=30, choices=TYPE_CLOSE_CHOICE, null=True, blank=True)
-    rate_chat = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(5)])
+    rate_chat = models.IntegerField(null=True, blank=True, default=0,
+                                    validators=[MinValueValidator(0), MaxValueValidator(5)])
 
     def __str__(self):
         return f"#{self.id} Chat Group {self.user.get_full_name()} - {self.admin.get_full_name()}"
@@ -243,8 +259,14 @@ class ChatGroup(models.Model):
         chat = ChatGroup.objects.filter(lookup, id=chat_id, is_active=True).first()
         return chat
 
+    def get_absolute_url(self):
+        return reverse('SupChat:view_chat_admin', args=(self.id,))
+
     def get_messages(self):
         return self.message_set.filter(deleted=False).select_subclasses().all()
+
+    def get_last_message(self):
+        return self.message_set.filter(deleted=False).select_subclasses().last()
 
     def seen_message_admin(self):
         self.message_set.filter(sender='user', seen=False).update(seen=True)
@@ -257,6 +279,9 @@ class ChatGroup(models.Model):
 
     def get_count_audiomessage(self):
         return self.message_set.select_subclasses().filter(audiomessage__type='audio').count()
+
+    def get_count_unread_message_by_admin(self):
+        return self.message_set.filter(seen=False,sender='user').count()
 
     # def get_messages_by_user(self):
     #     messages = self.message_set.filter(deleted=False).select_subclasses().all()
@@ -332,7 +357,7 @@ class MessageBase(models.Model):
     SENDER_MESSAGE = (
         ('system', 'System'),
         ('user', 'User'),
-        ('user', 'User'),
+        ('admin', 'Admin'),
     )
 
     chat = models.ForeignKey('ChatGroup', on_delete=models.CASCADE)
@@ -363,6 +388,9 @@ class TextMessage(Message):
     type = models.CharField(max_length=5, default='text', editable=False)
     text = models.TextField()
 
+    def get_text(self):
+        return self.text
+
 
 def upload_audio_message(instance, path):
     path = str(path).split('.')[-1]
@@ -374,9 +402,14 @@ class AudioMessage(Message):
     audio = models.FileField(upload_to=upload_audio_message)
     audio_time = models.CharField(max_length=5, default='0')
 
+    def get_text(self):
+        return 'صدای ضبط شده'
+
 
 class SystemMessage(TextMessage):
-    pass
+
+    def get_text(self):
+        return self.text
 
 
 class SuggestedMessage(models.Model):

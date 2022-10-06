@@ -4,7 +4,16 @@ from django import template
 
 register = template.Library()
 
+@register.filter
+@register.simple_tag
+def get_data_chart_section_count_charts(section,admin):
+    return section.get_data_chart_count_chats(admin)
 
+
+@register.filter
+@register.simple_tag
+def get_data_chart_section_rate_chats(section,admin):
+    return section.get_data_chart_rate_chats(admin)
 
 
 # @register.filter

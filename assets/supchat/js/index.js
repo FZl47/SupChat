@@ -358,7 +358,9 @@ class SupChat {
     }
 
     show_default_message() {
-
+        if (this.CHAT && this.CONFIG.default_message_is_active && this.CHAT.messages.length == 0) {
+            new SystemMessage(this.CONFIG.default_message)
+        }
     }
 
     _create_messages(messages) {
@@ -555,6 +557,7 @@ class SupChat {
         this.create_connection()
         this.scroll_to_down_chat()
         this._set_info_chat()
+
     }
 
     scroll_to_down_chat() {
@@ -909,9 +912,7 @@ class ChatUser extends SupChat {
             this.show_notification_default()
         }
         // Show Default Message
-        if (this.CHAT && this.CONFIG.default_message_is_active && this.CHAT.messages.length == 0) {
-            new SystemMessage(this.CONFIG.default_message)
-        }
+        this.show_default_message()
 
     }
 
@@ -935,6 +936,7 @@ class ChatUser extends SupChat {
                     set_cookie('session_key_user_sup_chat', response.user.session_key, 365)
                     SUP_CHAT.CHAT = response.chat
                     SUP_CHAT.init_chat()
+                    SUP_CHAT.show_default_message()
                 }
             })
         }

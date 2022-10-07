@@ -17,6 +17,7 @@ button {
     box-shadow: 0 3px 15px rgba(191, 191, 191, 0.5);
     z-index: 10;
     transition: all .3s;
+    font-size: 98%;
 }
 
 #SupChat[state='open'] {
@@ -903,9 +904,9 @@ button {
     margin: 0;
     padding: 2px;
     font-size: 98%;
-    max-width: 90%;
+    max-width: calc(100% - 20px);
     overflow: hidden;
-    direction: rtl;
+    unicode-bidi: plaintext;
     box-shadow: none;
 }
 
@@ -1207,15 +1208,15 @@ button {
 }
 
 @media screen and (max-width: 400px) {
-    #input-message-supchat{
+    #input-message-supchat {
         width: 60%;
     }
 
-    #btn-record-voice-supchat svg{
+    #btn-record-voice-supchat svg {
         width: 19px;
     }
 
-    #btn-send-message-supchat svg{
+    #btn-send-message-supchat svg {
         width: 19px;
     }
 }

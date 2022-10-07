@@ -79,9 +79,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-7 order-1 order-md-0">
+                    <div class="col-12 col-lg-7 order-1 order-lg-0">
                         <div class="card card-body mailbox">
-                            <h5 class="card-title text-right">گفت و گو ها</h5>
+                            <h5 class="card-title text-right">گفت و گو های فعال</h5>
                             <div class="chats-list" style="height: 530px !important;">
                                 <!-- Chat list -->
                                 {% for chat in chat.section.get_chats_active %}
@@ -96,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-5">
+                    <div class="col-12 col-lg-5">
                         <div class="card card-body mailbox text-center d-flex-force justify-content-center"
                              style="height: 600px !important;">
                             <div id="SupChat" state="open">
@@ -139,6 +139,7 @@
 {% block Js %}
     <script>
         const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'
+        {#    const URL_BACKEND_SUPCHAT = 'http://192.168.1.142:8002'#}
         const ROOT_URL_ASSETS_SUPCHAT = '/assets/'
         let _supchat_json = JSON.parse('{{ supchat_json|escapejs  }}')
         let _chat_json = JSON.parse('{{ chat_json|escapejs  }}')

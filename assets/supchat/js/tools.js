@@ -22,7 +22,7 @@ function set_cookie(Name, Value, ExpireDay = 30, Path = '/') {
 }
 
 // Send Ajax
-function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed,convert_json=true) {
+function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed, convert_json = true) {
     let This = this
 
     if (Success == undefined) {
@@ -202,4 +202,11 @@ function convert_second_to_time_format(second) {
     let sec = Math.floor(second % 60)
     let min = Math.floor(second / 60 % 60)
     return `${min}:${sec}`
+}
+
+function is_secure() {
+    if (location.protocol === 'https:' || (location.hostname === "localhost" || location.hostname === "127.0.0.1")) {
+        return true
+    }
+    return false
 }

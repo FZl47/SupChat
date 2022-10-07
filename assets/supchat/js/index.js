@@ -460,8 +460,11 @@ class SupChat {
                 SUP_CHAT.start_record_voice()
             }
 
-            elements.btn_record_voice.addEventListener("mousedown", mouse_down);
-            elements.btn_record_voice.addEventListener("touchstart", mouse_down);
+            if (elements.btn_record_voice) {
+                elements.btn_record_voice.addEventListener("mousedown", mouse_down);
+                elements.btn_record_voice.addEventListener("touchstart", mouse_down);
+            }
+
             document.body.addEventListener("mouseup", mouse_up);
             document.body.addEventListener("touchend", mouse_up);
         }
@@ -1044,9 +1047,16 @@ class ChatAdmin extends SupChat {
     show_notification() {
     }
 
-
     chat_ended() {
         this.close_socket()
+    }
+
+
+    // Oeverwrite
+    socket_open(e) {
+        super.socket_open(e);
+        // Seen message request
+        RequestSupChat.seen_message.send()
     }
 
 }

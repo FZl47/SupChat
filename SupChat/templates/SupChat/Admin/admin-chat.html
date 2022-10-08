@@ -82,8 +82,13 @@
                     <div class="col-12 col-lg-7 order-1 order-lg-0">
                         <div class="card card-body mailbox">
                             <h5 class="card-title text-right">گفت و گو های فعال</h5>
-                            <div class="chats-list" style="height: 530px !important;">
+                            <div id="chats-list" class="chats-list" style="height: 590px !important;">
                                 <!-- Chat list -->
+                                <div id="SupChatListLoading">
+                                    <div>
+                                        <div class="loading-circle-supchat"></div>
+                                    </div>
+                                </div>
                                 {% for chat in chat.section.get_chats_active %}
                                     {% include 'SupChat/Admin/components/chat-list.html' with chat=chat %}
                                 {% empty %}
@@ -98,7 +103,7 @@
                     </div>
                     <div class="col-12 col-lg-5">
                         <div class="card card-body mailbox text-center d-flex-force justify-content-center"
-                             style="height: 600px !important;">
+                             style="height: 660px !important;">
                             <div id="SupChat" state="open">
                                 <!-- SupChat elements -->
                             </div>
@@ -145,6 +150,7 @@
         let _chat_json = JSON.parse('{{ chat_json|escapejs  }}')
         const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)
         SUP_CHAT.run()
+        const SUP_CHAT_LIST = new ChatList('{{ chat.section.id }}')
     </script>
 {% endblock %}
 

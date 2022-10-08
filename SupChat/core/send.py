@@ -4,8 +4,6 @@ from SupChat.core import serializers
 from SupChat.models import Message, TextMessage
 
 
-# TYPE_RESPONSE = ['TEXT_MESSAGE']
-
 class Response:
     RESPONSES = {
         # You should define name request and method for response
@@ -13,7 +11,7 @@ class Response:
         'SEND_TEXT_MESSAGE': 'send_text_message',
         'SEND_AUDIO_MESSAGE': 'send_audio_message',
         'DELETE_MESSAGE': 'delete_message',
-        'EDIT_MESSAGE':'edit_message',
+        'EDIT_MESSAGE': 'edit_message',
         'IS_TYPING': 'is_typing',
         'IS_VOICING': 'is_voicing',
         'SEEN_MESSAGE': 'seen_message',
@@ -24,19 +22,26 @@ class Response:
         # 'SEND_STATUS': 'send_status'
     }
 
-
     # Base Method
     def send_to_group(self, type_response, data={}, group_name=None):
-        async_to_sync(self.channel_layer.group_send)(
-            group_name or self.chat.get_group_name(),
-            {
-                'type': 'type_send_data',
-                'data': {
-                    'TYPE_RESPONSE': type_response,
-                    **data
+
+        def send(group_name_reciver):
+            async_to_sync(self.channel_layer.group_send)(
+                group_name_reciver,
+                {
+                    'type': 'type_send_data',
+                    'data': {
+                        'TYPE_RESPONSE': type_response,
+                        **data
+                    }
                 }
-            }
-        )
+            )
+
+        if type(group_name) == list:
+            for i in group_name:
+                send(i)
+        else:
+            send(group_name or self.chat.get_group_name())
 
     # Base Method
     def type_send_data(self, event):
@@ -86,36 +91,36 @@ class Response:
                     'message': serializers.Serializer_message(message_object)
                 })
 
-
     def is_typing(self, data_request):
         state_is_typing = data_request.get('state_is_typing')
         if (state_is_typing == True) or (state_is_typing == False):
-            group_name_reciver = self.chat.get_group_name_admin() if self.type_user == 'user' else self.chat.get_group_name_user()
             self.send_to_group('IS_TYPING', {
-                'state_is_typing': state_is_typing
-            }, group_name_reciver)
-
+                'state_is_typing': state_is_typing,
+                'sender_state': self.type_user,
+                'chat_id': self.chat.id
+            })
 
     def is_voicing(self, data_request):
         state_is_voicing = data_request.get('state_is_voicing')
         if (state_is_voicing == True) or (state_is_voicing == False):
-            group_name_reciver = self.chat.get_group_name_admin() if self.type_user == 'user' else self.chat.get_group_name_user()
             self.send_to_group('IS_VOICING', {
-                'state_is_voicing': state_is_voicing
-            }, group_name_reciver)
+                'state_is_voicing': state_is_voicing,
+                'sender_state': self.type_user,
+                'chat_id': self.chat.id
+            })
 
     def seen_message(self, data_request):
-        group_name_reciver = ''
         if self.type_user == 'user':
-            group_name_reciver = self.chat.get_group_name_admin()
             self.chat.seen_message_user()
         else:
-            group_name_reciver = self.chat.get_group_name_user()
             self.chat.seen_message_admin()
 
-        self.send_to_group('SEEN_MESSAGE',group_name=group_name_reciver)
+        self.send_to_group('SEEN_MESSAGE',{
+            'sender_state':self.type_user,
+            'chat_id': self.chat.id
+        })
 
-    def chat_end(self,data_request):
+    def chat_end(self, data_request):
         chat = self.chat
         close_auto = data_request.get('close_auto') or False
         if close_auto == True:
@@ -129,7 +134,6 @@ class Response:
         chat.save()
         self.send_to_group('CHAT_ENDED')
 
-
     # Requests in Consumer
     def send_status(self, data_request):
         group_name_reciver = ''
@@ -139,3 +143,15 @@ class Response:
             group_name_reciver = self.chat.get_group_name_user()
 
         self.send_to_group('SEND_STATUS', data_request, group_name_reciver)
+
+
+class ResponseSection(Response):
+    RESPONSES = {
+        # --- Response in Consumer ---
+        # Useless | Created for readibility
+        # 'SEND_STATUS': 'send_status'
+    }
+
+    def send_status(self, data_request):
+        # Send status to all chat group
+        self.send_to_group('SEND_STATUS', data_request, [chat.get_group_name_user() for chat in self.chats])

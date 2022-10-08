@@ -15,8 +15,8 @@ def Serializer_supchat_config(config):
         "default_notif_is_active": config.default_notif_is_active,
         "default_notif_show_after": config.default_notif_show_after,
         "default_notif_message": config.default_notif_message,
-        "notif_is_active":config.notif_is_active,
-        "notif_sound_is_active":config.notif_sound_is_active,
+        "notif_is_active": config.notif_is_active,
+        "notif_sound_is_active": config.notif_sound_is_active,
         "end_chat_auto": config.end_chat_auto,
         "end_chat_after": config.end_chat_after,
         "show_title_section": config.show_title_section,
@@ -61,7 +61,7 @@ def Serializer_chat(chat):
             "user": Serializer_user_chat(chat.user),
             "admin": Serializer_admin_chat(chat.admin),
             "messages": Serializer_message(chat.get_messages(), True),
-            'section_name':chat.section.title
+            'section_name': chat.section.title
         }
     return None
 
@@ -71,11 +71,13 @@ def Serializer_user_basic(user):
         "session_key": user.session_key
     }
 
+
 def Serializer_status(user):
     return {
-        "last_seen":user.get_last_seen(),
-        "is_online":user.is_online,
+        "last_seen": user.get_last_seen(),
+        "is_online": user.is_online,
     }
+
 
 def Serializer_user_chat(user):
     return {
@@ -84,6 +86,7 @@ def Serializer_user_chat(user):
         "image": user.get_image(),
         **Serializer_status(user)
     }
+
 
 def Serializer_admin_chat(admin):
     return {
@@ -96,7 +99,7 @@ def Serializer_admin_chat(admin):
 def Serializer_message(message, many=False):
     def Serializer_text_messagae(text_message):
         return {
-            "text": text_message.text
+            "text": text_message.text,
         }
 
     def Serializer_audio_messagae(audio_message):
@@ -110,13 +113,15 @@ def Serializer_message(message, many=False):
     def wrapper(obj):
         d = {
             "id": obj.id,
+            "chat_id": obj.chat_id,
             "type": obj.type,
             "sender": obj.sender,
             "seen": obj.seen,
             "edited": obj.edited,
             "deleted": obj.deleted,
             "time_send": obj.get_time(),
-            "time_send_full": obj.get_time_full()
+            "time_send_full": obj.get_time_full(),
+            "text_lable": obj.get_text_lable()
         }
         if obj.type == "text":
             d.update(Serializer_text_messagae(obj))

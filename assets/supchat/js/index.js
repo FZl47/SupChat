@@ -92,10 +92,11 @@ class TranslateSupChat {
 }
 
 
-class SupChat {
+class SupChat extends (WebSockectSupChatMixin) {
     URL_SUPCHAT = 'sup-chat'
 
     constructor(type_user) {
+        super()
         this.TYPE_USER = type_user
         this._constructor()
     }
@@ -765,50 +766,6 @@ class SupChat {
         }
     }
 
-    // Connection
-    create_connection() {
-        let supchat_obj = this
-        let count_try_create = 5
-        let socket
-
-        function create_socket() {
-
-            socket = new WebSocket(get_protocol_socket() + (get_only_url_backend() + supchat_obj._get_websocket_url()))
-
-            supchat_obj.toggle_loading('show')
-            supchat_obj.SOCKET = socket
-            socket.onmessage = function (e) {
-                supchat_obj.socket_recive(e)
-            }
-            socket.onopen = function (e) {
-                count_try_create = 1
-                supchat_obj.toggle_loading('hide')
-                SUP_CHAT.socket_open(e)
-            }
-            socket.onclose = function (e) {
-                supchat_obj.socket_close(e)
-            }
-            socket.onerror = function (e) {
-                supchat_obj.socket_error(e)
-                try_create_socket()
-            }
-        }
-
-        function try_create_socket() {
-            let timer_try_connection = setTimeout(function () {
-                if (SUP_CHAT.CAN_CREATE_CONNECTION && count_try_create > 0) {
-                    count_try_create -= 1
-                    create_socket()
-                } else {
-                    clearTimeout(timer_try_connection)
-                }
-            }, 2000)
-        }
-
-        if (this.CAN_CREATE_CONNECTION) {
-            create_socket()
-        }
-    }
 
     // Connection Events
     socket_recive(e) {
@@ -829,6 +786,14 @@ class SupChat {
 
     socket_error(e) {
         this.create_connection()
+    }
+
+    socket_loading(state) {
+        if (state) {
+            this.toggle_loading('show')
+        } else {
+            this.toggle_loading('hide')
+        }
     }
 
     // Action
@@ -1062,10 +1027,70 @@ class ChatAdmin extends SupChat {
 }
 
 
-class Section extends SupChat {
-    constructor() {
-        super('')
+class ChatList extends WebSockectSupChatMixin {
+    constructor(section_id) {
+        super()
+        this.SECTION_ID = section_id
+        this.set_elements()
+        this.CAN_CREATE_CONNECTION = true
+        this.create_connection()
     }
+
+    set_elements() {
+        this.ELEMENTS = {
+            container_chat_list: document.getElementById('chats-list'),
+            loading: document.getElementById('SupChatListLoading')
+        }
+    }
+
+    _get_websocket_url() {
+        return `/ws/chats/admin/section/${this.SECTION_ID}`
+    }
+
+    socket_open(e) {
+        console.log('Socket Connected')
+    }
+
+    socket_recive(e) {
+        let data = JSON.parse(e.data)
+        let response_obj = ResponseSupChat.get(`CHAT_LIST_${data.TYPE_RESPONSE}`)
+        if (response_obj) {
+            response_obj.run(data)
+        }
+    }
+
+    socket_close(e) {
+
+    }
+
+    socket_error(e){
+        console.log(e)
+    }
+
+    socket_loading(state) {
+        if (state) {
+            this.ELEMENTS.loading.setAttribute('container-show', '')
+        } else {
+            this.ELEMENTS.loading.removeAttribute('container-show')
+        }
+    }
+
+    // DOM action
+    new_message(message){
+        let chat_id = message.chat_id
+        let chat_element = document.getElementById(`chat-${chat_id}`)
+        let count_unread_message = (parseInt(chat_element.getAttribute('count-unread-message')) || 0) + 1
+        chat_element.setAttribute('edited',message.edited)
+        chat_element.setAttribute('deleted',message.deleted)
+        chat_element.setAttribute('edited',message.edited)
+        chat_element.setAttribute('seen',message.seen)
+        chat_element.setAttribute('sender-type',message.sender)
+        chat_element.setAttribute('count-unread-message',count_unread_message)
+        chat_element.querySelector('[container-count-message] span').innerText = count_unread_message
+        chat_element.querySelector('[container-message]').innerText = message.text_lable
+        chat_element.querySelector('[container-time]').innerText = message.time_send
+    }
+
 
 }
 

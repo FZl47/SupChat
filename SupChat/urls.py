@@ -12,6 +12,7 @@ def path_ws(url,handler):
 websocket_urlpatterns = [
     path_ws('chat/user/<chat_id>',consumers.ChatUser.as_asgi()),
     path_ws('chat/admin/<chat_id>',consumers.AdminUser.as_asgi()),
+    path_ws('chats/admin/section/<section_id>',consumers.ChatList.as_asgi()),
 ]
 
 urlpatterns = [

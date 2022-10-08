@@ -93,13 +93,20 @@ class Section(models.Model):
     def __str__(self):
         return self.title
 
+
+    def get_group_name_by_admin(self,admin):
+        return f"GroupName_SectionID_{self.id}_{admin.group_name}"
+
     def get_chats_active(self):
         # Chat active with minimum 1 message
+        # and
+        # Order by last message
         return self.chatgroup_set.filter(is_active=True).annotate(count_message=Count('message')).filter(
-            count_message__gt=0)
+            count_message__gt=0).annotate(last_message=Max('message')).order_by('-last_message')
 
     def get_all_chats(self):
-        return self.chatgroup_set.all()
+        # Order by last message
+        return self.chatgroup_set.all().annotate(last_message=Max('message')).order_by('-last_message')
 
     def get_admin_less_busy(self):
         return self.admin_set.order_by('-chatgroup__is_active').first()
@@ -283,46 +290,12 @@ class ChatGroup(models.Model):
     def get_count_unread_message_by_admin(self):
         return self.message_set.filter(seen=False,sender='user').count()
 
-    # def get_messages_by_user(self):
-    #     messages = self.message_set.filter(deleted=False).select_subclasses().all()
-    #     return messages
-    #
-    # def get_messages_by_admin(self):
-    #     """ Can use the code below the line to display the deleted message on the admin page """
-    #     # messages = self.message_set.select_subclasses().all()
-    #
-    #     messages = self.message_set.filter(deleted=False).select_subclasses().all()
-    #     return messages
-    #
-    # def get_last_message(self):
-    #     message = self.message_set.filter(deleted=False).select_subclasses().last()
-    #     return message
-    #
-    # def get_messages_without_seen(self):
-    #     return self.message_set.filter(seen=False,deleted=False).all()
-    #
-    # def get_count_messages_without_seen(self):
-    #     return self.get_messages_without_seen().count()
-    #
-    # def get_count_messages(self):
-    #     return self.message_set.filter(deleted=False).count()
-    #
-    # def get_messages_without_seen_user(self):
-    #     return self.get_messages_without_seen().filter(sender='user')
-    #
-    # def get_messages_without_seen_admin(self):
-    #     return self.get_messages_without_seen().filter(sender='admin')
-    #
     def seen_messages_user(self):
         self.message_set.filter(sender='user', seen=False).update(seen=True)
 
     def seen_messages_admin(self):
         self.message_set.filter(sender='admin', seen=False).update(seen=True)
 
-    #
-    # def get_url_absolute_admin(self):
-    #     return reverse_lazy('SupChat:admin_panel_chat', args=(self.id, self.user.get_full_name()))
-    #
 
     def get_group_name(self):
         """
@@ -388,7 +361,7 @@ class TextMessage(Message):
     type = models.CharField(max_length=5, default='text', editable=False)
     text = models.TextField()
 
-    def get_text(self):
+    def get_text_lable(self):
         return self.text
 
 
@@ -402,14 +375,12 @@ class AudioMessage(Message):
     audio = models.FileField(upload_to=upload_audio_message)
     audio_time = models.CharField(max_length=5, default='0')
 
-    def get_text(self):
+    def get_text_lable(self):
         return 'صدای ضبط شده'
 
 
 class SystemMessage(TextMessage):
-
-    def get_text(self):
-        return self.text
+    pass
 
 
 class SuggestedMessage(models.Model):

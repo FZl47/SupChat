@@ -3,6 +3,7 @@ from channels import exceptions
 from SupChat.models import ChatGroup, Admin
 from SupChat.core.auth.consumer import get_user
 
+
 def user_authenticated(func):
     def wrapper(self):
         user = get_user(self.scope)
@@ -11,6 +12,7 @@ def user_authenticated(func):
             return func(self)
         else:
             self.close(code=4003)
+
     return wrapper
 
 
@@ -23,6 +25,7 @@ def admin_authenticated(func):
             return func(self)
         else:
             self.close(code=4003)
+
     return wrapper
 
 
@@ -30,9 +33,9 @@ def get_chat(type_user):
     """
         type_user => [user,admin]
     """
-    assert type_user in ['user','admin']
+
     def inner(func):
-        def wrapper(self,*args,**kwargs):
+        def wrapper(self, *args, **kwargs):
             chat = None
             try:
                 chat_id = self.scope.get('url_route').get('kwargs').get('chat_id') or None
@@ -47,6 +50,25 @@ def get_chat(type_user):
                 self.chat = chat
             else:
                 raise exceptions.RequestAborted
-            return func(self,*args,**kwargs)
+            return func(self, *args, **kwargs)
+
         return wrapper
+
     return inner
+
+
+def get_section(func):
+    def wrapper(self):
+        section = None
+        section_id = self.scope.get('url_route').get('kwargs').get('section_id') or None
+        try:
+            section = self.admin_supchat.sections.get(id=section_id)
+        except:
+            pass
+        if section:
+            self.section = section
+        else:
+            raise exceptions.RequestAborted
+        return func(self)
+
+    return wrapper

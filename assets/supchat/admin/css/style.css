@@ -6683,6 +6683,27 @@ File: scss
     background: #777;
 }
 
+.chats-list::-webkit-scrollbar {
+    height: 4px;
+    width: 7px;
+    border-radius: 10px;
+}
+
+.chats-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.chats-list::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 10px;
+}
+
+.chats-list::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+
 #SupChat {
     position: static;
     width: 100% !important;
@@ -6691,6 +6712,10 @@ File: scss
     background: none;
     font-size: 110%;
     /*border: none;*/
+}
+
+#SupChatListLoading {
+    display: none;
 }
 
 
@@ -6715,6 +6740,42 @@ File: scss
     max-width: 100%;
 }
 
+.chat-list [container-icon-edited] {
+    position: absolute;
+    bottom: 13px;
+    right: 32px;
+    color: #888;
+    font-size: 90%;
+}
+
+
+.chat-list[sender-type="user"] [container-seen] {
+    display: none;
+}
+
+.chat-list[sender-type="user"] [container-count-message] {
+    color: #7460ee;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    text-align: center;
+}
+
+.chat-list[sender-type="user"][count-unread-message="0"] [container-count-message]{
+    display: none;
+}
+
+.chat-list[sender-type="admin"] [container-seen] {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.chat-list[sender-type="admin"] [container-count-message] {
+    display: none;
+}
+
+
 .text-gray {
     color: #999999 !important;
 }
@@ -6736,9 +6797,6 @@ File: scss
     display: inline-block;
 }
 
-.items-info-section {
-
-}
 
 .items-info-section li {
     position: relative;
@@ -6751,4 +6809,10 @@ File: scss
 
 .items-info-section li:nth-of-type(1) {
     background: linear-gradient(to right, transparent, rgba(255, 104, 87, 0.1), transparent);
+}
+
+@media screen and (max-width: 1170px) {
+    .container-title-supchat-intro {
+        display: none;
+    }
 }

@@ -1,3 +1,15 @@
+function response_is_for_you(sender_name) {
+    if (SUP_CHAT.TYPE_USER == 'USER') {
+        if (sender_name != 'user') {
+            return true
+        }
+    } else if (SUP_CHAT.TYPE_USER == 'ADMIN') {
+        if (sender_name != 'admin') {
+            return true
+        }
+    }
+}
+
 class ResponseSupChat {
     static LIST_RESPONSE_SUPCHAT = []
 
@@ -74,21 +86,33 @@ new ResponseSupChat('EDIT_MESSAGE', function (data) {
 
 // response is typing
 new ResponseSupChat('IS_TYPING', function (data) {
+    let sender_state = data.sender_state
     let state_is_typing = data.state_is_typing
-    SUP_CHAT.effect_is_typing(state_is_typing)
+    if (response_is_for_you(sender_state)) {
+        SUP_CHAT.effect_is_typing(state_is_typing)
+    }
+
 })
 
 
 // response is voicing
 new ResponseSupChat('IS_VOICING', function (data) {
+    let sender_state = data.sender_state
     let state_is_voicing = data.state_is_voicing
-    SUP_CHAT.effect_is_voicing(state_is_voicing)
+
+    if (response_is_for_you(sender_state)) {
+        SUP_CHAT.effect_is_voicing(state_is_voicing)
+    }
+
 })
 
 
 // response seen message
 new ResponseSupChat('SEEN_MESSAGE', function (data) {
-    MessageSupChat.seen_message()
+    let sender_state = data.sender_state
+    if (response_is_for_you(sender_state)) {
+        MessageSupChat.seen_message()
+    }
 })
 
 
@@ -99,9 +123,67 @@ new ResponseSupChat('SEND_STATUS', function (data) {
     SUP_CHAT.set_status_element(is_online, last_seen)
 })
 
-// response status
+
+// response chat ended
 new ResponseSupChat('CHAT_ENDED', function (data) {
     SUP_CHAT.chat_ended()
+})
+
+
+// --- RESPONSES in CHAT LIST ---
+
+
+// response text message
+new ResponseSupChat('CHAT_LIST_TEXT_MESSAGE', function (data) {
+    SUP_CHAT_LIST.new_message(data.message)
+})
+
+
+// response audio message
+new ResponseSupChat('CHAT_LIST_AUDIO_MESSAGE', function (data) {
+    SUP_CHAT_LIST.new_message(data.message)
+})
+
+
+// response delete message
+new ResponseSupChat('CHAT_LIST_DELETE_MESSAGE', function (data) {
+
+})
+
+
+// response edit message
+new ResponseSupChat('CHAT_LIST_EDIT_MESSAGE', function (data) {
+
+})
+
+
+// response is typing
+new ResponseSupChat('CHAT_LIST_IS_TYPING', function (data) {
+
+})
+
+
+// response is voicing
+new ResponseSupChat('CHAT_LIST_IS_VOICING', function (data) {
+
+})
+
+
+// response seen message
+new ResponseSupChat('CHAT_LIST_SEEN_MESSAGE', function (data) {
+
+})
+
+
+// response status
+new ResponseSupChat('CHAT_LIST_SEND_STATUS', function (data) {
+
+})
+
+
+// response chat ended
+new ResponseSupChat('CHAT_LIST_CHAT_ENDED', function (data) {
+
 })
 
 

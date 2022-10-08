@@ -51,6 +51,11 @@ button {
     display: block;
 }
 
+#SupChatListLoading[container-show] {
+    display: block;
+}
+
+
 #SupChatStart[container-show] {
     display: flex;
 }
@@ -716,6 +721,27 @@ button {
     align-items: center;
 }
 
+#SupChatListLoading {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    border-radius: inherit;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+#SupChatListLoading > div {
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .title-supchat-intro {
     width: 100%;
     height: 50px;
@@ -904,10 +930,13 @@ button {
     margin: 0;
     padding: 2px;
     font-size: 98%;
-    max-width: calc(100% - 20px);
     overflow: hidden;
     unicode-bidi: plaintext;
     box-shadow: none;
+}
+
+.container-message-supchat[sender-type="you"] pre {
+    max-width: calc(100% - 20px);
 }
 
 .content-message-supchat > footer {

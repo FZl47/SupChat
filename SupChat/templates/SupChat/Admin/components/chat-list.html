@@ -1,5 +1,6 @@
 {% with chat.get_last_message as last_message %}
-    <a class="chat-list content-message-supchat" id="chat-{{ chat.id }}" href="{{ chat.get_absolute_url }}"
+    <a class="chat-list content-message-supchat" id="chat-{{ chat.id }}" chat-id="{{ chat.id }}"
+       last-message-id="{{ last_message.id }}" href="{{ chat.get_absolute_url }}"
        title="{{ chat.user.get_full_name }}"
             {% if last_message.sender == 'admin' %}
        seen="{{ last_message.seen|yesno:'true,false' }}"
@@ -9,28 +10,52 @@
        sender-type="{{ last_message.sender }}"
 
        count-unread-message="{{ chat.get_count_unread_message_by_admin }}"
+
+       deleted="{{ last_message.deleted|yesno:'true,false' }}"
     >
-        <img class="btn-circle" style="width: 60px;height: 60px;background: rgba(236,236,236,0.1)"
-             src="{{ chat.user.get_image }}" alt="{{ chat.user.get_full_name }}">
+        <div class="d-inline-block position-relative">
+            <img class="btn-circle" style="width: 60px;height: 60px;background: rgba(236,236,236,0.1)"
+                 src="{{ chat.user.get_image }}" alt="{{ chat.user.get_full_name }}">
+            <span container-state-user state="{{ chat.user.is_online|yesno:'online,offline' }}"></span>
+
+        </div>
         <div class="mail-contnet">
             <div>
                 <p class="text-dark font-16 mb-0">{{ chat.user.get_full_name }}</p>
                 <span container-message class="mail-desc"
                       style="font-size: 110%!important;">{{ last_message.get_text_lable }}</span>
                 <span container-time class="time mt-2">{{ last_message.get_time }}</span>
-
-                <span container-count-message>
+                <div class="container-items-chat">
+                    <span container-count-message>
                             <span>{{ chat.get_count_unread_message_by_admin }}</span>
                             <i class="fal fa-comment-plus"></i>
-                </span>
+                    </span>
 
-                <div container-seen>
-                    <i class="fal fa-check-double" icon-seen-true></i>
-                    <i class="fal fa-check" icon-seen-false></i>
+                    <div container-seen>
+                        <i class="fal fa-check-double" icon-seen-true></i>
+                        <i class="fal fa-check" icon-seen-false></i>
+                    </div>
+
+                    <i container-icon-edited class="icon-message-edited-supchat fal fa-pen"></i>
+
+                    <i container-icon-deleted class="fal fa-trash"></i>
+
                 </div>
-
-                <i container-icon-edited
-                   class="icon-message-edited-supchat fal fa-pen"></i>
+                <div container-effect-is-typing class="container-effect-is-typing">
+                    <main>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </main>
+                </div>
+                <div container-effect-is-voicing class="container-effect-is-voicing">
+                    <main>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </main>
+                </div>
             </div>
         </div>
     </a>

@@ -58,6 +58,7 @@ def Serializer_chat(chat):
     if chat:
         return {
             "id": chat.id,
+            "url":chat.get_absolute_url(),
             "user": Serializer_user_chat(chat.user),
             "admin": Serializer_admin_chat(chat.admin),
             "messages": Serializer_message(chat.get_messages(), True),

@@ -10,6 +10,13 @@ function response_is_for_you(sender_name) {
     }
 }
 
+function response_is_for_section(sender_name) {
+    if (sender_name == 'user') {
+        return true
+    }
+    return false
+}
+
 class ResponseSupChat {
     static LIST_RESPONSE_SUPCHAT = []
 
@@ -120,7 +127,10 @@ new ResponseSupChat('SEEN_MESSAGE', function (data) {
 new ResponseSupChat('SEND_STATUS', function (data) {
     let is_online = data.is_online
     let last_seen = data.last_seen
-    SUP_CHAT.set_status_element(is_online, last_seen)
+    let sender_state = data.sender_state
+    if (response_is_for_you(sender_state)) {
+        SUP_CHAT.set_status_element(is_online, last_seen)
+    }
 })
 
 
@@ -147,43 +157,55 @@ new ResponseSupChat('CHAT_LIST_AUDIO_MESSAGE', function (data) {
 
 // response delete message
 new ResponseSupChat('CHAT_LIST_DELETE_MESSAGE', function (data) {
-
+    SUP_CHAT_LIST.delete_message(data.message)
 })
 
 
 // response edit message
 new ResponseSupChat('CHAT_LIST_EDIT_MESSAGE', function (data) {
-
+    SUP_CHAT_LIST.edit_message(data.message)
 })
 
 
 // response is typing
 new ResponseSupChat('CHAT_LIST_IS_TYPING', function (data) {
-
+    if (response_is_for_section(data.sender_state)) {
+        SUP_CHAT_LIST.is_typing(data)
+    }
 })
 
 
 // response is voicing
 new ResponseSupChat('CHAT_LIST_IS_VOICING', function (data) {
-
+    if (response_is_for_section(data.sender_state)) {
+        SUP_CHAT_LIST.is_voicing(data)
+    }
 })
 
 
 // response seen message
 new ResponseSupChat('CHAT_LIST_SEEN_MESSAGE', function (data) {
-
+    if (response_is_for_section(data.sender_state)) {
+        SUP_CHAT_LIST.seen_message(data)
+    }
 })
 
 
 // response status
 new ResponseSupChat('CHAT_LIST_SEND_STATUS', function (data) {
-
+    SUP_CHAT_LIST.status_user(data)
 })
 
 
 // response chat ended
 new ResponseSupChat('CHAT_LIST_CHAT_ENDED', function (data) {
+    SUP_CHAT_LIST.chat_ended(data)
+})
 
+
+// response chat created
+new ResponseSupChat('CHAT_LIST_CHAT_CREATED', function (data) {
+    SUP_CHAT_LIST.chat_created(data.chat)
 })
 
 
@@ -314,6 +336,19 @@ class RequestChatEndSupChat extends _RequestBaseSupChat {
     }
 }
 
+class RequestChatCreatedSupChat extends _RequestBaseSupChat {
+    constructor() {
+        super('CHAT_CREATED');
+    }
+
+    send(chat) {
+        let data = {
+            'chat': chat
+        }
+        this.send_to_socket(data)
+    }
+}
+
 const RequestSupChat = {
     'text_message': new RequestSendTextMessageSupChat(),
     'audio_message': new RequestSendAudioMessageSupChat(),
@@ -323,4 +358,5 @@ const RequestSupChat = {
     'is_voicing': new RequestIsVocingSupChat(),
     'seen_message': new RequestSeenMessageSupChat(),
     'chat_end': new RequestChatEndSupChat(),
+    'chat_created': new RequestChatCreatedSupChat(),
 }

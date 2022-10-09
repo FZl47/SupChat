@@ -974,15 +974,16 @@ button {
 
 .icon-message-edited-supchat {
     font-size: 65%;
+    visibility: hidden;
 }
 
 .content-message-supchat[edited='true'] .icon-message-edited-supchat {
     visibility: visible;
 }
 
-.content-message-supchat[edited='false'] .icon-message-edited-supchat {
-    visibility: hidden;
-}
+/*.content-message-supchat[edited='false'] .icon-message-edited-supchat {*/
+/*    visibility: hidden;*/
+/*}*/
 
 .content-message-supchat[seen='true'] [icon-seen-true] {
     display: inline-block;

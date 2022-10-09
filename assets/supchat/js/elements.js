@@ -183,7 +183,7 @@ function get_node_supchat() {
                      <div container-type="send-message-main">
                         <div class="container-btns-send-message-voice">
                             ${is_secure() ?
-                            ` <button id="btn-record-voice-supchat">
+        ` <button id="btn-record-voice-supchat">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path d="M12,15a4,4,0,0,0,4-4V5A4,4,0,0,0,8,5v6A4,4,0,0,0,12,15ZM10,5a2,2,0,0,1,4,0v6a2,2,0,0,1-4,0Zm10,6a1,1,0,0,0-2,0A6,6,0,0,1,6,11a1,1,0,0,0-2,0,8,8,0,0,0,7,7.93V21H9a1,1,0,0,0,0,2h6a1,1,0,0,0,0-2H13V18.93A8,8,0,0,0,20,11Z"></path>
                                 </svg>
@@ -428,5 +428,57 @@ function get_node_is_voicing_element() {
                 <span></span>
             </main>
         </div>
+    `
+}
+
+
+function get_node_chat_list(chat) {
+    return `
+        <div class="d-inline-block position-relative">
+            <img class="btn-circle" style="width: 60px;height: 60px;background: rgba(236,236,236,0.1)"
+                 src="${chat.user.image}" alt="${chat.user.name}">
+            <span container-state-user state="${chat.user.is_online ? 'online' : 'offline'}"></span>
+
+        </div>
+        <div class="mail-contnet">
+            <div>
+                <p class="text-dark font-16 mb-0">${chat.user.name}</p>
+                <span container-message class="mail-desc"
+                      style="font-size: 110%!important;">-</span>
+                <span container-time class="time mt-2">-</span>
+                <div class="container-items-chat">
+                    <span container-count-message>
+                            <span>0</span>
+                            <i class="fal fa-comment-plus"></i>
+                    </span>
+
+                    <div container-seen>
+                        <i class="fal fa-check-double" icon-seen-true></i>
+                        <i class="fal fa-check" icon-seen-false></i>
+                    </div>
+
+                    <i container-icon-edited class="icon-message-edited-supchat fal fa-pen"></i>
+
+                    <i container-icon-deleted class="fal fa-trash"></i>
+
+                </div>
+                <div container-effect-is-typing class="container-effect-is-typing">
+                    <main>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </main>
+                </div>
+                <div container-effect-is-voicing class="container-effect-is-voicing">
+                    <main>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </main>
+                </div>
+            </div>
+        </div>
+
     `
 }

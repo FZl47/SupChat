@@ -903,8 +903,17 @@ class ChatUser extends SupChat {
                     let user_created = response.user_created || false
                     set_cookie('session_key_user_sup_chat', response.user.session_key, 365)
                     SUP_CHAT.CHAT = response.chat
+                    let socket_open_callback = SUP_CHAT.socket_open
+                    SUP_CHAT.socket_open = function (e) {
+                        // Send request chat created
+                        RequestSupChat.chat_created.send(SUP_CHAT.CHAT)
+                        // Set past callback
+                        SUP_CHAT.socket_open = socket_open_callback
+                        SUP_CHAT.socket_open(e)
+                    }
                     SUP_CHAT.init_chat()
                     SUP_CHAT.show_default_message()
+
                 }
             })
         }
@@ -1075,15 +1084,34 @@ class ChatList extends WebSockectSupChatMixin {
         }
     }
 
+    sort_chats_by_new_message() {
+        var $container_chats = $('#chats-list'),
+            $chats = $container_chats.children('.chat-list');
+        $chats.sort(function (a, b) {
+            var an = a.getAttribute('last-message-id'),
+                bn = b.getAttribute('last-message-id');
+
+            if (an < bn) {
+                return 1;
+            }
+            if (an > bn) {
+                return -1;
+            }
+            return 0;
+        });
+        $chats.detach().appendTo($container_chats);
+    }
+
     // DOM action
+
     new_message(message) {
         let chat_id = message.chat_id
         let chat_element = document.getElementById(`chat-${chat_id}`)
         if (chat_element) {
             let count_unread_message = (parseInt(chat_element.getAttribute('count-unread-message')) || 0) + 1
+            chat_element.classList.remove('chat-is-new')
             chat_element.setAttribute('edited', message.edited)
             chat_element.setAttribute('deleted', message.deleted)
-            chat_element.setAttribute('edited', message.edited)
             chat_element.setAttribute('seen', message.seen)
             chat_element.setAttribute('sender-type', message.sender)
             chat_element.setAttribute('last-message-id', message.id)
@@ -1093,32 +1121,94 @@ class ChatList extends WebSockectSupChatMixin {
             chat_element.querySelector('[container-time]').innerText = message.time_send
         }
 
-        // $('.chat-list').sortElements(function (e) {
-        //     console.log(e.getAttribute('last-message-id'))
-        //     return e.getAttribute('last-message-id')
-        // })
-        sort_elements()
-
-        function sort_elements() {
-            var $container_chats = $('#chats-list'),
-                $chats = $container_chats.children('.chat-list');
-
-            $chats.sort(function (a, b) {
-                var an = a.getAttribute('last-message-id'),
-                    bn = b.getAttribute('last-message-id');
-
-                if (an < bn) {
-                    return 1;
-                }
-                if (an > bn) {
-                    return -1;
-                }
-                return 0;
-            });
-            $chats.detach().appendTo($container_chats);
-        }
-
+        this.sort_chats_by_new_message()
     }
+
+    delete_message(message) {
+        let chat_id = message.chat_id
+        let message_id = message.id
+        let chat_element = document.querySelector(`#chat-${chat_id}`)
+        if (chat_element && (parseInt(chat_element.getAttribute('last-message-id')) == message_id)) {
+            chat_element.setAttribute('deleted', message.deleted)
+            chat_element.setAttribute('sender-type', message.sender)
+        }
+    }
+
+    edit_message(message) {
+        let chat_id = message.chat_id
+        let message_id = message.id
+        let chat_element = document.querySelector(`#chat-${chat_id}`)
+        if (chat_element && (parseInt(chat_element.getAttribute('last-message-id')) == message_id)) {
+            chat_element.setAttribute('edited', message.edited)
+            chat_element.setAttribute('sender-type', message.sender)
+        }
+    }
+
+    is_typing(data) {
+        let chat_id = data.chat_id
+        let state_is_typing = data.state_is_typing
+        let sender_type = data.sender_state
+        let chat_element = document.querySelector(`#chat-${chat_id}`)
+        if (chat_element) {
+            chat_element.querySelector('[container-effect-is-typing]').setAttribute('state', state_is_typing)
+            // chat_element.setAttribute('sender-type', sender_type)
+        }
+    }
+
+    is_voicing(data) {
+        let chat_id = data.chat_id
+        let state_is_voicing = data.state_is_voicing
+        let sender_type = data.sender_state
+        let chat_element = document.querySelector(`#chat-${chat_id}`)
+        if (chat_element) {
+            chat_element.querySelector('[container-effect-is-voicing]').setAttribute('state', state_is_voicing)
+            // chat_element.setAttribute('sender-type', sender_type)
+        }
+    }
+
+    status_user(data) {
+        let chat_id = data.chat_id
+        let state_online = data.is_online ? 'online' : 'offline'
+        let sender_type = data.sender_state
+        let chat_element = document.querySelector(`#chat-${chat_id}`)
+        if (chat_element) {
+            chat_element.querySelector('[container-state-user]').setAttribute('state', state_online)
+        }
+    }
+
+    seen_message(data) {
+        let chat_id = data.chat_id
+        let sender_type = data.sender_state
+        let count_unread_message = 0
+        let chat_element = document.querySelector(`#chat-${chat_id}`)
+        if (chat_element) {
+            chat_element.setAttribute('seen', true)
+            chat_element.setAttribute('count-unread-message', count_unread_message)
+            chat_element.querySelector('[container-count-message] span').innerText = count_unread_message
+        }
+    }
+
+    chat_ended(data) {
+        let chat_id = data.chat_id
+        let chat_element = document.querySelector(`#chat-${chat_id}`)
+        if (chat_element) {
+            chat_element.classList.add('chat-deleted')
+        }
+    }
+
+    chat_created(chat) {
+        let chat_list = document.createElement('a')
+        chat_list.id = `chat-${chat.id}`
+        chat_list.href = chat.url
+        chat_list.title = chat.user.name
+        chat_list.classList.add('chat-list')
+        chat_list.classList.add('content-message-supchat')
+        chat_list.classList.add('chat-is-new')
+        chat_list.setAttribute('chat-id', chat.id)
+        chat_list.innerHTML = get_node_chat_list(chat)
+        document.getElementById('chats-list').appendChild(chat_list)
+    }
+
 
 }
 

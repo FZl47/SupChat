@@ -6734,20 +6734,55 @@ File: scss
 
 .chat-list {
     position: relative;
+    transition: all .25s;
+}
+
+.chat-is-new{
+    display: none!important;
+}
+
+.chat-deleted {
+    display: none!important;
 }
 
 .chats-list .content-message-supchat {
     max-width: 100%;
 }
 
-.chat-list [container-icon-edited] {
-    position: absolute;
-    bottom: 13px;
-    right: 32px;
-    color: #888;
-    font-size: 90%;
+.chat-list [container-count-message] {
+    display: none;
 }
 
+.container-items-chat {
+    position: absolute;
+    direction: rtl;
+    text-align: right;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.container-items-chat > * {
+    margin: 0 3px;
+}
+
+
+.chat-list [container-icon-edited] {
+    color: #888;
+    font-size: 85%;
+}
+
+.chat-list [container-icon-deleted] {
+    color: #ff9495;
+    font-weight: bold;
+    font-size: 80%;
+    display: none;
+}
+
+.chat-list[deleted='true'] [container-icon-deleted] {
+    display: block;
+}
 
 .chat-list[sender-type="user"] [container-seen] {
     display: none;
@@ -6755,24 +6790,146 @@ File: scss
 
 .chat-list[sender-type="user"] [container-count-message] {
     color: #7460ee;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
     text-align: center;
+    display: block;
 }
 
-.chat-list[sender-type="user"][count-unread-message="0"] [container-count-message]{
+.chat-list[sender-type="user"][count-unread-message="0"] [container-count-message] {
     display: none;
 }
 
-.chat-list[sender-type="admin"] [container-seen] {
+
+.chats-list [container-state-user] {
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    bottom: 7px;
+    right: 6px;
 }
 
-.chat-list[sender-type="admin"] [container-count-message] {
+.chats-list [container-state-user][state='online'] {
+    background: #27ff9f;
+}
+
+.chats-list [container-state-user][state='offline'] {
+    background: #ff4146;
+}
+
+
+.container-effect-is-typing {
     display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transition: all .3s;
+}
+
+.container-effect-is-typing[state='true'] {
+    display: block;
+}
+
+.container-effect-is-typing .content-message-supchat {
+    text-align: center;
+    padding: 5px;
+}
+
+.container-effect-is-typing .content-message-supchat main {
+    min-width: 85px;
+}
+
+.container-effect-is-typing span {
+    display: inline-block;
+    border-radius: 50%;
+    width: 7px;
+    height: 7px;
+    margin: 1px;
+    background: #ddd;
+}
+
+.container-effect-is-typing span:nth-of-type(1) {
+    animation: animation-effect-is-typing 2s linear infinite;
+}
+
+.container-effect-is-typing span:nth-of-type(2) {
+    animation: animation-effect-is-typing 2s linear infinite;
+    animation-delay: .2s;
+}
+
+.container-effect-is-typing span:nth-of-type(3) {
+    animation: animation-effect-is-typing 2s linear infinite;
+    animation-delay: .4s;
+}
+
+@keyframes animation-effect-is-typing {
+    50% {
+        background: #888;
+    }
+}
+
+
+.container-effect-is-voicing {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transition: all .3s;
+}
+
+
+.container-effect-is-voicing[state='true'] {
+    display: block;
+}
+
+.container-effect-is-voicing .content-message-supchat {
+    text-align: center;
+    padding: 5px;
+}
+
+.container-effect-is-voicing .content-message-supchat main {
+    min-width: 85px;
+    height: 34px;
+}
+
+.container-effect-is-voicing span {
+    display: inline-block;
+    width: 4px;
+    border-radius: 100px;
+    margin: 1px;
+    background: #ddd;
+    vertical-align: middle;
+    animation: animation-effect-is-voicing .9s linear infinite;
+}
+
+.container-effect-is-voicing span:nth-of-type(1) {
+    height: 12px;
+    animation-delay: .2s;
+}
+
+.container-effect-is-voicing span:nth-of-type(2) {
+    height: 16px;
+    animation-delay: .3s;
+}
+
+.container-effect-is-voicing span:nth-of-type(3) {
+    height: 7px;
+    animation-delay: .1s;
+}
+
+.container-effect-is-voicing span:nth-of-type(4) {
+    height: 14px;
+    animation-delay: 0;
+}
+
+@keyframes animation-effect-is-voicing {
+    30% {
+        height: 12px;
+        background: #888;
+    }
+    60% {
+        height: 8px;
+    }
 }
 
 

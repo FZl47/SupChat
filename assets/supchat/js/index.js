@@ -1063,7 +1063,7 @@ class ChatList extends WebSockectSupChatMixin {
 
     }
 
-    socket_error(e){
+    socket_error(e) {
         console.log(e)
     }
 
@@ -1076,21 +1076,49 @@ class ChatList extends WebSockectSupChatMixin {
     }
 
     // DOM action
-    new_message(message){
+    new_message(message) {
         let chat_id = message.chat_id
         let chat_element = document.getElementById(`chat-${chat_id}`)
-        let count_unread_message = (parseInt(chat_element.getAttribute('count-unread-message')) || 0) + 1
-        chat_element.setAttribute('edited',message.edited)
-        chat_element.setAttribute('deleted',message.deleted)
-        chat_element.setAttribute('edited',message.edited)
-        chat_element.setAttribute('seen',message.seen)
-        chat_element.setAttribute('sender-type',message.sender)
-        chat_element.setAttribute('count-unread-message',count_unread_message)
-        chat_element.querySelector('[container-count-message] span').innerText = count_unread_message
-        chat_element.querySelector('[container-message]').innerText = message.text_lable
-        chat_element.querySelector('[container-time]').innerText = message.time_send
-    }
+        if (chat_element) {
+            let count_unread_message = (parseInt(chat_element.getAttribute('count-unread-message')) || 0) + 1
+            chat_element.setAttribute('edited', message.edited)
+            chat_element.setAttribute('deleted', message.deleted)
+            chat_element.setAttribute('edited', message.edited)
+            chat_element.setAttribute('seen', message.seen)
+            chat_element.setAttribute('sender-type', message.sender)
+            chat_element.setAttribute('last-message-id', message.id)
+            chat_element.setAttribute('count-unread-message', count_unread_message)
+            chat_element.querySelector('[container-count-message] span').innerText = count_unread_message
+            chat_element.querySelector('[container-message]').innerText = message.text_lable
+            chat_element.querySelector('[container-time]').innerText = message.time_send
+        }
 
+        // $('.chat-list').sortElements(function (e) {
+        //     console.log(e.getAttribute('last-message-id'))
+        //     return e.getAttribute('last-message-id')
+        // })
+        sort_elements()
+
+        function sort_elements() {
+            var $container_chats = $('#chats-list'),
+                $chats = $container_chats.children('.chat-list');
+
+            $chats.sort(function (a, b) {
+                var an = a.getAttribute('last-message-id'),
+                    bn = b.getAttribute('last-message-id');
+
+                if (an < bn) {
+                    return 1;
+                }
+                if (an > bn) {
+                    return -1;
+                }
+                return 0;
+            });
+            $chats.detach().appendTo($container_chats);
+        }
+
+    }
 
 }
 

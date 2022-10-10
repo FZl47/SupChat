@@ -6707,34 +6707,34 @@ File: scss
 #SupChat {
     position: static;
     width: 100% !important;
-    height: 100% !important;
+    height: 620px !important;
     box-shadow: none;
     background: none;
     font-size: 110%;
-    /*border: none;*/
 }
 
 #SupChatListLoading {
     display: none;
 }
 
-
 #btn-scroll-down-chat-supchat {
     bottom: 118px;
     left: 7px;
 }
 
-#BtnCloseSupChat {
-    display: none;
-}
-
-#btn-more-option-chat-supchat {
-    display: none;
-}
 
 .chat-list {
     position: relative;
     transition: all .25s;
+}
+
+#container-more-options-chat-supchat{
+    width: 190px;
+}
+
+#ip-address-user-supchat{
+    font-size: 85%;
+    color: #fff;
 }
 
 .chat-is-new{

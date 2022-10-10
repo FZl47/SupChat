@@ -20,6 +20,10 @@ button {
     font-size: 98%;
 }
 
+.error-supchat > div:not(#SupChatError){
+    display: none!important;
+}
+
 #SupChat[state='open'] {
     width: 370px;
     height: 600px;
@@ -41,6 +45,7 @@ button {
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    overflow: hidden;
 }
 
 #SupChatContent[container-show] {
@@ -392,9 +397,15 @@ button {
 
 #SupChatContent > main {
     width: 100%;
+    padding: 10px 0;
     height: calc(100% - 95px - 70px);
     direction: rtl;
     background: #f7f7f7;
+    transition: all .3s;
+}
+
+.footer-is-hide-supchat #SupChatContent > main{
+    height: calc(100% - 95px);
 }
 
 #supchat-messages-chat {
@@ -458,11 +469,19 @@ button {
     transform: translate(0);
 }
 
+.footer-is-hide-supchat #SupChatContent > footer {
+    visibility: hidden;
+    overflow: hidden;
+    height: 0;
+}
+
+
 #SupChatContent > footer {
     width: 100%;
     border-top: 1px solid #eee;
     background: #fff;
     height: 70px;
+    transition: all .3s;
 }
 
 #content-footer-supchat {

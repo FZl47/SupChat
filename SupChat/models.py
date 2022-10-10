@@ -7,7 +7,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 from model_utils.managers import InheritanceManager
 from SupChat.core.tools import RandomString, GetDifferenceTime
-from SupChat.config import USER
+from SupChat.config import USER, get_datetime
 import json
 
 
@@ -166,44 +166,15 @@ class Admin(models.Model):
         diff_sec = GetDifferenceTime(self.last_seen)
         return diff_sec
 
+    def set_last_seen_offline(self):
+        self.status_online = 'offline'
+        self.last_seen = get_datetime()
+        self.save()
+
     def get_sections(self):
         sections = self.sections.filter(is_active=True).all()
         return sections
 
-    #
-    # def get_group_name_admin_in_section(self, section):
-    #     """
-    #         for use in consumer ChatAdminSection
-    #         return : group name admin in section
-    #     """
-    #     if section:
-    #         return f"{self.group_name}_Section_ID_{section.id}"
-    #     return None
-    #
-    # def can_get_chat_transfered(self,chat):
-    #     sections = self.sections.all()
-    #     for section in sections:
-    #         if section.id == chat.section_id:
-    #             return True
-    #     return False
-    #
-    # def get_sections(self):
-    #     return self.sections.filter(isActive=True)
-    #
-    # def has_log_message(self):
-    #     logs = self.logmessageadmin_set.filter(seen=False).count()
-    #     return True if logs > 0 else False
-    #
-    # def get_log_messages(self):
-    #     return self.logmessageadmin_set.filter()
-    #
-    # def seen_log_messages(self):
-    #     self.logmessageadmin_set.update(seen=True)
-
-
-#
-# def RandomStringGroupNameUser():
-#     return f"Group_User_{RandomString(25)}"
 
 
 class User(models.Model):
@@ -235,6 +206,11 @@ class User(models.Model):
     def get_last_seen(self):
         diff_sec = GetDifferenceTime(self.last_seen)
         return diff_sec
+
+    def set_last_seen_offline(self):
+        self.status_online = 'offline'
+        self.last_seen = get_datetime()
+        self.save()
 
     def in_blacklist(self):
         return bool(hasattr(self, 'blacklist'))
@@ -320,7 +296,6 @@ class ChatGroup(models.Model):
 
 class BlackList(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE)
-    reason = models.CharField(max_length=300)
 
     def __str__(self):
         return self.user.get_full_name()

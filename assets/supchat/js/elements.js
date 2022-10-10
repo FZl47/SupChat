@@ -1,4 +1,4 @@
-function get_node_supchat() {
+function get_node_supchat_user() {
 
     let sections = ''
     for (let section of SUP_CHAT.SECTIONS) {
@@ -150,6 +150,10 @@ function get_node_supchat() {
                                 <i class="fal fa-sign-out-alt"></i>
                                 ${SUP_CHAT.TRANSLATE.get('پایان گفت و گو')}
                             </button>
+                            <button id="btn-download-chat-supchat">
+                                <i class="fal fa-file-pdf"></i>
+                                ${SUP_CHAT.TRANSLATE.get('دانلود گفت و گو')}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -239,6 +243,155 @@ function get_node_supchat() {
         </div>
     `
     return node
+}
+
+
+function get_node_supchat_admin() {
+    let style_for_specified_lang = `
+          text-align: ${SUP_CHAT.CONFIG.language == 'fa' ? 'right' : 'left'};
+    `
+
+    let node = `
+        <div id="SupChatContent">
+            <header>
+                <div class="content-header-supchat">
+                    <div class="info-chat-supchat">
+                    <div>
+                        <img id="image-user-chat-supchat" src="/assets/supchat/images/default/iconsUser.png" alt="image user">
+                        <div class="container-status-user-chat-supchat">
+                            <span id="status-online-info-chat-supchat"></span>
+                            ${SUP_CHAT.CONFIG.show_last_seen ? `<span id="last-seen-info-chat-supchat">اخرین بازدید 2 ساعت پیش</span>` : ''}
+                        </div>
+                    </div>
+                        <div>
+                            <p id="name-user-info-chat-supchat">Fazel Momeni</p>
+                            <p id="ip-address-user-supchat"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <button id="btn-more-option-chat-supchat">
+                            <i class="fal fa-ellipsis-v"></i>
+                        </button>
+                        <div id="container-more-options-chat-supchat">
+                            <button id="btn-end-chat-supchat">
+                                <i class="fal fa-sign-out-alt"></i>
+                                ${SUP_CHAT.TRANSLATE.get('پایان گفت و گو')}
+                            </button>
+                            ${SUP_CHAT.CONFIG.transfer_chat_is_active == true ? `
+                                <button id="btn-transfer-chat-supchat">
+                                    <i class="fal fa-user-friends"></i>
+                                    ${SUP_CHAT.TRANSLATE.get('انتقال گفت و گو')}
+                                </button>
+                            ` : ''}
+                            <button id="btn-ban-chat-supchat" class="${SUP_CHAT.CHAT.user.in_blacklist ? 'd-none' : ''}">
+                                <i class="fal fa-ban"></i>
+                                ${SUP_CHAT.TRANSLATE.get('افزودن به لیست سیاه')}
+                            </button>  
+                            <button id="btn-unban-chat-supchat" class="${SUP_CHAT.CHAT.user.in_blacklist == false ? 'd-none' : ''}">
+                                <i class="fal fa-door-open"></i>
+                                ${SUP_CHAT.TRANSLATE.get('خارج کردن از لیست سیاه')}
+                            </button>
+                            <button id="btn-download-chat-supchat">
+                                <i class="fal fa-file-pdf"></i>
+                                ${SUP_CHAT.TRANSLATE.get('دانلود گفت و گو')}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <div id="supchat-messages-chat"></div>
+                <div id="container-suggested-messages-supchat">
+                    <button>
+                        <i class="fal fa-angle-double-left"></i>
+                    </button>
+                    <div id="suggested-messages-supchat">
+                        <div class="suggested-message-supchat"></div>
+                    </div>
+                </div>
+                <button id="btn-scroll-down-chat-supchat" state="hide">
+                    <i class="fal fa-angle-down"></i>
+                </button>
+            </main>
+            <footer>
+                <div id="content-footer-supchat" container-active="send-message-main">
+                    <!-- Container  -->
+                    <!-- send-message-edit-main  -->
+                    <!-- send-message-main  -->
+                    <!-- voice-recording  -->
+                    <!-- voice-send-or-cancel  -->
+                    <!-- voice-sending  -->
+                    <div container-type="send-message-edit-main">
+                        <i id="btn-set-default-edit-message" class="fa fa-times"></i>
+                        <p id="content-message-for-edit-chat-supchat"></p>
+                    </div>
+                     <div container-type="send-message-main">
+                        <div class="container-btns-send-message-voice">
+                            ${is_secure() ?
+        ` <button id="btn-record-voice-supchat">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12,15a4,4,0,0,0,4-4V5A4,4,0,0,0,8,5v6A4,4,0,0,0,12,15ZM10,5a2,2,0,0,1,4,0v6a2,2,0,0,1-4,0Zm10,6a1,1,0,0,0-2,0A6,6,0,0,1,6,11a1,1,0,0,0-2,0,8,8,0,0,0,7,7.93V21H9a1,1,0,0,0,0,2h6a1,1,0,0,0,0-2H13V18.93A8,8,0,0,0,20,11Z"></path>
+                                </svg>
+                            </button>` : ''}
+                             <button id="btn-send-message-supchat">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <textarea id="input-message-supchat" dir="rtl" type-message="new" type="text" placeholder="${SUP_CHAT.TRANSLATE.get('پیام')}..."></textarea>
+                    </div>
+                    <div container-type="voice-recording">
+                        <p id="time-voice-recording-supchat">0.0</p>
+                        <p>...${SUP_CHAT.TRANSLATE.get('در حال ضبط')}</p>
+                    </div> 
+                    <div container-type="voice-send-or-cancel">
+                        <div>
+                            <button id="btn-send-voice-recorded-supchat">    
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M20.34,9.32l-14-7a3,3,0,0,0-4.08,3.9l2.4,5.37h0a1.06,1.06,0,0,1,0,.82l-2.4,5.37A3,3,0,0,0,5,22a3.14,3.14,0,0,0,1.35-.32l14-7a3,3,0,0,0,0-5.36Zm-.89,3.57-14,7a1,1,0,0,1-1.35-1.3l2.39-5.37A2,2,0,0,0,6.57,13h6.89a1,1,0,0,0,0-2H6.57a2,2,0,0,0-.08-.22L4.1,5.41a1,1,0,0,1,1.35-1.3l14,7a1,1,0,0,1,0,1.78Z"></path>
+                                </svg>
+                            </button>
+                            <button id="btn-voice-cancel-supchat">    
+                                <i class="fal fa-times"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <p id="time-voice-recorded-supchat">0.0</p>
+                            <p>... ${SUP_CHAT.TRANSLATE.get('صدای ضبط شده')}</p>
+                        </div>
+                    </div>
+                    <div container-type="voice-sending">
+                        <div>
+                            <div class="loading-circle-supchat-small"></div>
+                        </div>
+                        <div>
+                            <p>${SUP_CHAT.TRANSLATE.get('در حال ارسال')}</p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <div id="SupChatLoading">
+            <div>
+                <div class="loading-circle-supchat"></div>
+            </div>
+        </div>
+        <div id="SupChatError">
+            <img src="" alt="">
+            <h4></h4>
+            <p></p>
+        </div>
+    `
+    return node
+}
+
+function get_node_supchat() {
+    if (SUP_CHAT.TYPE_USER == 'USER') {
+        return get_node_supchat_user()
+    } else if (SUP_CHAT.TYPE_USER == 'ADMIN') {
+        return get_node_supchat_admin()
+    }
 }
 
 function get_node_notification_supchat() {
@@ -480,5 +633,17 @@ function get_node_chat_list(chat) {
             </div>
         </div>
 
+    `
+}
+
+
+function get_node_chat_ended() {
+    return `
+        <div>
+            <img src="${get_link_assets_supchat('images/default/end-chat.webp')}" alt="end chat" loading="lazy">
+            <div>
+                <p>${SUP_CHAT.TRANSLATE.get('گفت و گو بسته شد')}</p>
+            </div>
+        </div>
     `
 }

@@ -7,6 +7,7 @@ from SupChat.models import Message, TextMessage
 class Response:
     RESPONSES = {
         # You should define name request and method for response
+        # Find response for request
         # REQUESTS TYPE and RESPONSE HANDLER
         'SEND_TEXT_MESSAGE': 'send_text_message',
         'SEND_AUDIO_MESSAGE': 'send_audio_message',
@@ -16,15 +17,19 @@ class Response:
         'IS_VOICING': 'is_voicing',
         'SEEN_MESSAGE': 'seen_message',
         'CHAT_END': 'chat_end',
-
-        # --- Response in Consumer ---
-        # Useless | Created for readibility
-        # 'SEND_STATUS': 'send_status'
+        'CHAT_CREATED': 'chat_created',
+        'SEND_STATUS': 'send_status'
     }
 
-    # Base Method
-    def send_to_group(self, type_response, data={}, group_name=None):
 
+    # Base Method
+    def add_to_group(self, group_name, channel_name=None):
+        async_to_sync(self.channel_layer.group_add)(
+            group_name,
+            channel_name or self.channel_name
+        )
+
+    def send_to_group(self, type_response, data={}, group_name=None):
         def send(group_name_reciver):
             async_to_sync(self.channel_layer.group_send)(
                 group_name_reciver,
@@ -43,12 +48,16 @@ class Response:
         else:
             send(group_name or self.chat.get_group_name())
 
-    # Base Method
     def type_send_data(self, event):
         data = json.dumps(event['data'])
         self.send(text_data=data)
 
-    # Handlers
+    def get_response_handler(self,request_name):
+        handler_response_name = self.RESPONSES.get(request_name, '')
+        handler_response = getattr(self, handler_response_name, None)
+        return handler_response
+
+    # Handlers Response
     def send_text_message(self, data_request):
         text_message = data_request.get('message')
         if text_message:
@@ -115,43 +124,67 @@ class Response:
         else:
             self.chat.seen_message_admin()
 
-        self.send_to_group('SEEN_MESSAGE',{
-            'sender_state':self.type_user,
+        self.send_to_group('SEEN_MESSAGE', {
+            'sender_state': self.type_user,
             'chat_id': self.chat.id
         })
 
     def chat_end(self, data_request):
         chat = self.chat
         close_auto = data_request.get('close_auto') or False
+        type_close = ''
         if close_auto == True:
-            chat.type_close = 'closed_auto'
+            type_close = 'closed_auto'
         else:
             if self.type_user == 'user':
-                chat.type_close = 'closed_by_user'
+                type_close = 'closed_by_user'
             else:
-                chat.type_close = 'closed_by_admin'
+                type_close = 'closed_by_admin'
+        chat.type_close = type_close
         chat.is_active = False
         chat.save()
-        self.send_to_group('CHAT_ENDED')
+        self.send_to_group('CHAT_ENDED', {
+            'chat_id': self.chat.id,
+        })
 
-    # Requests in Consumer
-    def send_status(self, data_request):
-        group_name_reciver = ''
-        if self.type_user == 'user':
-            group_name_reciver = self.chat.get_group_name_admin()
-        else:
-            group_name_reciver = self.chat.get_group_name_user()
+    def chat_created(self, data_request):
+        section_group_name = self.chat.section.get_group_name_by_admin(self.chat.admin)
 
-        self.send_to_group('SEND_STATUS', data_request, group_name_reciver)
+        # Add section to group channel
+        self.send_to_group('CHAT_CREATED', {
+            'chat': serializers.Serializer_chat(self.chat)
+        },group_name=[
+            section_group_name, # Send to consumer section and in next step consumer section will add self to group chat
+            self.chat.get_group_name()
+        ])
+
+
+    def send_status(self, data_request={}):
+        data_request = self.get_status_data()
+        self.send_to_group('SEND_STATUS', {
+            'sender_state': self.type_user,
+            'chat_id': self.chat.id,
+            **data_request
+        })
 
 
 class ResponseSection(Response):
-    RESPONSES = {
-        # --- Response in Consumer ---
-        # Useless | Created for readibility
-        # 'SEND_STATUS': 'send_status'
-    }
 
-    def send_status(self, data_request):
+    # Base Method
+    def type_send_data(self, event):
+        type_response = event['data']['TYPE_RESPONSE'] or None
+        if type_response == 'CHAT_CREATED':
+            # Update Chats
+            self.update_chats()
+            # Add section to new group chat
+            last_chat = self.chats.last()
+            self.add_to_group(last_chat.get_group_name())
+            # Send new status to group chat for section
+
+        super().type_send_data(event)
+
+
+    def send_status(self, data_request={}):
         # Send status to all chat group
-        self.send_to_group('SEND_STATUS', data_request, [chat.get_group_name_user() for chat in self.chats])
+        data_request = self.get_status_data()
+        self.send_to_group('SEND_STATUS', data_request, [chat.get_group_name() for chat in self.chats])

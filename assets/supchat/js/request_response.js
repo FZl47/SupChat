@@ -140,6 +140,29 @@ new ResponseSupChat('CHAT_ENDED', function (data) {
 })
 
 
+// response user baned
+new ResponseSupChat('USER_BANED', function (data) {
+    if (SUP_CHAT.TYPE_USER == 'USER') {
+        SUP_CHAT.show_error(403)
+        SUP_CHAT.close_socket()
+    }
+
+})
+
+
+// This response is received after disconnection, in fact it is now ineffective
+// response user unbaned
+// new ResponseSupChat('USER_UNBANED', function (data) {
+//     if (data.connect_again){
+//         SUP_CHAT.show_error(0)
+//         SUP_CHAT.reset_messages()
+//         SUP_CHAT._init_chat_or_register()
+//         SUP_CHAT.reset_count_try()
+//         SUP_CHAT.create_connection()
+//     }
+// })
+
+
 // --- RESPONSES in CHAT LIST ---
 
 
@@ -311,6 +334,17 @@ class RequestIsVocingSupChat extends _RequestBaseSupChat {
 }
 
 
+class RequestSendStatusSupChat extends _RequestBaseSupChat {
+    constructor() {
+        super('SEND_STATUS');
+    }
+
+    send() {
+        this.send_to_socket()
+    }
+}
+
+
 class RequestSeenMessageSupChat extends _RequestBaseSupChat {
     constructor() {
         super('SEEN_MESSAGE');
@@ -341,9 +375,29 @@ class RequestChatCreatedSupChat extends _RequestBaseSupChat {
         super('CHAT_CREATED');
     }
 
-    send(chat) {
+    send() {
+        this.send_to_socket()
+    }
+}
+
+class RequestUserBanedSupChat extends _RequestBaseSupChat {
+    constructor() {
+        super('USER_BANED');
+    }
+
+    send() {
+        this.send_to_socket()
+    }
+}
+
+class RequestUserUnBanedSupChat extends _RequestBaseSupChat {
+    constructor() {
+        super('USER_UNBANED');
+    }
+
+    send(connect_again) {
         let data = {
-            'chat': chat
+            'connect_again': connect_again
         }
         this.send_to_socket(data)
     }
@@ -356,7 +410,10 @@ const RequestSupChat = {
     'edit_message': new RequestEditMessageSupChat(),
     'is_typing': new RequestIsTypingSupChat(),
     'is_voicing': new RequestIsVocingSupChat(),
+    'send_status': new RequestSendStatusSupChat(),
     'seen_message': new RequestSeenMessageSupChat(),
     'chat_end': new RequestChatEndSupChat(),
     'chat_created': new RequestChatCreatedSupChat(),
+    'user_baned': new RequestUserBanedSupChat(),
+    'user_unbaned': new RequestUserUnBanedSupChat(),
 }

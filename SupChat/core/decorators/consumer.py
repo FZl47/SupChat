@@ -11,8 +11,7 @@ def user_authenticated(func):
             self.user_supchat = user
             return func(self)
         else:
-            self.close(code=4003)
-
+            raise exceptions.RequestAborted
     return wrapper
 
 
@@ -24,7 +23,7 @@ def admin_authenticated(func):
             self.admin_supchat = admin
             return func(self)
         else:
-            self.close(code=4003)
+            raise exceptions.RequestAborted
 
     return wrapper
 

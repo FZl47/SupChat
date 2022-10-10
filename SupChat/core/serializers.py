@@ -82,9 +82,11 @@ def Serializer_status(user):
 
 def Serializer_user_chat(user):
     return {
+        "ip":user.ip,
         "session_key": user.session_key,
         "name": user.get_full_name(),
         "image": user.get_image(),
+        "in_blacklist":user.in_blacklist(),
         **Serializer_status(user)
     }
 

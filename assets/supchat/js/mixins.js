@@ -14,15 +14,20 @@ class WebSockectSupChatMixin {
 
     //--- CAN_CREATE_CONNECTION | CAN_CREATE_CONNECTION => true or false
 
-    constructor(count_try_create_connection_websocket=5) {
-        this.count_try_create_connection_websocket =  count_try_create_connection_websocket
+    constructor(count_try_create_connection_websocket = 5) {
+        this._count_try_create_connection_websocket = count_try_create_connection_websocket
+        this.count_try_create_connection_websocket = count_try_create_connection_websocket
     }
 
+    reset_count_try() {
+        this.count_try_create_connection_websocket = this._count_try_create_connection_websocket
+    }
 
     // Connection
     create_connection() {
         let WebSocketObj = this
         let socket
+
         function create_socket() {
 
             socket = new WebSocket(get_protocol_socket() + (get_only_url_backend() + WebSocketObj._get_websocket_url()))
@@ -32,7 +37,6 @@ class WebSockectSupChatMixin {
                 WebSocketObj.socket_recive(e)
             }
             socket.onopen = function (e) {
-                WebSocketObj.count_try_create_connection_websocket = 1
                 WebSocketObj.socket_loading(false)
                 WebSocketObj.socket_open(e)
             }
@@ -59,6 +63,10 @@ class WebSockectSupChatMixin {
         if (this.CAN_CREATE_CONNECTION) {
             create_socket()
         }
+    }
+
+    close_socket() {
+        this.SOCKET.close()
     }
 }
 

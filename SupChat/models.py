@@ -97,6 +97,8 @@ class Section(models.Model):
     def get_group_name_by_admin(self,admin):
         return f"GroupName_SectionID_{self.id}_{admin.group_name}"
 
+
+
     def get_chats_active(self):
         # Chat active with minimum 1 message
         # and
@@ -301,7 +303,7 @@ class ChatGroup(models.Model):
         """
             must use this in consumer chat
         """
-        return f"GroupName_{self.admin.group_name}_{self.user.group_name}"
+        return f"GroupName_ChatID_{self.id}_{self.admin.group_name}_{self.user.group_name}"
 
     def get_group_name_admin(self):
         """

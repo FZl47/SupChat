@@ -61,10 +61,10 @@ class TranslateSupChat {
         'روز پیش': [
             'Day ago'
         ],
-        'شما دسترسی ندارید': [
+        'دسترسی ندارید': [
             'Access denied'
         ],
-        'حساب شما در لیست سیاه قرار دارد . برای رفع این مشکل میتوانید با پشتیبانی در ارتباط باشید': [
+        'حساب شما در لیست سیاه قرار دارد برای رفع این مشکل میتوانید با پشتیبانی در ارتباط باشید': [
             'Your account is in the blacklist . To solve this problem , you can contact support'
         ],
         'مسدود': [
@@ -78,6 +78,21 @@ class TranslateSupChat {
         ],
         'از ارسال بازخورد شما سپاسگزاریم': [
             'Thank you for submitting your feedback'
+        ],
+        'گفت و گو بسته شد': [
+            'The chat was closed'
+        ],
+        'انتقال گفت و گو': [
+            'Transferring chat'
+        ],
+        'افزودن به لیست سیاه': [
+            'Add to blacklist'
+        ],
+        'دانلود گفت و گو': [
+            'Download chat'
+        ],
+        'خارج کردن از لیست سیاه': [
+            'Remove from blacklist'
         ]
     }
 
@@ -122,10 +137,17 @@ class SupChat extends (WebSockectSupChatMixin) {
         this.VOICE_RECORDER
     }
 
+    download_chat() {
+        html2pdf(this.ELEMENTS.supchat_messages_chat)
+    }
 
     reset_chat() {
         this.CHAT = undefined
         this.CHAT_INITED = false
+        this.reset_messages()
+    }
+
+    reset_messages() {
         this.ELEMENTS.supchat_messages_chat.innerHTML = ''
         MessageSupChat.LIST_MESSAGES = []
     }
@@ -152,22 +174,15 @@ class SupChat extends (WebSockectSupChatMixin) {
     }
 
     _set_elements() {
+        // Bse elements
         this.ELEMENTS = {
             supchat: document.getElementById('SupChat'),
-            btn_open_supchat: document.getElementById('BtnOpenSupChat'),
-            btn_close_supchat: document.getElementById('BtnCloseSupChat'),
-            supchat_start: document.getElementById('SupChatStart'),
             supchat_content: document.getElementById('SupChatContent'),
             supchat_content_header: document.querySelector('#SupChatContent header'),
             supchat_content_main: document.querySelector('#SupChatContent main'),
             supchat_content_footer: document.querySelector('#SupChatContent footer'),
             supchat_messages_chat: document.querySelector('#supchat-messages-chat'),
             supchat_loading: document.getElementById('SupChatLoading'),
-            supchat_rate: document.getElementById('SupChatRate'),
-            supchat_rate_submited: document.querySelector('#SupChatRateSubmited'),
-            btn_start_chat: document.getElementById('BtnStartChatSupChat'),
-            input_choice_section: document.getElementById('input-choice-section-supchat'),
-            input_phone_or_email: document.getElementById('input-enter-phone-or-email-supchat'),
             btn_more_option_chat_supchat: document.getElementById('btn-more-option-chat-supchat'),
             container_more_option_chat_supchat: document.getElementById('container-more-options-chat-supchat'),
             btn_send_message_supchat: document.getElementById('btn-send-message-supchat'),
@@ -181,7 +196,6 @@ class SupChat extends (WebSockectSupChatMixin) {
             btn_send_voice_recorded: document.getElementById('btn-send-voice-recorded-supchat'),
             image_user_chat_supchat: document.getElementById('image-user-chat-supchat'),
             name_user_info_chat_supchat: document.getElementById('name-user-info-chat-supchat'),
-            name_section_info_chat_supchat: document.getElementById('name-section-info-chat-supchat'),
             status_online_info_chat_supchat: document.getElementById('status-online-info-chat-supchat'),
             last_seen_info_chat_supchat: document.getElementById('last-seen-info-chat-supchat'),
             supchat_error: document.getElementById('SupChatError'),
@@ -190,15 +204,8 @@ class SupChat extends (WebSockectSupChatMixin) {
             supchat_error_description: document.querySelector('#SupChatError p'),
             content_message_for_edit_chat_supchat: document.querySelector('#content-message-for-edit-chat-supchat'),
             btn_set_default_edit_message: document.querySelector('#btn-set-default-edit-message'),
-            notification_supchat: document.getElementById('NotificationSupChat'),
-            notification_message_supchat: document.querySelector('#NotificationSupChat p'),
-            notification_sound: new Audio(get_link_assets_supchat('sound/1.mp3', false, true)),
             btn_end_chat_supchat: document.querySelector('#btn-end-chat-supchat'),
-            btn_rate_star_1: document.querySelector('#btn-rate-1-star-supchat'),
-            btn_rate_star_2: document.querySelector('#btn-rate-2-star-supchat'),
-            btn_rate_star_3: document.querySelector('#btn-rate-3-star-supchat'),
-            btn_rate_star_4: document.querySelector('#btn-rate-4-star-supchat'),
-            btn_rate_star_5: document.querySelector('#btn-rate-5-star-supchat'),
+            btn_download_chat_supchat: document.querySelector('#btn-download-chat-supchat'),
         }
     }
 
@@ -279,6 +286,7 @@ class SupChat extends (WebSockectSupChatMixin) {
         }
     }
 
+
     set_info_for_edit_message(id, old_message) {
         this.toggle_container_edit('show')
         this.ELEMENTS.input_message_supchat.setAttribute('type-message', 'edit')
@@ -296,11 +304,17 @@ class SupChat extends (WebSockectSupChatMixin) {
     }
 
     show_error(status) {
+        // if status == 0 => then remove error
+        if (status == 0) {
+            this.ELEMENTS.supchat_error.removeAttribute('container-show')
+            this.ELEMENTS.supchat.classList.remove('error-supchat')
+        }
         this.ELEMENTS.supchat_error.setAttribute('container-show', '')
+        this.ELEMENTS.supchat.classList.add('error-supchat')
         this.ELEMENTS.supchat_error_img.alt = `Error ${status}`
         if (status == 403) {
             this.ELEMENTS.supchat_error_img.src = get_link_assets_supchat('images/default/err_403.png', false, true)
-            this.ELEMENTS.supchat_error_title.innerText = SUP_CHAT.TRANSLATE.get('شما دسترسی ندارید')
+            this.ELEMENTS.supchat_error_title.innerText = SUP_CHAT.TRANSLATE.get('دسترسی ندارید')
             this.ELEMENTS.supchat_error_description.innerText = SUP_CHAT.TRANSLATE.get('حساب شما در لیست سیاه قرار دارد برای رفع این مشکل میتوانید با پشتیبانی در ارتباط باشید')
         }
     }
@@ -374,50 +388,11 @@ class SupChat extends (WebSockectSupChatMixin) {
         }
     }
 
+
     _events() {
+        // Base event for base elements
         let elements = SUP_CHAT.ELEMENTS
 
-        if (elements.btn_open_supchat) {
-            elements.btn_open_supchat.addEventListener('click', function () {
-                if (SUP_CHAT.CHAT_INITED == false && !SUP_CHAT.CHAT) {
-                    SUP_CHAT._init_chat_or_register()
-                }
-                SUP_CHAT.toggle_supchat('open')
-                // Seen message request
-                RequestSupChat.seen_message.send()
-            })
-        }
-
-
-        elements.btn_close_supchat.addEventListener('click', function () {
-            SUP_CHAT.toggle_supchat('close')
-            SUP_CHAT.toggle_container_supchat_rate_submited('hide')
-        })
-
-        if (elements.input_phone_or_email) {
-            elements.input_phone_or_email.addEventListener('input', function () {
-                let valid_email = check_input_validation(this, 3, 100, 'None', 'Email', true)
-                let valid_phone = check_input_validation(this, 10, 15, 'None', 'Number', true)
-                if (valid_phone || valid_email) {
-                    this.classList.add('input-valid')
-                    this.classList.remove('input-invalid')
-                    elements.btn_start_chat.setAttribute('valid', true)
-                } else {
-                    this.classList.remove('input-valid')
-                    this.classList.add('input-invalid')
-                    elements.btn_start_chat.setAttribute('valid', false)
-                }
-            })
-        } else {
-            elements.btn_start_chat.setAttribute('valid', true)
-        }
-
-        elements.btn_start_chat.addEventListener('click', function () {
-            let valid = this.getAttribute('valid') || 'false'
-            if (valid == 'true') {
-                SUP_CHAT.start_chat()
-            }
-        })
 
         elements.btn_send_message_supchat.addEventListener('click', function () {
             let state = this.getAttribute('state') || 'false'
@@ -521,35 +496,12 @@ class SupChat extends (WebSockectSupChatMixin) {
             SUP_CHAT.set_default_info_for_edit_message()
         })
 
-        if (elements.notification_supchat) {
-            elements.notification_supchat.addEventListener('click', function () {
-                SUP_CHAT.ELEMENTS.btn_open_supchat.click()
-            })
-        }
-
-
         elements.btn_end_chat_supchat.addEventListener('click', function () {
             RequestSupChat.chat_end.send()
         })
 
-        elements.btn_rate_star_1.addEventListener('click', function () {
-            SUP_CHAT.submit_rate_chat(1)
-        })
-
-        elements.btn_rate_star_2.addEventListener('click', function () {
-            SUP_CHAT.submit_rate_chat(2)
-        })
-
-        elements.btn_rate_star_3.addEventListener('click', function () {
-            SUP_CHAT.submit_rate_chat(3)
-        })
-
-        elements.btn_rate_star_4.addEventListener('click', function () {
-            SUP_CHAT.submit_rate_chat(4)
-        })
-
-        elements.btn_rate_star_5.addEventListener('click', function () {
-            SUP_CHAT.submit_rate_chat(5)
+        elements.btn_download_chat_supchat.addEventListener('click', function () {
+            SUP_CHAT.download_chat()
         })
 
     }
@@ -561,7 +513,6 @@ class SupChat extends (WebSockectSupChatMixin) {
         this.create_connection()
         this.scroll_to_down_chat()
         this._set_info_chat()
-
     }
 
     scroll_to_down_chat() {
@@ -796,10 +747,6 @@ class SupChat extends (WebSockectSupChatMixin) {
         }
     }
 
-    // Action
-    close_socket() {
-        this.SOCKET.close()
-    }
 
 }
 
@@ -843,6 +790,122 @@ class ChatUser extends SupChat {
             SUP_CHAT.ELEMENTS.btn_open_supchat.classList.remove('d-none')
             SUP_CHAT.IS_OPEN = false
         }
+    }
+
+    _set_elements() {
+        // Base elements
+        super._set_elements()
+        // User elements
+        this.ELEMENTS = {
+            ...this.ELEMENTS, ...{
+                btn_open_supchat: document.getElementById('BtnOpenSupChat'),
+                btn_close_supchat: document.getElementById('BtnCloseSupChat'),
+                supchat_start: document.getElementById('SupChatStart'),
+                supchat_rate: document.getElementById('SupChatRate'),
+                supchat_rate_submited: document.querySelector('#SupChatRateSubmited'),
+                btn_start_chat: document.getElementById('BtnStartChatSupChat'),
+                input_choice_section: document.getElementById('input-choice-section-supchat'),
+                input_phone_or_email: document.getElementById('input-enter-phone-or-email-supchat'),
+                name_section_info_chat_supchat: document.getElementById('name-section-info-chat-supchat'),
+                notification_supchat: document.getElementById('NotificationSupChat'),
+                notification_message_supchat: document.querySelector('#NotificationSupChat p'),
+                notification_sound: new Audio(get_link_assets_supchat('sound/1.mp3', false, true)),
+                btn_rate_star_1: document.querySelector('#btn-rate-1-star-supchat'),
+                btn_rate_star_2: document.querySelector('#btn-rate-2-star-supchat'),
+                btn_rate_star_3: document.querySelector('#btn-rate-3-star-supchat'),
+                btn_rate_star_4: document.querySelector('#btn-rate-4-star-supchat'),
+                btn_rate_star_5: document.querySelector('#btn-rate-5-star-supchat'),
+            }
+        }
+    }
+
+    _events() {
+        let elements = SUP_CHAT.ELEMENTS
+        // Base event
+        super._events()
+        // User event
+        if (elements.btn_open_supchat) {
+            elements.btn_open_supchat.addEventListener('click', function () {
+                if (SUP_CHAT.CHAT_INITED == false && !SUP_CHAT.CHAT) {
+                    SUP_CHAT._init_chat_or_register()
+                }
+                SUP_CHAT.toggle_supchat('open')
+                // Seen message request
+                RequestSupChat.seen_message.send()
+            })
+        }
+
+        if (elements.btn_close_supchat) {
+            elements.btn_close_supchat.addEventListener('click', function () {
+                SUP_CHAT.toggle_supchat('close')
+                SUP_CHAT.toggle_container_supchat_rate_submited('hide')
+            })
+        }
+
+        if (elements.input_phone_or_email) {
+            elements.input_phone_or_email.addEventListener('input', function () {
+                let valid_email = check_input_validation(this, 3, 100, 'None', 'Email', true)
+                let valid_phone = check_input_validation(this, 10, 15, 'None', 'Number', true)
+                if (valid_phone || valid_email) {
+                    this.classList.add('input-valid')
+                    this.classList.remove('input-invalid')
+                    elements.btn_start_chat.setAttribute('valid', true)
+                } else {
+                    this.classList.remove('input-valid')
+                    this.classList.add('input-invalid')
+                    elements.btn_start_chat.setAttribute('valid', false)
+                }
+            })
+        } else {
+            if (elements.btn_start_chat) {
+                elements.btn_start_chat.setAttribute('valid', true)
+            }
+        }
+        if (elements.btn_start_chat) {
+            elements.btn_start_chat.addEventListener('click', function () {
+                let valid = this.getAttribute('valid') || 'false'
+                if (valid == 'true') {
+                    SUP_CHAT.start_chat()
+                }
+            })
+        }
+
+        if (elements.notification_supchat) {
+            elements.notification_supchat.addEventListener('click', function () {
+                SUP_CHAT.ELEMENTS.btn_open_supchat.click()
+            })
+        }
+
+        if (elements.btn_rate_star_1) {
+            elements.btn_rate_star_1.addEventListener('click', function () {
+                SUP_CHAT.submit_rate_chat(1)
+            })
+        }
+
+        if (elements.btn_rate_star_2) {
+            elements.btn_rate_star_2.addEventListener('click', function () {
+                SUP_CHAT.submit_rate_chat(2)
+            })
+        }
+
+        if (elements.btn_rate_star_3) {
+            elements.btn_rate_star_3.addEventListener('click', function () {
+                SUP_CHAT.submit_rate_chat(3)
+            })
+        }
+
+        if (elements.btn_rate_star_4) {
+            elements.btn_rate_star_4.addEventListener('click', function () {
+                SUP_CHAT.submit_rate_chat(4)
+            })
+        }
+
+        if (elements.btn_rate_star_5) {
+            elements.btn_rate_star_5.addEventListener('click', function () {
+                SUP_CHAT.submit_rate_chat(5)
+            })
+        }
+
     }
 
     _set_info_chat() {
@@ -906,7 +969,9 @@ class ChatUser extends SupChat {
                     let socket_open_callback = SUP_CHAT.socket_open
                     SUP_CHAT.socket_open = function (e) {
                         // Send request chat created
-                        RequestSupChat.chat_created.send(SUP_CHAT.CHAT)
+                        RequestSupChat.chat_created.send()
+                        // Send status user
+                        RequestSupChat.send_status.send()
                         // Set past callback
                         SUP_CHAT.socket_open = socket_open_callback
                         SUP_CHAT.socket_open(e)
@@ -956,6 +1021,7 @@ class ChatAdmin extends SupChat {
         return `/ws/chat/admin/${this.CHAT.id}`
     }
 
+
     run() {
         this._set_supchat_info(this.context)
         this._create_element_supchat()
@@ -964,6 +1030,14 @@ class ChatAdmin extends SupChat {
         this._events()
         this.init_chat()
         this.toggle_supchat('open')
+    }
+
+    init_chat() {
+        this._create_messages(this.CHAT.messages)
+        this.toggle_container_supchat_content('show')
+        this.create_connection()
+        this.scroll_to_down_chat()
+        this._set_info_chat()
     }
 
     toggle_supchat(state) {
@@ -976,6 +1050,48 @@ class ChatAdmin extends SupChat {
             SUP_CHAT.IS_OPEN = false
         }
     }
+
+    _set_elements() {
+        // Base elements
+        super._set_elements()
+        // Admin elements
+        this.ELEMENTS = {
+            ...this.ELEMENTS, ...{
+                ip_address_user_supchat: document.getElementById('ip-address-user-supchat'),
+                btn_transfer_chat_supchat: document.getElementById('btn-transfer-chat-supchat'),
+                btn_ban_chat_supchat: document.getElementById('btn-ban-chat-supchat'),
+                btn_unban_chat_supchat: document.getElementById('btn-unban-chat-supchat'),
+            }
+        }
+    }
+
+    _events() {
+        let elements = SUP_CHAT.ELEMENTS
+        // Base event
+        super._events()
+        // Admin event
+
+        elements.btn_ban_chat_supchat.addEventListener('click', function () {
+            RequestSupChat.user_baned.send()
+            elements.btn_ban_chat_supchat.classList.add('d-none')
+            elements.btn_unban_chat_supchat.classList.remove('d-none')
+            elements.supchat.classList.add('footer-is-hide-supchat')
+        })
+
+        elements.btn_unban_chat_supchat.addEventListener('click', function () {
+            RequestSupChat.user_unbaned.send(true)
+            elements.btn_unban_chat_supchat.classList.add('d-none')
+            elements.btn_ban_chat_supchat.classList.remove('d-none')
+            elements.supchat.classList.remove('footer-is-hide-supchat')
+        })
+
+        if (elements.btn_transfer_chat_supchat) {
+            elements.btn_transfer_chat_supchat.addEventListener('click', function () {
+
+            })
+        }
+    }
+
 
     _create_element_supchat() {
         let supchat = document.getElementById('SupChat')
@@ -992,10 +1108,7 @@ class ChatAdmin extends SupChat {
         let user = this.CHAT.user
         this.ELEMENTS.image_user_chat_supchat.src = user.image
         this.ELEMENTS.name_user_info_chat_supchat.innerText = user.name
-        let el_name_section = this.ELEMENTS.name_section_info_chat_supchat
-        if (el_name_section) {
-            el_name_section.classList.add('d-none') // Hide name section
-        }
+        this.ELEMENTS.ip_address_user_supchat.innerText = user.ip
         this.set_status_element(user.is_online, user.last_seen)
     }
 
@@ -1016,13 +1129,17 @@ class ChatAdmin extends SupChat {
         // _add_css_link(get_link_assets_supchat('css/theme/default.css', false, true))
     }
 
-    // Remove notification admin and Added notification web instead
+    // Remove notification supchat and Added notification web instead
     // overwrite
     show_notification() {
     }
 
     chat_ended() {
         this.close_socket()
+        let container_chat_ended = document.getElementById('div')
+        container_chat_ended.id = 'SupChatEnded'
+        container_chat_ended.innerHTML = get_node_chat_ended()
+        this.ELEMENTS.supchat.appendChild(container_chat_ended)
     }
 
 
@@ -1184,7 +1301,8 @@ class ChatList extends WebSockectSupChatMixin {
         if (chat_element) {
             chat_element.setAttribute('seen', true)
             chat_element.setAttribute('count-unread-message', count_unread_message)
-            chat_element.querySelector('[container-count-message] span').innerText = count_unread_message
+            // chat_element.querySelector('[container-count-message] span').innerText = count_unread_message
+            // chat_element.setAttribute('sender-type', 'admin')
         }
     }
 
@@ -1192,7 +1310,8 @@ class ChatList extends WebSockectSupChatMixin {
         let chat_id = data.chat_id
         let chat_element = document.querySelector(`#chat-${chat_id}`)
         if (chat_element) {
-            chat_element.classList.add('chat-deleted')
+            // chat_element.classList.add('chat-deleted')
+            chat_element.remove()
         }
     }
 
@@ -1208,8 +1327,6 @@ class ChatList extends WebSockectSupChatMixin {
         chat_list.innerHTML = get_node_chat_list(chat)
         document.getElementById('chats-list').appendChild(chat_list)
     }
-
-
 }
 
 
@@ -1233,6 +1350,7 @@ class MessageSupChat {
 
     constructor(message) {
         MessageSupChat.LIST_MESSAGES.push(this)
+        this.message = message
         this.id = message.id
         this.ELEMENTS = {}
 
@@ -1285,6 +1403,7 @@ class TextMessage extends MessageSupChat {
     constructor(message) {
         super(message)
         this.text_message = message.text
+        this.lable_message = message.text_lable
     }
 
     create_message_you(message) {
@@ -1343,6 +1462,7 @@ class TextMessage extends MessageSupChat {
 class AudioMessage extends MessageSupChat {
     constructor(message) {
         super(message)
+        this.lable_message = message.text_lable
     }
 
     create_message_you(message) {
@@ -1374,4 +1494,5 @@ class SystemMessage {
         })
     }
 }
+
 

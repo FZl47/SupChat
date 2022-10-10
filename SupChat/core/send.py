@@ -1,7 +1,7 @@
 import json
 from asgiref.sync import async_to_sync
 from SupChat.core import serializers
-from SupChat.models import Message, TextMessage
+from SupChat.models import Message, TextMessage, BlackList, SystemMessage
 
 
 class Response:
@@ -18,9 +18,10 @@ class Response:
         'SEEN_MESSAGE': 'seen_message',
         'CHAT_END': 'chat_end',
         'CHAT_CREATED': 'chat_created',
-        'SEND_STATUS': 'send_status'
+        'SEND_STATUS': 'send_status',
+        'USER_BANED': 'user_baned',
+        'USER_UNBANED': 'user_unbaned',
     }
-
 
     # Base Method
     def add_to_group(self, group_name, channel_name=None):
@@ -52,7 +53,7 @@ class Response:
         data = json.dumps(event['data'])
         self.send(text_data=data)
 
-    def get_response_handler(self,request_name):
+    def get_response_handler(self, request_name):
         handler_response_name = self.RESPONSES.get(request_name, '')
         handler_response = getattr(self, handler_response_name, None)
         return handler_response
@@ -150,14 +151,31 @@ class Response:
     def chat_created(self, data_request):
         section_group_name = self.chat.section.get_group_name_by_admin(self.chat.admin)
 
-        # Add section to group channel
         self.send_to_group('CHAT_CREATED', {
             'chat': serializers.Serializer_chat(self.chat)
-        },group_name=[
-            section_group_name, # Send to consumer section and in next step consumer section will add self to group chat
+        }, group_name=[
+            # Send to consumer section and in next step consumer section will add self to group chat
+            section_group_name,
             self.chat.get_group_name()
         ])
 
+    def user_baned(self, data_request):
+        try:
+            BlackList.objects.create(user=self.chat.user)
+        except:
+            pass  # From before in blacklist
+        self.chat.is_active = False
+        self.chat.save()
+        self.send_to_group('USER_BANED')
+
+    def user_unbaned(self, data_request):
+        try:
+            self.chat.user.blacklist.delete()
+        except:
+            pass # User not in blacklist
+        self.send_to_group('USER_UNBANED',{
+            **data_request
+        })
 
     def send_status(self, data_request={}):
         data_request = self.get_status_data()
@@ -182,7 +200,6 @@ class ResponseSection(Response):
             # Send new status to group chat for section
 
         super().type_send_data(event)
-
 
     def send_status(self, data_request={}):
         # Send status to all chat group

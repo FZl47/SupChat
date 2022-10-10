@@ -8,14 +8,11 @@ from SupChat.core import serializers
 import json
 
 
-
-
 class SupChat(WebsocketConsumer):
 
     def accept(self):
         super().accept()
         self.ACCEPTED = True
-
 
     def receive(self, text_data=None, bytes_data=None):
         text_data = json.loads(text_data)
@@ -24,16 +21,13 @@ class SupChat(WebsocketConsumer):
         if handler_response:
             handler_response(text_data)
 
-
     def disconnect(self, code):
         super().disconnect(code)
         # Left at Chat Group
         async_to_sync(self.channel_layer.group_discard)(self.chat.get_group_name(), self.channel_name)
 
 
-
-
-class ChatUser(SupChat,send.Response):
+class ChatUser(SupChat, send.Response):
     """
         Order of decorators is important
     """
@@ -47,21 +41,18 @@ class ChatUser(SupChat,send.Response):
         self._send_status()
         self.accept()
 
-
-    def _set_status(self,status):
+    def _set_status(self, status):
         self.user_supchat.status_online = status
         if status == 'offline':
-            self.user_supchat.last_seen = config.get_datetime()
+            self.user_supchat.set_last_seen_offline()
         self.user_supchat.save()
 
     def _send_status(self):
         handler_response = self.get_response_handler('SEND_STATUS')
         handler_response()
 
-
     def get_status_data(self):
         return serializers.Serializer_status(self.user_supchat)
-
 
     def disconnect(self, code):
         # Send and Set Status
@@ -70,9 +61,7 @@ class ChatUser(SupChat,send.Response):
         super().disconnect(code)
 
 
-
-
-class AdminUser(SupChat,send.Response):
+class AdminUser(SupChat, send.Response):
     """
         Order of decorators is important
     """
@@ -86,10 +75,10 @@ class AdminUser(SupChat,send.Response):
         self._send_status()
         self.accept()
 
-    def _set_status(self,status):
+    def _set_status(self, status):
         self.admin_supchat.status_online = status
         if status == 'offline':
-            self.admin_supchat.last_seen = config.get_datetime()
+            self.admin_supchat.set_last_seen_offline()
         self.admin_supchat.save()
 
     def get_status_data(self):
@@ -106,7 +95,7 @@ class AdminUser(SupChat,send.Response):
         super().disconnect(code)
 
 
-class ChatList(SupChat,send.ResponseSection):
+class ChatList(SupChat, send.ResponseSection):
     """
         Order of decorators is important
     """
@@ -116,7 +105,8 @@ class ChatList(SupChat,send.ResponseSection):
     @decorators.get_section
     def connect(self):
         # Add self to self group
-        self.add_to_group(self.section.get_group_name_by_admin(self.admin_supchat))
+        self.group_name_section = self.section.get_group_name_by_admin(self.admin_supchat)
+        self.add_to_group(self.group_name_section)
 
         # Add self to all group chat active
         self.chats = self.get_chats()
@@ -128,12 +118,12 @@ class ChatList(SupChat,send.ResponseSection):
         self.accept()
 
     def get_chats(self):
-        return self.section.chatgroup_set.filter(is_active=True,admin=self.admin_supchat).all()
+        return self.section.chatgroup_set.filter(is_active=True, admin=self.admin_supchat).all()
 
     def update_chats(self):
         self.chats = self.get_chats()
 
-    def _set_status(self,status):
+    def _set_status(self, status):
         self.admin_supchat.status_online = status
         if status == 'offline':
             self.admin_supchat.last_seen = config.get_datetime()
@@ -153,3 +143,6 @@ class ChatList(SupChat,send.ResponseSection):
         # Left at All Chat Group
         for chat in self.chats:
             async_to_sync(self.channel_layer.group_discard)(chat.get_group_name(), self.channel_name)
+
+        # Left at self group
+        async_to_sync(self.channel_layer.group_discard)(self.group_name_section, self.channel_name)

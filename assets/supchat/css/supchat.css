@@ -15,13 +15,14 @@ button {
     border-radius: 12px;
     border: 1px solid #e4eeeb;
     box-shadow: 0 3px 15px rgba(191, 191, 191, 0.5);
+    background: #fff;
     z-index: 10;
     transition: all .3s;
     font-size: 98%;
 }
 
-.error-supchat > div:not(#SupChatError){
-    display: none!important;
+.error-supchat > div:not(#SupChatError) {
+    display: none !important;
 }
 
 #SupChat[state='open'] {
@@ -333,7 +334,6 @@ button {
 }
 
 #name-section-info-chat-supchat {
-    color: #eee;
     font-size: 85%;
 }
 
@@ -341,11 +341,9 @@ button {
     border: none;
     background: none;
     font-size: 160%;
-    color: #006ae1;
 }
 
 #container-more-options-chat-supchat {
-    background: #fff;
     border-radius: 4px;
     opacity: 0;
     visibility: hidden;
@@ -400,11 +398,10 @@ button {
     padding: 10px 0;
     height: calc(100% - 95px - 70px);
     direction: rtl;
-    background: #f7f7f7;
     transition: all .3s;
 }
 
-.footer-is-hide-supchat #SupChatContent > main{
+.footer-is-hide-supchat #SupChatContent > main {
     height: calc(100% - 95px);
 }
 
@@ -427,13 +424,7 @@ button {
 }
 
 #supchat-messages-chat::-webkit-scrollbar-thumb {
-    background: rgba(29, 238, 191, 0.8);
     border-radius: 50px;
-}
-
-
-#supchat-messages-chat::-webkit-scrollbar-thumb:hover {
-    background: rgb(29, 226, 179);
 }
 
 
@@ -441,15 +432,12 @@ button {
     display: none;
 }
 
-
 #btn-scroll-down-chat-supchat {
     position: absolute;
     bottom: 85px;
     left: 10px;
     width: 33px;
     height: 33px;
-    color: #ffffff;
-    background: #ff524f;
     padding-bottom: 4px;
     border-radius: 50%;
     font-size: 180%;
@@ -479,7 +467,6 @@ button {
 #SupChatContent > footer {
     width: 100%;
     border-top: 1px solid #eee;
-    background: #fff;
     height: 70px;
     transition: all .3s;
 }
@@ -633,9 +620,6 @@ button {
     transform: rotate(-180deg);
 }
 
-#btn-send-message-supchat[state='true'] svg {
-    fill: #00cdaa;
-}
 
 #input-message-supchat {
     text-align: right;
@@ -686,7 +670,6 @@ button {
 
 #btn-send-voice-recorded-supchat svg {
     width: 23px;
-    fill: #00cdaa;
     transform: rotate(-180deg);
 }
 
@@ -707,17 +690,10 @@ button {
     transition: all .35s;
 }
 
-
 #BtnStartChatSupChat[valid='true'] {
-    background: linear-gradient(-20deg, #ff5b56, #ff6f77);
-    box-shadow: 0 1px 2px rgba(255, 91, 86, 0.1);
-    color: #fff;
     cursor: pointer;
 }
 
-#BtnStartChatSupChat[valid='true']:hover {
-    box-shadow: 0 3px 3px rgba(255, 91, 86, 0.7);
-}
 
 #SupChatLoading {
     position: absolute;
@@ -798,9 +774,6 @@ button {
     display: flex;
     justify-content: space-between !important;
     align-items: center;
-    background: #ff524f;
-    color: #fff;
-    box-shadow: 0 4px 5px #ddd;
     position: fixed;
     bottom: 80px;
     right: 90px;
@@ -831,11 +804,11 @@ button {
     text-align: right;
     text-overflow: ellipsis;
     direction: rtl;
+    font-family: VazirMatn;
 }
 
 #NotificationSupChat i {
     font-size: 110%;
-    color: #fff;
 }
 
 #BtnOpenSupChat {
@@ -874,7 +847,6 @@ button {
     top: 8px;
     left: 8px;
     font-size: 130%;
-    color: #ee4a4e;
     background: none;
     border: none;
     cursor: pointer;
@@ -899,7 +871,6 @@ button {
     border-radius: 4px;
     padding: 6px 4px;
     margin: 15px auto;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(233, 233, 233, 0.6), rgba(255, 255, 255, 0.1));
 }
 
 .container-message-supchat-system .content-message-supchat {
@@ -921,16 +892,12 @@ button {
 .container-message-supchat[sender-type='you'] .content-message-supchat > main {
     border-radius: 15px 4px 15px 15px;
     padding: 6px;
-    background: #1dcfbe;
-    color: #fff;
     min-width: 120px;
 }
 
 .container-message-supchat[sender-type='other'] .content-message-supchat > main {
     border-radius: 4px 15px 15px 15px;
     padding: 6px;
-    background: #e8e8e8;
-    color: #444;
     min-width: 120px;
 }
 
@@ -1018,7 +985,6 @@ button {
     left: 5px;
     background: none;
     border: none;
-    color: #eee;
     font-size: 110%;
 }
 
@@ -1034,14 +1000,11 @@ button {
 
 .container-more-options-message-supchat {
     position: absolute;
-    width: 150px;
+    width: 160px;
     max-width: 100%;
     left: -10px;
     top: 0;
     border-radius: 5px;
-    background: #fff;
-    box-shadow: 0 0 4px #ddd;
-    border: 1px solid #ddd;
     direction: ltr;
     visibility: hidden;
     opacity: 0;
@@ -1059,7 +1022,7 @@ button {
     align-items: center;
     padding: 6px 8px;
     margin: 3px 0;
-    font-size: 85%;
+    font-size: 90%;
     transition: all .2s;
 }
 
@@ -1256,7 +1219,7 @@ button {
     }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 370px) {
     #input-message-supchat {
         width: 60%;
     }

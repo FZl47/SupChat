@@ -54,9 +54,6 @@ Global Styles
 @import '../css/spinners.css';
 @import '../css/animate.css';
 
-:root {
-    --base-color: #00ebd5;
-}
 
 * {
     outline: none;
@@ -6629,6 +6626,8 @@ File: scss
     font-weight: bold;
 }
 
+/* ===== Style SupChat Admin ===== */
+
 .container-title-supchat-intro {
     margin-top: 100px;
     margin-bottom: 10px;
@@ -6663,43 +6662,23 @@ File: scss
     padding-bottom: 20px;
 }
 
-.container-settings-chat::-webkit-scrollbar {
+::-webkit-scrollbar {
     height: 4px;
-    width: 10px;
+    width: 8px;
     border-radius: 10px;
 }
 
-.container-settings-chat::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 10px;
 }
 
-.container-settings-chat::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background: #aaa;
     border-radius: 10px;
 }
 
-.container-settings-chat::-webkit-scrollbar-thumb:hover {
-    background: #777;
-}
-
-.chats-list::-webkit-scrollbar {
-    height: 4px;
-    width: 7px;
-    border-radius: 10px;
-}
-
-.chats-list::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.chats-list::-webkit-scrollbar-thumb {
-    background: #aaa;
-    border-radius: 10px;
-}
-
-.chats-list::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     background: #777;
 }
 
@@ -6711,6 +6690,25 @@ File: scss
     box-shadow: none;
     background: none;
     font-size: 110%;
+}
+
+#SupChatEnded[container-show] {
+    display: flex;
+}
+
+#SupChatEnded {
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#SupChatEnded img {
+    margin: auto;
+}
+
+#SupChatEnded p {
+    font-size: 190%;
+    font-family: KalameBlack;
 }
 
 #SupChatListLoading {
@@ -6728,21 +6726,21 @@ File: scss
     transition: all .25s;
 }
 
-#container-more-options-chat-supchat{
+#container-more-options-chat-supchat {
     width: 190px;
 }
 
-#ip-address-user-supchat{
+#ip-address-user-supchat {
     font-size: 85%;
     color: #fff;
 }
 
-.chat-is-new{
-    display: none!important;
+.chat-is-new {
+    display: none !important;
 }
 
 .chat-deleted {
-    display: none!important;
+    display: none !important;
 }
 
 .chats-list .content-message-supchat {
@@ -6973,3 +6971,126 @@ File: scss
         display: none;
     }
 }
+
+@media screen and (max-width: 450px) {
+    #SupChat[state='open'] {
+        width: 100% !important;
+        border-radius: 12px;
+    }
+}
+
+
+@media screen and (max-height: 840px) {
+    #SupChat[state='open'] {
+        height: calc(100vh - 130px) !important;
+        border-radius: 12px;
+    }
+}
+
+
+@media screen and (max-height: 400px) {
+    #SupChat[state='open'] {
+        height: 400px !important;
+    }
+}
+
+.btn-open-options-dashboard {
+    font-size: 220%;
+    background: none;
+    outline: none;
+    border: none;
+    color: #888;
+}
+
+.options-dashboard {
+    padding: 10px 20px;
+    width: 270px;
+    text-align: center;
+    box-shadow: 0 3px 15px rgba(170, 170, 170, 0.5) !important;
+}
+
+.options-dashboard li {
+    margin: 15px auto;
+    border-bottom: 1px solid #bbb;
+}
+
+.options-dashboard li:first-of-type {
+    margin-top: 0;
+}
+
+.options-dashboard li:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.dropdown-lable {
+    text-align: right;
+    font-size: 85%;
+    padding-bottom: 5px;
+    color: #777;
+    border-bottom: 1px dashed #f0f0f0;
+}
+
+
+/* Switch btn */
+.toggle {
+    cursor: pointer;
+    display: inline-block;
+}
+
+.toggle-switch {
+    display: inline-block;
+    background: #e5e5e5;
+    border-radius: 16px;
+    width: 58px;
+    height: 27px;
+    position: relative;
+    vertical-align: middle;
+    transition: background 0.25s;
+}
+
+.toggle-switch:before, .toggle-switch:after {
+    content: "";
+}
+
+.toggle-switch:before {
+    display: block;
+    background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    width: 19px;
+    height: 19px;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    transition: all .25s;
+}
+
+
+.toggle:hover .toggle-switch:before {
+    background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-checkbox:checked + .toggle-switch {
+    background: var(--base-color);
+}
+
+.toggle-checkbox:checked + .toggle-switch:before {
+    left: 35px;
+}
+
+.toggle-checkbox {
+    position: absolute;
+    visibility: hidden;
+}
+
+.toggle-label {
+    margin-left: 5px;
+    margin-right: 5px;
+    position: relative;
+    top: 2px;
+    font-size: 80%;
+    color: #888;
+}
+

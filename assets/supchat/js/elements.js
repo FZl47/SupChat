@@ -250,7 +250,6 @@ function get_node_supchat_admin() {
     let style_for_specified_lang = `
           text-align: ${SUP_CHAT.CONFIG.language == 'fa' ? 'right' : 'left'};
     `
-
     let node = `
         <div id="SupChatContent">
             <header>
@@ -328,7 +327,7 @@ function get_node_supchat_admin() {
                      <div container-type="send-message-main">
                         <div class="container-btns-send-message-voice">
                             ${is_secure() ?
-        ` <button id="btn-record-voice-supchat">
+                            ` <button id="btn-record-voice-supchat">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path d="M12,15a4,4,0,0,0,4-4V5A4,4,0,0,0,8,5v6A4,4,0,0,0,12,15ZM10,5a2,2,0,0,1,4,0v6a2,2,0,0,1-4,0Zm10,6a1,1,0,0,0-2,0A6,6,0,0,1,6,11a1,1,0,0,0-2,0,8,8,0,0,0,7,7.93V21H9a1,1,0,0,0,0,2h6a1,1,0,0,0,0-2H13V18.93A8,8,0,0,0,20,11Z"></path>
                                 </svg>
@@ -381,6 +380,13 @@ function get_node_supchat_admin() {
             <img src="" alt="">
             <h4></h4>
             <p></p>
+        </div>
+        <div id="SupChatEnded">
+            <img src="${get_link_assets_supchat('images/default/end-chat.webp')}" alt="end chat" loading="lazy"
+                class="col-12 col-md-5 col-lg-9">
+            <div>
+                <p>${SUP_CHAT.TRANSLATE.get('گفت و گو بسته شد')}</p>
+            </div>
         </div>
     `
     return node
@@ -589,13 +595,13 @@ function get_node_chat_list(chat) {
     return `
         <div class="d-inline-block position-relative">
             <img class="btn-circle" style="width: 60px;height: 60px;background: rgba(236,236,236,0.1)"
-                 src="${chat.user.image}" alt="${chat.user.name}">
+                 src="${chat.user.image}" alt="${chat.user.name}" image-user>
             <span container-state-user state="${chat.user.is_online ? 'online' : 'offline'}"></span>
 
         </div>
         <div class="mail-contnet">
             <div>
-                <p class="text-dark font-16 mb-0">${chat.user.name}</p>
+                <p class="text-dark font-16 mb-0" name-user>${chat.user.name}</p>
                 <span container-message class="mail-desc"
                       style="font-size: 110%!important;">-</span>
                 <span container-time class="time mt-2">-</span>
@@ -636,14 +642,3 @@ function get_node_chat_list(chat) {
     `
 }
 
-
-function get_node_chat_ended() {
-    return `
-        <div>
-            <img src="${get_link_assets_supchat('images/default/end-chat.webp')}" alt="end chat" loading="lazy">
-            <div>
-                <p>${SUP_CHAT.TRANSLATE.get('گفت و گو بسته شد')}</p>
-            </div>
-        </div>
-    `
-}

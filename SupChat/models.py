@@ -34,6 +34,7 @@ class SupChatStyle(models.Model):
     THEME_OPTIONS = (
         # Src file css - name
         ('/supchat/css/theme/default.css', 'default'),
+        ('/supchat/css/theme/purple.css', 'purple'),
     )
 
     background_chat = models.ImageField(upload_to=upload_image_background_chat, null=True, blank=True)

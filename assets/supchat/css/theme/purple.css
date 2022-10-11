@@ -1,0 +1,116 @@
+:root {
+    --Loading--color: #270082;
+    --base-color: #823FFF;
+}
+
+
+#SupChat {
+    box-shadow: 0 3px 15px rgba(122, 11, 192, 0.1);
+    border: 1px solid #eee;
+}
+
+#BtnOpenSupChat {
+    background: #823FFF;
+    color: #fff;
+}
+
+#SupChatContent > header {
+    background: var(--base-color)
+}
+
+#name-section-info-chat-supchat {
+    color: #eee;
+}
+
+#btn-more-option-chat-supchat {
+    color: #fff;
+}
+
+#container-more-options-chat-supchat {
+    background: #fff;
+}
+
+#SupChatContent > main {
+    background: rgba(250, 205, 229, 0.1);
+}
+
+#supchat-messages-chat::-webkit-scrollbar-thumb {
+    background: rgba(39, 0, 130, 0.8);
+}
+
+#supchat-messages-chat::-webkit-scrollbar-thumb:hover {
+    background: rgba(39, 0, 130, 1);
+}
+
+
+#btn-scroll-down-chat-supchat {
+    background: #ffffff;
+    color: #270082;
+    border: 1px solid rgba(221, 221, 221, 0.6);
+    box-shadow: 0 1px 3px rgba(39,0,130,0.4);
+}
+
+#SupChatContent > footer {
+    background: #fff;
+}
+
+#btn-send-message-supchat[state='true'] svg {
+    fill: var(--base-color);
+}
+
+#btn-send-voice-recorded-supchat svg {
+    fill: var(--base-color);
+}
+
+#BtnStartChatSupChat[valid='true'] {
+    background: linear-gradient(170deg, #b780ff, #823fff);
+    box-shadow: 0 1px 2px rgba(255, 91, 86, 0.1);
+    color: #fff;
+}
+
+#BtnStartChatSupChat[valid='true']:hover {
+    box-shadow: 0 3px 3px rgba(193, 90, 255, 0.7);
+}
+
+#NotificationSupChat {
+    background: var(--base-color);
+    color: #fff;
+    box-shadow: 0 3px 4px #ddd;
+}
+
+#NotificationSupChat i {
+    color: #fff;
+}
+
+#BtnCloseSupChat {
+    color: #ff7a7b;
+}
+
+/* Messages */
+
+.container-message-supchat[sender-type='you'] .content-message-supchat > main {
+    background: #950be2;
+    color: #fff;
+}
+
+.container-message-supchat[sender-type='other'] .content-message-supchat > main {
+    background: #47475e;
+    color: #fff;
+}
+
+
+.btn-show-more-options-message-supchat {
+    color: #fff;
+}
+
+
+.container-more-options-message-supchat {
+    background: #fff;
+    box-shadow: 0 0 4px #ddd;
+    border: 1px solid #ddd;
+}
+
+.container-message-supchat-system {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(233, 233, 233, 0.35), rgba(255, 255, 255, 0.1));
+}
+

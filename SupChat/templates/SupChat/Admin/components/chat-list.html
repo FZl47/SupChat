@@ -15,13 +15,13 @@
     >
         <div class="d-inline-block position-relative">
             <img class="btn-circle" style="width: 60px;height: 60px;background: rgba(236,236,236,0.1)"
-                 src="{{ chat.user.get_image }}" alt="{{ chat.user.get_full_name }}">
+                 src="{{ chat.user.get_image }}" alt="{{ chat.user.get_full_name }}" image-user>
             <span container-state-user state="{{ chat.user.is_online|yesno:'online,offline' }}"></span>
 
         </div>
         <div class="mail-contnet">
             <div>
-                <p class="text-dark font-16 mb-0">{{ chat.user.get_full_name }}</p>
+                <p class="text-dark font-16 mb-0" name-user>{{ chat.user.get_full_name }}</p>
                 <span container-message class="mail-desc"
                       style="font-size: 110%!important;height: 30px;overflow: hidden">{{ last_message.get_text_lable }}</span>
                 <span container-time class="time mt-2">{{ last_message.get_time }}</span>

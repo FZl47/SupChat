@@ -212,3 +212,6 @@ function is_secure() {
 }
 
 
+function slice_text(text,len) {
+    return String(text).slice(0, len) + text.length > length ? '...' : ''
+}

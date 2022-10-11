@@ -32,6 +32,40 @@
                             class="srh-btn"><i class="fal fa-times"></i></a></form>
                 </li>
             </ul>
+            <ul class="navbar-nav">
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle btn-open-options-dashboard" type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            data-bs-auto-close="outside" auto-close="outsideClick">
+                        <i class="fal fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end options-dashboard" uib-dropdown-menu>
+                        <li>
+                            <p class="dropdown-lable">
+                                اعلانات
+                            </p>
+                            <label class="toggle">
+                                <span class="toggle-label">فعال</span>
+                                <input class="toggle-checkbox" type="checkbox" id="btn-switch-notification">
+                                <div class="toggle-switch"></div>
+                                <span class="toggle-label">غیرفعال</span>
+                            </label>
+                        </li>
+                        <li>
+                            <p class="dropdown-lable">
+                                باز کردن گفت و گو به صورت خودکار
+                            </p>
+                            <label class="toggle">
+                                <span class="toggle-label">فعال</span>
+                                <input class="toggle-checkbox" type="checkbox" id="btn-switch-auto-open-chat">
+                                <div class="toggle-switch"></div>
+                                <span class="toggle-label">غیرفعال</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </ul>
             <!-- ============================================================== -->
             <!-- User profile and search -->
             <!-- ============================================================== -->

@@ -1,3 +1,5 @@
+const STYLE_CONSOLE_SUPCHAT = "color:#fff; background:#00DDC7; font-size: 11pt;border-radius:5px;padding:3px"
+
 class TranslateSupChat {
     constructor(language_active) {
         this.LANGUAGE_ACTIVE = language_active
@@ -727,17 +729,6 @@ class SupChat extends (WebSockectSupChatMixin) {
         }
     }
 
-    socket_open(e) {
-        console.log('Socket Connected')
-    }
-
-    socket_close(e) {
-        console.log(e)
-    }
-
-    socket_error(e) {
-        this.create_connection()
-    }
 
     socket_loading(state) {
         if (state) {
@@ -776,6 +767,10 @@ class ChatUser extends SupChat {
                 This.show_error(403)
             }
         })
+    }
+
+    socket_open(e) {
+        console.log(" %c %s ", STYLE_CONSOLE_SUPCHAT, 'SupChat Connected !');
     }
 
     toggle_supchat(state) {
@@ -1051,6 +1046,17 @@ class ChatAdmin extends SupChat {
         }
     }
 
+    toggle_container_supchat_ended(state) {
+        let supchat_ended = document.getElementById('SupChatEnded')
+        if (state == 'show') {
+            this.toggle_container_supchat_content('hide')
+            supchat_ended.setAttribute('container-show', '')
+        } else {
+            this.toggle_container_supchat_content('show')
+            supchat_ended.removeAttribute('container-show')
+        }
+    }
+
     _set_elements() {
         // Base elements
         super._set_elements()
@@ -1136,16 +1142,13 @@ class ChatAdmin extends SupChat {
 
     chat_ended() {
         this.close_socket()
-        let container_chat_ended = document.getElementById('div')
-        container_chat_ended.id = 'SupChatEnded'
-        container_chat_ended.innerHTML = get_node_chat_ended()
-        this.ELEMENTS.supchat.appendChild(container_chat_ended)
+        this.toggle_container_supchat_ended('show')
     }
 
 
     // Oeverwrite
     socket_open(e) {
-        super.socket_open(e);
+        console.log(" %c %s ", STYLE_CONSOLE_SUPCHAT, 'SupChat - Admin - Connected !');
         // Seen message request
         RequestSupChat.seen_message.send()
     }
@@ -1157,6 +1160,7 @@ class ChatList extends WebSockectSupChatMixin {
     constructor(section_id) {
         super()
         this.SECTION_ID = section_id
+        this.NOTIFICATION_OBJECT_MIXIN = new NotificationSupChatMixin()
         this.set_elements()
         this.CAN_CREATE_CONNECTION = true
         this.create_connection()
@@ -1174,7 +1178,7 @@ class ChatList extends WebSockectSupChatMixin {
     }
 
     socket_open(e) {
-        console.log('Socket Connected')
+        console.log(" %c %s ", STYLE_CONSOLE_SUPCHAT, 'SupChat - ChatList - Connected !');
     }
 
     socket_recive(e) {
@@ -1183,14 +1187,6 @@ class ChatList extends WebSockectSupChatMixin {
         if (response_obj) {
             response_obj.run(data)
         }
-    }
-
-    socket_close(e) {
-
-    }
-
-    socket_error(e) {
-        console.log(e)
     }
 
     socket_loading(state) {
@@ -1217,6 +1213,25 @@ class ChatList extends WebSockectSupChatMixin {
             return 0;
         });
         $chats.detach().appendTo($container_chats);
+    }
+
+
+    show_notification(message) {
+        let chat_id = message.chat_id
+        let chat_element = document.getElementById(`chat-${chat_id}`)
+        if (chat_element) {
+            let name = chat_element.querySelector('[name-user]').innerText
+            let image = chat_element.querySelector('[image-user]').src
+            let chat_url = chat_element.href
+            this.NOTIFICATION_OBJECT_MIXIN.send_notification(name, image, message.text_lable, chat_url)
+        }
+    }
+
+    open_next_chat() {
+        let next_chat = document.querySelector('.chat-list')
+        if (next_chat) {
+            next_chat.click()
+        }
     }
 
     // DOM action
@@ -1299,6 +1314,9 @@ class ChatList extends WebSockectSupChatMixin {
         let count_unread_message = 0
         let chat_element = document.querySelector(`#chat-${chat_id}`)
         if (chat_element) {
+            if (sender_type == 'user') {
+                count_unread_message = (parseInt(chat_element.getAttribute('count-unread-message')) || 0)
+            }
             chat_element.setAttribute('seen', true)
             chat_element.setAttribute('count-unread-message', count_unread_message)
             // chat_element.querySelector('[container-count-message] span').innerText = count_unread_message
@@ -1327,8 +1345,8 @@ class ChatList extends WebSockectSupChatMixin {
         chat_list.innerHTML = get_node_chat_list(chat)
         document.getElementById('chats-list').appendChild(chat_list)
     }
-}
 
+}
 
 class MessageSupChat {
     static LIST_MESSAGES = []

@@ -380,9 +380,9 @@ def sup_chat_run_user(request):
 @csrf_exempt
 @decorators.require_post_and_ajax
 @decorators.get_user
-def submit_rate_chat(request,chat_id):
+def submit_rate_chat(request, chat_id):
     context = {}
-    chat = ChatGroup.objects.filter(id=chat_id,user=request.user_supchat).first()
+    chat = ChatGroup.objects.filter(id=chat_id, user=request.user_supchat).first()
     data = json.loads(request.body)
     rate = data.get('rate')
     if chat and rate:
@@ -394,12 +394,13 @@ def submit_rate_chat(request,chat_id):
 
     return JsonResponse(context)
 
+
 @decorators.get_user
 def get_user_by_request_or_phone_email(request, phone_or_email):
     exists = False
     user = request.user_supchat
     if user == None and phone_or_email:
-        user = User.objects.filter(phone_or_email=phone_or_email,ip=tools.Get_IP(request)).first()
+        user = User.objects.filter(phone_or_email=phone_or_email, ip=tools.Get_IP(request)).first()
     return user
 
 
@@ -425,13 +426,14 @@ def start_chat(request):
     if supchat and section:
         phone_or_email_is_valid = False
         if supchat.config.get_phone_or_email:
-            if tools.ValidationEmail(phone_or_email, 3, 100) or (tools.ValidationText(phone_or_email, 10, 15) and phone_or_email.isdigit()):
+            if tools.ValidationEmail(phone_or_email, 3, 100) or (
+                    tools.ValidationText(phone_or_email, 10, 15) and phone_or_email.isdigit()):
                 phone_or_email_is_valid = True
         if (supchat.config.get_phone_or_email == False) or phone_or_email_is_valid:
             if admin:
                 user = get_user_by_request_or_phone_email(request, phone_or_email)
                 if user == None:
-                    user = create_user(request,phone_or_email)
+                    user = create_user(request, phone_or_email)
                     context['user_created'] = True
                 else:
                     context['user_created'] = False
@@ -470,9 +472,9 @@ def send_voice_message(request):
             if tools.format_file(voice) == 'mp3':
                 chat = None
                 if type_user == 'admin':
-                    chat = ChatGroup.get_chat_by_type_user(chat_id,admin_supchat,'admin')
+                    chat = ChatGroup.get_chat_by_type_user(chat_id, admin_supchat, 'admin')
                 elif type_user == 'user':
-                    chat = ChatGroup.get_chat_by_type_user(chat_id,user_supchat,'user')
+                    chat = ChatGroup.get_chat_by_type_user(chat_id, user_supchat, 'user')
                 if chat:
                     context = {}
                     audio = AudioMessage.objects.create(chat=chat, sender=type_user, audio=voice,
@@ -486,16 +488,22 @@ def send_voice_message(request):
 @decorators.admin_authenticated
 def view_admin(request):
     context = {}
-    return render(request,'SupChat/Admin/admin-panel.html',context)
+    supchat = get_supchat()
+    context['supcaht'] = supchat
+    return render(request, 'SupChat/Admin/admin-panel.html', context)
+
 
 @decorators.admin_authenticated
-def view_section_admin(request,section_id):
+def view_section_admin(request, section_id):
     context = {}
-    section = Section.objects.filter(id=section_id,admin=request.admin).first()
+    section = Section.objects.filter(id=section_id, admin=request.admin).first()
+    supchat = get_supchat()
+    context['supchat'] = supchat
     context['section'] = section
     if not section:
         raise Http404
-    return render(request,'SupChat/Admin/admin-section.html',context)
+    return render(request, 'SupChat/Admin/admin-section.html', context)
+
 
 @decorators.admin_authenticated
 def view_chat_admin(request, chat_id):
@@ -508,9 +516,10 @@ def view_chat_admin(request, chat_id):
         chat_serializer = serializers.Serializer_chat(chat)
         supchat_serialized = serializers.Serializer_supchat(supchat)
         context['chat'] = chat
+        context['supchat'] = supchat
         context['chat_json'] = json.dumps(chat_serializer)
         context['supchat_json'] = json.dumps(supchat_serialized)
-        return render(request,'SupChat/Admin/admin-chat.html',context)
+        return render(request, 'SupChat/Admin/admin-chat.html', context)
     raise Http404
 
 

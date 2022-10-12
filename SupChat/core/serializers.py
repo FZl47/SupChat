@@ -124,7 +124,7 @@ def Serializer_message(message, many=False):
             "deleted": obj.deleted,
             "time_send": obj.get_time(),
             "time_send_full": obj.get_time_full(),
-            "text_lable": obj.get_text_lable()
+            "text_label": obj.get_text_label()
         }
         if obj.type == "text":
             d.update(Serializer_text_messagae(obj))

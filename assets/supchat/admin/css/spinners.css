@@ -39,7 +39,7 @@ Preloader
     height: 0;
     width: 0;
     box-sizing: border-box;
-    border: 0 solid  var(--base-color);
+    border: 0 solid  var(--base-color-admin);
     border-radius: 50%;
     -webkit-animation: loader-figure 1.15s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
     -moz-animation: loader-figure 1.15s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -58,7 +58,7 @@ Preloader
     font-size: 0.875em;
     letter-spacing: 0.1em;
     line-height: 1.5em;
-    color:  var(--base-color);
+    color:  var(--base-color-admin);
     white-space: nowrap;
     -webkit-animation: loader-label 1.15s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
     -moz-animation: loader-label 1.15s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -69,10 +69,10 @@ Preloader
     0% {
         height: 0;
         width: 0;
-        background-color:  var(--base-color);
+        background-color:  var(--base-color-admin);
     }
     29% {
-        background-color:  var(--base-color);
+        background-color:  var(--base-color-admin);
     }
     30% {
         height: 2em;
@@ -94,10 +94,10 @@ Preloader
     0% {
         height: 0;
         width: 0;
-        background-color:  var(--base-color);
+        background-color:  var(--base-color-admin);
     }
     29% {
-        background-color:  var(--base-color);
+        background-color:  var(--base-color-admin);
     }
     30% {
         height: 2em;
@@ -119,10 +119,10 @@ Preloader
     0% {
         height: 0;
         width: 0;
-        background-color:  var(--base-color);
+        background-color:  var(--base-color-admin);
     }
     29% {
-        background-color:  var(--base-color);
+        background-color:  var(--base-color-admin);
     }
     30% {
         height: 2em;

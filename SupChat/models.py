@@ -359,7 +359,7 @@ class AudioMessage(Message):
     audio = models.FileField(upload_to=upload_audio_message)
     audio_time = models.CharField(max_length=5, default='0')
 
-    def get_text_lable(self):
+    def get_text_label(self):
         return 'صدای ضبط شده'
 
 

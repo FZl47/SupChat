@@ -1,5 +1,9 @@
 const STYLE_CONSOLE_SUPCHAT = "color:#fff; background:#00DDC7; font-size: 11pt;border-radius:5px;padding:3px"
 
+function get_theme_admin() {
+    return get_cookie('theme-src-chat-admin-supchat') || '/assets/css/theme/default.css'
+}
+
 class TranslateSupChat {
     constructor(language_active) {
         this.LANGUAGE_ACTIVE = language_active
@@ -1130,9 +1134,8 @@ class ChatAdmin extends SupChat {
         this.IS_OPEN = false
 
 
-        // Add theme default
-        _add_css_link(get_link_assets_supchat(this.STYLE.theme_src, false, false, false))
-        // _add_css_link(get_link_assets_supchat('css/theme/default.css', false, true))
+        // Add theme
+        _add_css_link(get_link_assets_supchat(get_theme_admin(), false, false, false),'style-theme-admin')
     }
 
     // Remove notification supchat and Added notification web instead
@@ -1223,7 +1226,7 @@ class ChatList extends WebSockectSupChatMixin {
             let name = chat_element.querySelector('[name-user]').innerText
             let image = chat_element.querySelector('[image-user]').src
             let chat_url = chat_element.href
-            this.NOTIFICATION_OBJECT_MIXIN.send_notification(name, image, message.text_lable, chat_url)
+            this.NOTIFICATION_OBJECT_MIXIN.send_notification(name, image, message.text_label, chat_url)
         }
     }
 
@@ -1249,7 +1252,7 @@ class ChatList extends WebSockectSupChatMixin {
             chat_element.setAttribute('last-message-id', message.id)
             chat_element.setAttribute('count-unread-message', count_unread_message)
             chat_element.querySelector('[container-count-message] span').innerText = count_unread_message
-            chat_element.querySelector('[container-message]').innerText = message.text_lable
+            chat_element.querySelector('[container-message]').innerText = message.text_label
             chat_element.querySelector('[container-time]').innerText = message.time_send
         }
 
@@ -1314,8 +1317,10 @@ class ChatList extends WebSockectSupChatMixin {
         let count_unread_message = 0
         let chat_element = document.querySelector(`#chat-${chat_id}`)
         if (chat_element) {
-            if (sender_type == 'user') {
+            if (sender_type == 'admin') {
                 count_unread_message = (parseInt(chat_element.getAttribute('count-unread-message')) || 0)
+            } else {
+                count_unread_message = 0
             }
             chat_element.setAttribute('seen', true)
             chat_element.setAttribute('count-unread-message', count_unread_message)
@@ -1421,7 +1426,7 @@ class TextMessage extends MessageSupChat {
     constructor(message) {
         super(message)
         this.text_message = message.text
-        this.lable_message = message.text_lable
+        this.lable_message = message.text_label
     }
 
     create_message_you(message) {
@@ -1480,7 +1485,7 @@ class TextMessage extends MessageSupChat {
 class AudioMessage extends MessageSupChat {
     constructor(message) {
         super(message)
-        this.lable_message = message.text_lable
+        this.lable_message = message.text_label
     }
 
     create_message_you(message) {

@@ -63,19 +63,22 @@ function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed, conve
     })
 }
 
-function _add_css_link(src,id=undefined) {
+function _add_css_link(src, id = undefined) {
     let css = document.createElement('link')
     css.rel = 'stylesheet'
     css.href = String(src)
-    if(id){
+    if (id) {
         css.id = id
     }
     document.head.appendChild(css)
 }
 
-function _add_js_link(src) {
+function _add_js_link(src, id = undefined) {
     let js = document.createElement('script')
     js.src = String(src)
+    if (id) {
+        js.id = id
+    }
     document.body.appendChild(js)
 }
 
@@ -215,7 +218,7 @@ function is_secure() {
 }
 
 
-function slice_text(text,len) {
+function slice_text(text, len) {
     return String(text).slice(0, len) + text.length > length ? '...' : ''
 }
 

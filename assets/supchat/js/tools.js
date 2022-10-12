@@ -63,10 +63,13 @@ function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed, conve
     })
 }
 
-function _add_css_link(src) {
+function _add_css_link(src,id=undefined) {
     let css = document.createElement('link')
     css.rel = 'stylesheet'
     css.href = String(src)
+    if(id){
+        css.id = id
+    }
     document.head.appendChild(css)
 }
 
@@ -215,3 +218,4 @@ function is_secure() {
 function slice_text(text,len) {
     return String(text).slice(0, len) + text.length > length ? '...' : ''
 }
+

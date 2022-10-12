@@ -63,6 +63,21 @@
                                 <span class="toggle-label">غیرفعال</span>
                             </label>
                         </li>
+                        <li>
+                            <p class="dropdown-lable">
+                                تم گفت و گو
+                            </p>
+                            <div class="position-relative">
+                                <form id="form-switch-theme-chat">
+                                    {% for theme in supchat.style.get_all_theme %}
+                                        <div class="radio-custom">
+                                            <input id="theme-{{ theme.name }}" type="radio" name="theme-input" value="{{ theme.src }}" theme-name="{{ theme.name }}">
+                                            <label for="theme-{{ theme.name }}">{{ theme.name }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </form>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </ul>

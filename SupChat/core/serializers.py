@@ -1,6 +1,5 @@
 def Serializer_supchat_style(style):
     return {
-        "background_chat": style.get_background_chat(),
         "theme_type": style.get_theme_display(),
         "theme_src": style.theme,
     }

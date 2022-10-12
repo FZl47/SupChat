@@ -89,7 +89,7 @@
 /* Messages */
 
 .container-message-supchat[sender-type='you'] .content-message-supchat > main {
-    background: #950be2;
+    background: #c052e2;
     color: #fff;
 }
 
@@ -114,3 +114,11 @@
     background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(233, 233, 233, 0.35), rgba(255, 255, 255, 0.1));
 }
 
+
+#container-effect-is-typing span {
+    background: #eee!important;
+}
+
+#container-effect-is-voicing span {
+    background: #eee!important;
+}

@@ -35,9 +35,11 @@ class SupChatStyle(models.Model):
         # Src file css - name
         ('/supchat/css/theme/default.css', 'default'),
         ('/supchat/css/theme/purple.css', 'purple'),
+        ('/supchat/css/theme/black_green.css', 'black green'),
+        ('/supchat/css/theme/black_full.css', 'black full'),
+        ('/supchat/css/theme/blue.css', 'blue'),
     )
 
-    background_chat = models.ImageField(upload_to=upload_image_background_chat, null=True, blank=True)
     theme = models.CharField(choices=THEME_OPTIONS, max_length=200, default=THEME_OPTIONS[0][0])
 
     def __str__(self):
@@ -46,11 +48,15 @@ class SupChatStyle(models.Model):
         except:
             return 'SupChat Style'
 
-    def get_background_chat(self):
-        try:
-            return self.background_chat.url
-        except:
-            return static('supchat/images/default/backgroundChat.png')
+
+    def get_all_theme(self):
+        themes = []
+        for theme in self.THEME_OPTIONS:
+            themes.append({
+                'src':theme[0],
+                'name':theme[1],
+            })
+        return themes
 
 
 class SupChatConfig(models.Model):
@@ -339,7 +345,7 @@ class TextMessage(Message):
     type = models.CharField(max_length=5, default='text', editable=False)
     text = models.TextField()
 
-    def get_text_lable(self):
+    def get_text_label(self):
         return self.text
 
 

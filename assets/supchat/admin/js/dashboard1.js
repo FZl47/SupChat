@@ -383,16 +383,20 @@ if (input_theme_chat) {
     input_theme_chat.parentNode.classList.add('radio-custom-active')
     input_theme_chat.click()
 }
-form_switch_theme_chat.addEventListener('change', function () {
-    reset_all_active_radio_custome()
-    let theme_input = form_switch_theme_chat.querySelector('input[name="theme-input"]:checked')
-    theme_input.parentNode.classList.add('radio-custom-active')
-    set_cookie('theme-name-chat-admin-supchat', theme_input.getAttribute('theme-name'), 60)
-    set_cookie('theme-src-chat-admin-supchat', theme_input.value, 60)
-    let style = document.getElementById('style-theme-admin')
-    style.remove()
-    _add_css_link(get_link_assets_supchat(theme_input.value,false,false,false),'style-theme-admin')
-})
+if (form_switch_theme_chat) {
+    form_switch_theme_chat.addEventListener('change', function () {
+        reset_all_active_radio_custome()
+        let theme_input = form_switch_theme_chat.querySelector('input[name="theme-input"]:checked')
+        theme_input.parentNode.classList.add('radio-custom-active')
+        set_cookie('theme-name-chat-admin-supchat', theme_input.getAttribute('theme-name'), 60)
+        set_cookie('theme-src-chat-admin-supchat', theme_input.value, 60)
+        let style = document.getElementById('style-theme-admin')
+        if (style) {
+            style.remove()
+        }
+        _add_css_link(get_link_assets_supchat(theme_input.value, false, false, false), 'style-theme-admin')
+    })
+}
 
 function reset_all_active_radio_custome() {
     let all = document.querySelectorAll('.radio-custom-active')

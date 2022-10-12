@@ -1,0 +1,126 @@
+{% extends 'SupChat/Base/BaseTemplateSupChat.html' %}
+{% load static %}
+{% load supchat_filter %}
+
+
+{% block Title %}
+    <title>SupChat Admin - {{ section.title }}</title>
+{% endblock %}
+
+{% block Tags %}
+    <meta name="robots" content="noindex,nofollow">
+{% endblock %}
+
+
+{% block Content %}
+    <body class="fix-header fix-sidebar card-no-border">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">SupChat</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/header.html' %}
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/menu.html' %}
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles text-right" dir="rtl">
+                    <div class="col-12 align-self-center">
+                        <h1 class="text-themecolor">جست و جو <span class="mr-2 text-purple">w</span></h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'SupChat:view_admin' %}">صفحه اصلی</a></li>
+                            <li class="breadcrumb-item active">جست و جو</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-4 order-1 order-md-0">
+                        <div class="card card-body mailbox text-center d-flex-force justify-content-center">
+                            <h5 class="card-title text-right">
+                                جست و جو های اخیر
+                            </h5>
+                            <img src="{% static 'supchat/images/default/search.webp' %}" alt="Chat not found"
+                                 class="mx-auto mb-4" style="width: 300px;max-width: 100%">
+                            <p class="text-gray font-20">لیست جست و جو های اخیر شما خالی است</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <div class="card card-body mailbox">
+                            <h5 class="card-title text-right"></h5>
+                            <div id="chats-list" class="chats-list" style="height: 520px !important;">
+                                {% for chat in section.get_chats_active %}
+                                    {% include 'SupChat/Admin/components/chat-list.html' with chat=chat %}
+                                {% empty %}
+                                    <div class="d-flex-force flex-column justify-content-center align-items-center">
+                                        <img src="{% static 'supchat/images/default/search.webp' %}"
+                                             alt="Chat not found" class="mx-auto mb-4" style="width: 400px;max-width: 100%">
+                                        <p class="text-gray font-20">چیزی یافت نشد</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Notification And Feeds -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- End Page Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            {% include 'SupChat/Admin/components/footer.html' %}
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+
+    </body>
+{% endblock %}
+
+
+{% block Js %}
+
+{% endblock %}
+

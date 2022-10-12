@@ -492,6 +492,11 @@ def view_admin(request):
     context['supcaht'] = supchat
     return render(request, 'SupChat/Admin/admin-panel.html', context)
 
+@decorators.admin_authenticated
+def view_admin_search(request,search_query):
+    context = {}
+
+    return render(request,'SupChat/Admin/admin-search.html',context)
 
 @decorators.admin_authenticated
 def view_section_admin(request, section_id):

@@ -210,9 +210,7 @@ new ResponseSupChat('CHAT_LIST_IS_VOICING', function (data) {
 
 // response seen message
 new ResponseSupChat('CHAT_LIST_SEEN_MESSAGE', function (data) {
-    if (response_is_for_section(data.sender_state)) {
-        SUP_CHAT_LIST.seen_message(data)
-    }
+    SUP_CHAT_LIST.seen_message(data)
 })
 
 
@@ -225,7 +223,7 @@ new ResponseSupChat('CHAT_LIST_SEND_STATUS', function (data) {
 // response chat ended
 new ResponseSupChat('CHAT_LIST_CHAT_ENDED', function (data) {
     SUP_CHAT_LIST.chat_ended(data)
-    if (get_cookie('auto_open_chat_supchat') == 'enabled'){
+    if (get_cookie('auto_open_chat_supchat') == 'enabled') {
         SUP_CHAT_LIST.open_next_chat()
     }
 })

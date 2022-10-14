@@ -2,6 +2,20 @@ from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
 from SupChat.models import Admin, User
 from SupChat.core import tools
+from SupChat import config
+
+
+def supchat(func):
+    def wrapper(request, *args, **kwargs):
+        supchat_data = {
+            'config': {
+                'URL_BACKEND_SUPCHAT': config.URL_BACKEND_SUPCHAT
+            }
+        }
+        setattr(request,'supchat', supchat_data)
+        return func(request, *args, **kwargs)
+
+    return wrapper
 
 
 def admin_authenticated(func):
@@ -51,19 +65,20 @@ def get_user(func):
         if session_key_user_sup_chat:
             user = None
             try:
-                user = User.objects.get(session_key=session_key_user_sup_chat,ip=tools.Get_IP(request))
+                user = User.objects.get(session_key=session_key_user_sup_chat, ip=tools.Get_IP(request))
             except:
                 pass
         setattr(request, 'user_supchat', user)
-        return func(request, *args,**kwargs)
+        return func(request, *args, **kwargs)
+
     return wrapper
 
 
 def get_admin(func):
-    def wrapper(request,*args,**kwargs):
+    def wrapper(request, *args, **kwargs):
         user = request.user
         admin = Admin.objects.filter(user=user).first()
-        setattr(request,'admin_supchat',admin)
-        return func(request,*args,**kwargs)
-    return wrapper
+        setattr(request, 'admin_supchat', admin)
+        return func(request, *args, **kwargs)
 
+    return wrapper

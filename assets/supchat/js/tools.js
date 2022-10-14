@@ -37,7 +37,7 @@ function SendAjaxSupChat(Url, Data = {}, Method = 'POST', Success, Failed, conve
     }
 
     $.ajax({
-        url: URL_BACKEND_SUPCHAT + '/' + SUP_CHAT.URL_SUPCHAT + '/' + Url,
+        url: URL_BACKEND_SUPCHAT + '/' + SupChat.URL_SUPCHAT + '/' + Url,
         data: convert_json ? JSON.stringify(Data) : Data,
         type: Method,
         processData: false,
@@ -222,3 +222,19 @@ function slice_text(text, len) {
     return String(text).slice(0, len) + text.length > length ? '...' : ''
 }
 
+
+function mark_text(element, key) {
+    let marked_key = `<mark>${key}</mark>`
+    element.innerHTML = element.textContent.replaceAll(key, marked_key)
+}
+
+function add_loading_effect(el,size=1) {
+    let loading_el = document.createElement('div')
+    loading_el.classList.add('loading-effect-supchat')
+    loading_el.style.transform = `scale(${size})`
+    el.appendChild(loading_el)
+}
+
+function remove_loading_effect(el) {
+    el.querySelector('.loading-effect-supchat').remove()
+}

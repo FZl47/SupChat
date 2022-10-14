@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import F, Max, Count, Sum, Q, Value
-from django.db.models.functions import TruncDay, ExtractDay
+from django.db.models.functions import ExtractDay
 from django.utils import timezone
 from django.templatetags.static import static
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -182,6 +182,17 @@ class Admin(models.Model):
         sections = self.sections.filter(is_active=True).all()
         return sections
 
+    def get_chats_actvie(self):
+        return self.chatgroup_set.filter(is_active=True)
+
+    def get_search_histoies(self):
+        return self.searchhistoryadmin_set.all()
+
+    def get_last_search_histories(self):
+        # Geted 10 latest obj
+        return self.get_search_histoies()[:10]
+
+
 
 
 class User(models.Model):
@@ -252,7 +263,10 @@ class ChatGroup(models.Model):
         return chat
 
     def get_absolute_url(self):
-        return reverse('SupChat:view_chat_admin', args=(self.id,))
+        if self.is_active:
+            return reverse('SupChat:view_chat_admin', args=(self.id,))
+        else:
+            return ''
 
     def get_messages(self):
         return self.message_set.filter(deleted=False).select_subclasses().all()
@@ -336,6 +350,10 @@ class MessageBase(models.Model):
     def get_time_full(self):
         return self.date_time_send.strftime('%Y/%d/%m %H:%M:%S')
 
+    def get_absolute_url(self):
+        # Get url chat and set id message in url and focus on message
+        return self.chat.get_absolute_url() + f'#focus-on-message={self.id}'
+
 
 class Message(MessageBase):
     objects = InheritanceManager()
@@ -387,3 +405,18 @@ class LogMessageAdmin(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SearchHistoryAdmin(models.Model):
+    search_query = models.CharField(max_length=100)
+    admin = models.ForeignKey('Admin',on_delete=models.CASCADE)
+    date_time_submit = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-id',)
+
+    def __str__(self):
+        return self.search_query[:30]
+
+    def get_absolute_url(self):
+        return reverse('SupChat:view_admin_search') + f'?q={self.search_query}'

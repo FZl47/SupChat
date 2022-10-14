@@ -5,351 +5,28 @@
 # from django.core.exceptions import PermissionDenied
 # from django.views.decorators.http import require_POST
 # from django.contrib.auth import logout, authenticate, login
-# from django.db.models import Q, Count, F, Max
 # from django.utils import timezone
 # from SupChat.core.tools import Send_Message_Notif
 
 
-# from SupChat.core.serializers import SerializerChat, SerializerSection, SerializerUser, SerializerAdminUser, SerializerMessageAudio
-# from SupChat.core.auth.view import getUser, getUserSession, createUser
-# from SupChat.core.tools import format_file
 import json
 from django.http import HttpResponse, JsonResponse, Http404
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Count
+from django.db.models import Count, Q
+from django.core.paginator import Paginator
 from SupChat.core.auth.view import create_user
 from SupChat.core import serializers
 from SupChat.core import tools
 from SupChat.core.decorators import view as decorators
-# from SupChat.core.decorators.view import admin_authenticated, require_post_and_ajax, get_user
-from SupChat.models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin
+from SupChat.models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin, SearchHistoryAdmin, \
+    Message
 
 
 def get_supchat():
     return SupChat.objects.first()
 
-
-#
-# def index(request):
-#     context = {}
-#     sections = Section.objects.filter(isActive=True).annotate(count_admins=Count('admin')).filter(count_admins__gt=0)
-#     supchat = getSupChat()
-#     context['Sections'] = sections
-#     context['SupChat'] = supchat
-#     if sections.first() != None and supchat:
-#         return render(request, 'Chat/User/index.html', context)
-#     return HttpResponse()
-#
-#
-# def urlFilterBy(filter_by):
-#     if filter_by != 'all':
-#         return f"?chats-filter={filter_by}"
-#     return ''
-#
-#
-# def filter_chats(request, chats):
-#     filter_by = request.GET.get('chats-filter') or 'all'
-#     dateTime = '1990-1-1'
-#     dateTimeNow = timezone.now()
-#
-#     def filter_by_date(dateTime):
-#         return chats.filter(message__dateTimeSend__gte=dateTime).distinct()
-#
-#     if filter_by == 'all':
-#         return chats, filter_by
-#
-#     elif filter_by == 'at-one-hour':
-#         dateTime = dateTimeNow - timezone.timedelta(hours=1)
-#         return filter_by_date(dateTime), filter_by
-#
-#     elif filter_by == 'at-one-day':
-#         dateTime = dateTimeNow - timezone.timedelta(days=1)
-#         return filter_by_date(dateTime), filter_by
-#
-#     elif filter_by == 'at-one-week':
-#         dateTime = dateTimeNow - timezone.timedelta(weeks=1)
-#         return filter_by_date(dateTime), filter_by
-#
-#     elif filter_by == 'at-one-month':
-#         dateTime = dateTimeNow - timezone.timedelta(weeks=4)
-#         return filter_by_date(dateTime), filter_by
-#
-#     elif filter_by == 'without-seen':
-#         return chats.filter(message__seen=False, message__sender='user'), filter_by
-#
-#     return chats , 'none'
-#
-# @admin_authenticated
-# def adminViewPanel(request):
-#     context = {
-#         'Admin': request.admin
-#     }
-#     context['SupChat'] = getSupChat()
-#     context['page_active'] = 'dashboard'
-#     return render(request, 'Chat/Admin/admin-panel.html', context)
-#
-#
-# @admin_authenticated
-# def adminViewInfo(request):
-#     context = {
-#         'Admin': request.admin
-#     }
-#     context['SupChat'] = getSupChat()
-#     context['page_active'] = 'info'
-#     return render(request, 'Chat/Admin/admin-panel.html', context)
-#
-#
-# @require_POST
-# @admin_authenticated
-# def adminViewInfoUpdate(request):
-#     admin = request.admin
-#     data = request.POST
-#     first_name = data.get('first-name')
-#     last_name = data.get('last-name')
-#     email = data.get('email')
-#     gender = data.get('gender')
-#     picture = request.FILES.get('picture-person')
-#     picture_format = format_file(picture)
-#     if first_name and last_name and email and gender and picture and (
-#             picture_format == 'png' or picture_format == 'jpg') and (gender == 'male' or gender == 'female'):
-#         admin.user.first_name = first_name
-#         admin.user.last_name = last_name
-#         admin.user.email = email
-#         admin.gender = gender
-#         admin.image = picture
-#         admin.user.save()
-#         admin.save()
-#         return Send_Message_Notif('اطلاعات شما با موفقیت اپدیت شدند', 'Success')
-#     return Send_Message_Notif('لطفا فیلد هارا به درستی پر نمایید', 'Error')
-#
-#
-# @admin_authenticated
-# def adminViewLogMessage(request):
-#     context = {
-#         'Admin': request.admin
-#     }
-#     admin = request.admin
-#     admin.seen_log_messages()
-#     context['SupChat'] = getSupChat()
-#     context['page_active'] = 'log_message'
-#     return render(request, 'Chat/Admin/admin-panel.html', context)
-#
-#
-# @admin_authenticated
-# def adminViewSection(request, id, name):
-#     context = {
-#         'Admin': request.admin
-#     }
-#     admin = request.admin
-#     section = get_object_or_404(Section, id=id, admin__in=[admin])
-#     chats = section.get_chats_by_admin(admin)
-#     chats, filter_by = filter_chats(request, chats)
-#     context['Section'] = section
-#     context['Messages_Count'] = section.get_messages_count_by_admin(admin)
-#     context['Messages_Unread_Count'] = section.get_messages_unread_count_by_admin(admin)
-#     context['Chats'] = chats
-#     context['Filter_by'] = filter_by
-#     context['Url_Filter_by'] = urlFilterBy(filter_by)
-#     # context['ID_SECTION'] = section.id
-#     context['SupChat'] = getSupChat()
-#     context['page_active'] = 'section'
-#     return render(request, 'Chat/Admin/admin-panel.html', context)
-#
-#
-# @admin_authenticated
-# def adminViewChat(request, id, name):
-#     context = {
-#         'Admin': request.admin
-#     }
-#     admin = request.admin
-#     chat = get_object_or_404(ChatGroup, id=id, admin=admin)
-#     chat.seen_messages_user()
-#     section = chat.section
-#     chats = section.get_chats_by_admin(admin)
-#     chats, filter_by = filter_chats(request, chats)
-#     context['Chat'] = chat
-#     context['Section'] = section
-#     context['Messages_Count'] = section.get_messages_count_by_admin(admin)
-#     context['Messages_Unread_Count'] = section.get_messages_unread_count_by_admin(admin)
-#     context['Chats'] = chats
-#     context['Filter_by'] = filter_by
-#     context['Url_Filter_by'] = urlFilterBy(filter_by)
-#     context['SupChat'] = getSupChat()
-#     context['page_active'] = 'chat'
-#     return render(request, 'Chat/Admin/admin-panel.html', context)
-#
-#
-# @admin_authenticated
-# @require_POST
-# def transferChat(request):
-#     supchat = SupChat.objects.first()
-#     if supchat.config.transfer_chat_is_active:
-#         admin = request.admin
-#         data = request.POST
-#         chat_id = data.get('chat-id') or 0
-#         admin_id = data.get('admin-id') or 0
-#         chat = ChatGroup.objects.filter(id=chat_id, admin_id=admin.id, isActive=True).first()
-#         urlRedirectPanel = reverse('SupChat:admin_panel')
-#         if chat:
-#             urlRedirectSection = reverse('SupChat:admin_panel_section', args=(chat.section_id, chat.section.title))
-#             admin_transfer = Admin.objects.filter(id=admin_id).first()
-#             if admin_transfer:
-#                 if admin_transfer.can_get_chat_transfered(chat):
-#                     chat.admin = admin_transfer
-#                     chat.save()
-#                     # Log message for admin
-#                     message_log_admin = " چتی از طرف شما با ایدی " + f"<b>{chat.id}</b>" + " به ادمینی با ایدی " + f"<b>{admin_transfer.id}</b>" + " و نام " + f"<b>{admin_transfer.get_full_name()}</b>" + " انتقال یافت "
-#                     LogMessageAdmin.objects.create(title='انتقال چت از شما', message=message_log_admin, admin=admin)
-#                     # Log message for admin transfer
-#                     message_log_admin_transfer = " چتی از طرف ادمین با ایدی " + f"<b>{admin.id}</b>" + " و نام " + f"<b>{admin.get_full_name()}</b>" + " با ایدی " + f"<b>{chat.id}</b>" + " به شما انتقال پیدا کرد "
-#                     LogMessageAdmin.objects.create(title='انتقال چت به شما', message=message_log_admin_transfer,
-#                                                    admin=admin_transfer)
-#                     return Send_Message_Notif('انتقال چت با موفقیت انجام شد', 'Success', RedirectTo=urlRedirectSection)
-#             return Send_Message_Notif('ادمین برای انتقال چت یافت نشد', 'Error', RedirectTo=urlRedirectSection)
-#         return Send_Message_Notif('چتی برای انتقال یافت نشد', 'Error', RedirectTo=urlRedirectPanel)
-#     return Send_Message_Notif('انتقال چت بسته است', 'Error', RedirectTo=urlRedirectPanel)
-#
-#
-# # View
-# def adminLogin(request):
-#     if request.method == 'GET':
-#         return render(request, 'Chat/Admin/login.html')
-#
-#     elif request.method == 'POST':
-#         data = request.POST
-#         username = data.get('username') or None
-#         password = data.get('password') or None
-#         user = authenticate(request, username=username, password=password)
-#         if user != None:
-#             admin = Admin.objects.filter(user=user).first()
-#             if admin != None:
-#                 login(request, user)
-#                 return redirect('SupChat:admin_panel')
-#         return Send_Message_Notif('ادمینی با این مشخصات یافت نشد', 'Error')
-#
-# # View
-# def adminSignOut(request):
-#     logout(request)
-#     return redirect('/')
-#
-# # View
-# @require_post_and_ajax
-# def getUserView(request):
-#     # POST and Ajax
-#     context = {}
-#     userDjango = request.user
-#     if userDjango.is_authenticated == False:
-#         userDjango = 0
-#     user = User.objects.filter(user=userDjango).first() or getUserSession(request)
-#     if user == None:
-#         user = createUser()
-#         context['user_created'] = True
-#     else:
-#         context['user_created'] = False
-#     context['user'] = SerializerUser(user)
-#     context['user']['session_key'] = user.session_key
-#     return JsonResponse(context)
-#
-# # View
-# @require_post_and_ajax
-# @admin_authenticated
-# def getAdminView(request):
-#     # POST and Ajax
-#     context = {}
-#     admin = request.admin
-#     context['status'] = '200'
-#     context['admin'] = SerializerAdminUser(admin)
-#     return JsonResponse(context)
-#
-# @require_post_and_ajax
-# def getInfoChat(request):
-#     context = {}
-#     data = json.loads(request.body)
-#     idSection = data.get('id-section') or 0
-#     section = Section.objects.filter(id=idSection).first()
-#     if section != None:
-#         user = request.user
-#         lookupChat = Q(user=user, section=section)
-#         chat = ChatGroup.objects.filter(lookupChat).first()
-#         chat = SerializerChat(chat)
-#         context['user'] = {
-#             'name': user.get_full_name()
-#         }
-#         context['chat'] = chat
-#         context['status'] = '200'
-#         return JsonResponse(context)
-#     raise Http404
-#
-#
-#
-# def get_chat(request, section_id, create=True):
-#     if section_id:
-#         user = getUser(request)
-#         chat = ChatGroup.objects.filter(user=user, section_id=section_id, isActive=True).last()
-#         is_created = False
-#         if chat == None and create:
-#             admin = Admin.objects.filter(sections__in=[section_id]).all()
-#             if admin.count() != 0:
-#                 admin = random.choice(admin)
-#                 chat = ChatGroup.objects.create(user=user, section_id=section_id, admin=admin)
-#                 is_created = True
-#             else:
-#                 # No Admins in Section
-#                 pass
-#         return chat, is_created
-#
-#
-# def get_admin(request):
-#     user = request.user
-#     admin = Admin.objects.filter(user=user).first()
-#     return admin
-#
-#
-# def get_chat_admin(request, id_chat):
-#     if id_chat:
-#         admin = get_admin(request)
-#         if admin:
-#             chat = ChatGroup.objects.filter(id=id_chat, admin=admin, isActive=True).last()
-#             return chat
-#     raise PermissionDenied
-#
-#
-#
-# @require_post_and_ajax
-# def voiceMessage(request):
-#     # POST and Ajax
-#     data = request.POST
-#     type_user = data.get('type-user') or None
-#     section_id = data.get('section-id') or 0
-#     id_chat = data.get('id-chat')
-#     voice = request.FILES.get('voice') or None
-#     voice_time = data.get('voice-time') or 0
-#     if type_user and voice:
-#         if format_file(voice) == 'mp3':
-#             sender_name = None
-#             chat = None
-#             chat_is_created = False
-#             if type_user == 'user':
-#                 chat, chat_is_created = get_chat(request, section_id)
-#                 sender_name = 'user'
-#             else:
-#                 chat = get_chat_admin(request, id_chat)
-#                 sender_name = 'admin'
-#             if chat:
-#                 data_response = {}
-#                 audio = AudioMessage.objects.create(chat=chat, sender=sender_name, audio=voice,
-#                                                     audio_time=voice_time)
-#                 audio_json = SerializerMessageAudio(audio)
-#                 data_response['audio'] = audio_json
-#                 data_response['sender_person'] = 'you'
-#                 data_response['chat_is_created'] = chat_is_created
-#                 return JsonResponse(data_response)
-#     raise PermissionDenied
-
-
-# ------------------------ V3 ----------------------------
 
 @csrf_exempt
 @decorators.require_post_and_ajax
@@ -486,19 +163,74 @@ def send_voice_message(request):
 
 
 @decorators.admin_authenticated
+@decorators.supchat
 def view_admin(request):
     context = {}
     supchat = get_supchat()
     context['supcaht'] = supchat
     return render(request, 'SupChat/Admin/admin-panel.html', context)
 
-@decorators.admin_authenticated
-def view_admin_search(request,search_query):
-    context = {}
-
-    return render(request,'SupChat/Admin/admin-search.html',context)
 
 @decorators.admin_authenticated
+@decorators.supchat
+def view_admin_search(request):
+    search_query = request.GET.get('q',None)
+    if search_query and len(search_query) < 100:
+        # Check no spam
+        context = {}
+        admin = request.admin
+
+        # Create history searched
+        SearchHistoryAdmin.objects.create(search_query=search_query, admin=admin)
+
+
+        # Search in messages
+        lookup_message = Q(sender=search_query) | Q(textmessage__text__icontains=search_query)
+        messages = Message.objects.select_subclasses().filter(lookup_message, deleted=False,
+                                                              chat__admin=admin).order_by('-chat__is_active').distinct()
+        # Use Pagination
+        pagination_messages = Paginator(messages, 25)
+        page_actvie_messages = request.GET.get('page-messages',1)
+        messages = pagination_messages.get_page(page_actvie_messages).object_list
+        context['search_messages'] = messages
+        context['pagination_messages'] = pagination_messages
+        context['page_actvie_messages'] = page_actvie_messages
+
+        # Search in chat
+        lookup_chats = Q(user__ip=search_query) | Q(user__phone_or_email=search_query)
+        chats = admin.get_chats_actvie().filter(lookup_chats).distinct()
+
+        # Use Pagination
+        pagination_chats = Paginator(chats,25)
+        chats = pagination_chats.get_page(request.GET.get('page-chats',1)).object_list
+        context['search_chats'] = chats
+        context['pagination_chats'] = pagination_chats
+
+
+        # Search in section
+        lookup_section = Q(title=search_query)
+        sections = admin.get_sections().filter(lookup_section).distinct()
+        context['search_section'] = sections
+
+        context['admin'] = request.admin
+        context['search_query'] = search_query
+
+        return render(request, 'SupChat/Admin/admin-search.html', context)
+    raise Http404
+
+
+@csrf_exempt
+@decorators.admin_authenticated
+def view_admin_search_delete_all(request):
+    request.admin.get_search_histoies().delete()
+    context = {
+        'status_code':200
+    }
+    return JsonResponse(context)
+
+
+@decorators.admin_authenticated
+@decorators.supchat
 def view_section_admin(request, section_id):
     context = {}
     section = Section.objects.filter(id=section_id, admin=request.admin).first()
@@ -511,6 +243,7 @@ def view_section_admin(request, section_id):
 
 
 @decorators.admin_authenticated
+@decorators.supchat
 def view_chat_admin(request, chat_id):
     context = {}
     chat = ChatGroup.objects.filter(id=chat_id, admin=request.admin, is_active=True).first()
@@ -527,6 +260,6 @@ def view_chat_admin(request, chat_id):
         return render(request, 'SupChat/Admin/admin-chat.html', context)
     raise Http404
 
-
+@decorators.supchat
 def view_login_admin(request):
     return HttpResponse('Login Page Admin')

@@ -4,11 +4,141 @@
 
 
 {% block Title %}
-    <title>SupChat Admin - {{ section.title }}</title>
+    <title>SupChat Admin Search - {{ search_query }}</title>
 {% endblock %}
 
 {% block Tags %}
     <meta name="robots" content="noindex,nofollow">
+{% endblock %}
+
+{% block Css %}
+    <style>
+
+        .search-results {
+            overflow: auto;
+            height: 700px;
+            max-height: 100%;
+            direction: rtl;
+        }
+
+        .search-items {
+            margin: 40px 0;
+        }
+
+        .search-items h3 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-item {
+            width: 90%;
+            background: #f5f5f5;
+            padding: 10px 15px;
+            margin: auto;
+            margin-top: 9px;
+            border-radius: 4px;
+        }
+
+        .search-item a {
+            color: #4a69e6;
+            width: 85%;
+            text-align: justify;
+        }
+
+        .search-item a:hover {
+            color: #1726a0;
+        }
+
+        .search-item-not-found {
+            text-align: center;
+            font-size: 120%;
+        }
+
+        .search-item-message {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-item-message span {
+            font-size: 85%;
+        }
+
+        .search-item-chat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-item-chat span {
+            font-size: 85%;
+        }
+
+        .pagination {
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 10px;
+            width: 300px;
+            margin: auto;
+            margin-top: 15px;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: auto;
+            direction: ltr;
+            text-align: center;
+            display: block;
+        }
+
+        .pagination-item {
+            padding: 4px;
+            margin: 3px 5px;
+            color: #444;
+        }
+
+        .pagination-item-active {
+            color: #00cb8e;
+            font-weight: bold;
+            font-size: 110%;
+        }
+
+        #btn-delete-histories {
+            border-radius: 5px;
+            background: #ff6b59;
+            border: none;
+            padding: 10px 5px;
+            color: #fff;
+            width: 300px;
+            max-width: 100%;
+            margin: auto;
+            margin-top: 15px;
+            margin-bottom: 7px;
+            transition: all .3s;
+        }
+
+        #btn-delete-histories i {
+            margin-right: 10px;
+            color: inherit;
+        }
+
+        #btn-delete-histories:hover {
+            box-shadow: 0 3px 2px rgba(255, 107, 89, 0.5);
+        }
+
+        .search-history {
+            background: #f6f6f6;
+            margin: 5px auto;
+            width: 90%;
+            border-radius: 5px;
+            padding: 10px 15px;
+            text-align: right;
+            display: block;
+        }
+
+        .search-history p {
+            margin: 0;
+        }
+
+    </style>
 {% endblock %}
 
 
@@ -54,7 +184,8 @@
                 <!-- ============================================================== -->
                 <div class="row page-titles text-right" dir="rtl">
                     <div class="col-12 align-self-center">
-                        <h1 class="text-themecolor">جست و جو <span class="mr-2 text-purple">w</span></h1>
+                        <h1 class="text-themecolor">جست و جو :<span class="mr-2 text-purple">{{ search_query }}</span>
+                        </h1>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{% url 'SupChat:view_admin' %}">صفحه اصلی</a></li>
                             <li class="breadcrumb-item active">جست و جو</li>
@@ -67,24 +198,117 @@
                             <h5 class="card-title text-right">
                                 جست و جو های اخیر
                             </h5>
-                            <img src="{% static 'supchat/images/default/search.webp' %}" alt="Chat not found"
-                                 class="mx-auto mb-4" style="width: 300px;max-width: 100%">
-                            <p class="text-gray font-20">لیست جست و جو های اخیر شما خالی است</p>
+                            <div id="search-histories" class="position-relative">
+                                {% for search in admin.get_last_search_histories %}
+                                    <a class="search-history" href="{{ search.get_absolute_url }}">
+                                        <p>{{ search.search_query }}</p>
+                                    </a>
+                                {% endfor %}
+                                <div id="container-not-found-history"
+                                     class="mb-4 {% if not admin.get_last_search_histories|length_is:0 %} d-none {% endif %}">
+                                    <img
+                                            src="{% static 'supchat/images/default/search.webp' %}"
+                                            alt="Chat not found"
+                                            class="mx-auto"
+                                            style="width: 300px;max-width: 100%">
+                                    <p class="text-gray font-20">لیست جست و جو های اخیر شما خالی است</p>
+                                </div>
+                                {% if admin.get_search_histoies|length != 0 %}
+                                    <button id="btn-delete-histories">
+                                        <i class="fas fa-trash"></i>
+                                        حذف جست و جوهای اخیر
+                                    </button>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-8">
                         <div class="card card-body mailbox">
                             <h5 class="card-title text-right"></h5>
-                            <div id="chats-list" class="chats-list" style="height: 520px !important;">
-                                {% for chat in section.get_chats_active %}
-                                    {% include 'SupChat/Admin/components/chat-list.html' with chat=chat %}
-                                {% empty %}
-                                    <div class="d-flex-force flex-column justify-content-center align-items-center">
-                                        <img src="{% static 'supchat/images/default/search.webp' %}"
-                                             alt="Chat not found" class="mx-auto mb-4" style="width: 400px;max-width: 100%">
-                                        <p class="text-gray font-20">چیزی یافت نشد</p>
-                                    </div>
-                                {% endfor %}
+                            <div class="search-results">
+                                <div class="search-items" count-result="{{ search_messages.count }}">
+                                    <h3>
+                                        پیام ها
+                                        <span class="font-20">
+                                            ({{ pagination_messages.count }})
+                                        </span>
+                                    </h3>
+                                    {% for message in search_messages %}
+                                        <div class="search-item search-item-message">
+                                            <a href="{{ message.get_absolute_url }}">
+                                                {{ message.get_text_label }}
+                                            </a>
+                                            {% if message.chat.is_active %}
+                                                <span>فعال</span>
+                                            {% else %}
+                                                <span> آرشیو شده</span>
+                                            {% endif %}
+                                        </div>
+                                    {% empty %}
+                                        <div class="search-item-not-found">
+                                            چیزی یافت نشد
+                                        </div>
+                                    {% endfor %}
+                                    {% if not pagination_messages.object_list|length_is:0 and pagination_messages.num_pages > 1 %}
+                                        <div class="pagination">
+                                            {% for page in pagination_messages.page_range %}
+                                                <a href="?q={{ search_query }}&page-messages={{ page }}"
+                                                   class="pagination-item {% if page|to_string == page_actvie_messages|to_string %}pagination-item-active{% endif %}">{{ page }}</a>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="search-items" count-result="{{ search_chats.count }}">
+                                    <h3>
+                                        گفت و گو ها
+                                        <span class="font-20">
+                                            ({{ pagination_chats.count }})
+                                        </span>
+                                    </h3>
+                                    {% for chat in search_chats %}
+                                        <div class="search-item search-item-chat">
+                                            <a href="{{ chat.get_absolute_url }}">
+                                                {{ chat }}
+                                            </a>
+                                            {% if chat.is_active %}
+                                                <span>فعال</span>
+                                            {% else %}
+                                                <span> آرشیو شده</span>
+                                            {% endif %}
+                                        </div>
+                                    {% empty %}
+                                        <div class="search-item-not-found">
+                                            چیزی یافت نشد
+                                        </div>
+                                    {% endfor %}
+                                    {% if not pagination_chats.object_list|length_is:0 and pagination_chats.num_pages > 1 %}
+                                        <div class="pagination">
+                                            {% for page in pagination_chats.page_range %}
+                                                <a href="?q={{ search_query }}&page-chat={{ page }}"
+                                                   class="pagination-item {% if page|to_string == page_actvie_messages|to_string %}pagination-item-active{% endif %}">{{ page }}</a>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="search-items" count-result="{{ search_section.count }}">
+                                    <h3>
+                                        بخش ها
+                                        <span class="font-20">
+                                            ({{ search_section.count }})
+                                        </span>
+                                    </h3>
+                                    {% for section in search_section %}
+                                        <div class="search-item">
+                                            <a href="{{ section.get_absolute_url }}">
+                                                {{ section }}
+                                            </a>
+                                        </div>
+                                    {% empty %}
+                                        <div class="search-item-not-found">
+                                            چیزی یافت نشد
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -121,6 +345,28 @@
 
 
 {% block Js %}
+    <script>
+        const URL_BACKEND_SUPCHAT = '{{ request.supchat.config.URL_BACKEND_SUPCHAT }}'
 
+        let all_content_search_item = document.querySelectorAll('.search-item a')
+        for (let content of all_content_search_item) {
+            mark_text(content, '{{ search_query }}')
+        }
+
+        let btn_delete_history = document.getElementById('btn-delete-histories')
+        let search_histories = document.getElementById('search-histories')
+        btn_delete_history.addEventListener('click', function () {
+            add_loading_effect(search_histories)
+            SendAjaxSupChat('admin/search/delete-all',{},'POST',function (response) {
+                if (response.status_code == 200){
+                    $('.search-history').remove()
+                    btn_delete_history.remove()
+                    document.getElementById('container-not-found-history').classList.remove('d-none')
+                    remove_loading_effect(search_histories)
+                }
+            })
+        })
+
+    </script>
 {% endblock %}
 

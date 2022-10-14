@@ -114,7 +114,7 @@ class TranslateSupChat {
 
 
 class SupChat extends (WebSockectSupChatMixin) {
-    URL_SUPCHAT = 'sup-chat'
+    static URL_SUPCHAT = 'sup-chat'
 
     constructor(type_user) {
         super()

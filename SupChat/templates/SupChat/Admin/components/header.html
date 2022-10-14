@@ -27,8 +27,8 @@
                 <li class="nav-item hidden-xs-down search-box"><a
                         class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i
                         class="fal fa-search"></i></a>
-                    <form class="app-search">
-                        <input type="text" class="form-control" placeholder="Search & enter"> <a
+                    <form method="get" class="app-search" action="{% url 'SupChat:view_admin_search' %}?{{ request.GET.q }}">
+                        <input type="text" value="{{ request.GET.q }}" class="form-control" name="q" placeholder="Search & enter"> <a
                             class="srh-btn"><i class="fal fa-times"></i></a></form>
                 </li>
             </ul>

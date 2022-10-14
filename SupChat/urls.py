@@ -25,7 +25,8 @@ urlpatterns = [
 
     # Admin
     path('admin',views.view_admin,name='view_admin'),
-    path('admin/search/<str:search_query>',views.view_admin_search,name='view_admin_search'),
+    path('admin/search/',views.view_admin_search,name='view_admin_search'),
+    path('admin/search/delete-all',views.view_admin_search_delete_all,name='view_admin_search_delete_all'),
     path('admin/section/<int:section_id>',views.view_section_admin,name='view_section_admin'),
     path('admin/chat/<int:chat_id>',views.view_chat_admin,name='view_chat_admin'),
     path('admin/login',views.view_login_admin,name='view_login_admin'),

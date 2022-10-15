@@ -7,6 +7,8 @@ from django.utils import timezone
 #You must set name settings project in file "asgi.py"
 
 
+ROOT_URL_ASSETS_SUPCHAT = settings.STATIC_URL
+# Address server or domain
 URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'
 
 # User Default is Django User

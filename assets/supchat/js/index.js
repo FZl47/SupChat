@@ -1031,13 +1031,31 @@ class ChatAdmin extends SupChat {
         this.toggle_supchat('open')
     }
 
-    init_chat() {
+    run_archive() {
+        this._set_supchat_info(this.context)
+        this._create_element_supchat()
+        this._set_elements()
+        this._set_info_chat()
+        this._events()
+        this.init_chat_archive()
+        this.toggle_supchat('open')
+    }
+
+    init_chat_archive() {
+        this._create_messages(this.CHAT.messages)
+        this.toggle_container_supchat_content('show')
+        this.scroll_to_down_chat()
+        this._set_info_chat()
+    }
+
+    init_chat(create_conn = true) {
         this._create_messages(this.CHAT.messages)
         this.toggle_container_supchat_content('show')
         this.create_connection()
         this.scroll_to_down_chat()
         this._set_info_chat()
     }
+
 
     toggle_supchat(state) {
         if (state == 'open') {
@@ -1135,7 +1153,7 @@ class ChatAdmin extends SupChat {
 
 
         // Add theme
-        _add_css_link(get_link_assets_supchat(get_theme_admin(), false, false, false),'style-theme-admin')
+        _add_css_link(get_link_assets_supchat(get_theme_admin(), false, false, false), 'style-theme-admin')
     }
 
     // Remove notification supchat and Added notification web instead
@@ -1432,6 +1450,7 @@ class TextMessage extends MessageSupChat {
     create_message_you(message) {
         let message_element = document.createElement('div')
         message_element.classList.add('container-message-supchat')
+        message_element.setAttribute('message-id', message.id)
         message_element.setAttribute('sender-type', 'you')
         message_element.innerHTML = get_node_text_message_you(message)
         this.ELEMENTS.message = message_element
@@ -1441,6 +1460,7 @@ class TextMessage extends MessageSupChat {
     create_message_other(message) {
         let message_element = document.createElement('div')
         message_element.classList.add('container-message-supchat')
+        message_element.setAttribute('message-id', message.id)
         message_element.setAttribute('sender-type', 'other')
         message_element.innerHTML = get_node_text_message_other(message)
         this.ELEMENTS.message = message_element
@@ -1452,6 +1472,7 @@ class TextMessage extends MessageSupChat {
         let message_element = document.createElement('div')
         message_element.classList.add('container-message-supchat')
         message_element.classList.add('container-message-supchat-system')
+        message_element.setAttribute('message-id', message.id)
         message_element.setAttribute('sender-type', 'system')
         message_element.innerHTML = get_node_message_system(message)
         this.ELEMENTS.message = message_element
@@ -1491,6 +1512,7 @@ class AudioMessage extends MessageSupChat {
     create_message_you(message) {
         let message_element = document.createElement('div')
         message_element.classList.add('container-message-supchat')
+        message_element.setAttribute('message-id', message.id)
         message_element.setAttribute('sender-type', 'you')
         message_element.innerHTML = get_node_audio_message_you(message)
         this.ELEMENTS.message = message_element
@@ -1501,6 +1523,7 @@ class AudioMessage extends MessageSupChat {
     create_message_other(message) {
         let message_element = document.createElement('div')
         message_element.classList.add('container-message-supchat')
+        message_element.setAttribute('message-id', message.id)
         message_element.setAttribute('sender-type', 'other')
         message_element.innerHTML = get_node_audio_message_other(message)
         this.ELEMENTS.message = message_element

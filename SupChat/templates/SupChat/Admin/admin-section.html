@@ -135,16 +135,9 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- ============================================================== -->
-                <!-- End Sales Chart -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
-                <!-- Notification And Feeds -->
-                <!-- ============================================================== -->
                 <div class="row">
                     <div class="col-12 col-md-8 order-1 order-md-0">
-                        <div class="card card-body mailbox">
+                        <div class="card card-body mailbox h-100">
                             <h5 class="card-title text-right">گفت و گو های فعال</h5>
                             <div id="chats-list" class="chats-list" style="height: 520px !important;">
                                 <!-- Chat list -->
@@ -153,7 +146,7 @@
                                         <div class="loading-circle-supchat"></div>
                                     </div>
                                 </div>
-                                {% for chat in section.get_chats_active %}
+                                {% for chat in chats_active %}
                                     {% include 'SupChat/Admin/components/chat-list.html' with chat=chat %}
                                 {% empty %}
                                     <div class="d-flex-force flex-column justify-content-center align-items-center">
@@ -166,19 +159,64 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="card card-body mailbox text-center d-flex-force justify-content-center">
+                        <div class="card card-body mailbox text-center d-flex-force justify-content-center h-100">
                             <img src="{% static 'supchat/images/default/chat-not-found.png' %}" alt="Chat not found"
                                  class="mx-auto" style="width: 300px;max-width: 100%">
                             <p class="text-gray font-20">گفت و گویی یافت نشد</p>
                         </div>
                     </div>
                 </div>
-                <!-- ============================================================== -->
-                <!-- End Notification And Feeds -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
-                <!-- End Page Content -->
-                <!-- ============================================================== -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card card-body mailbox">
+                            <div class="d-flex justify-content-between align-items-center mb-5" dir="rtl">
+                                <h5 class="card-title text-right">
+                                    گفت و گو های آرشیو شده
+                                    ({{ pagination_chats_archived.count }})
+                                </h5>
+                                <form method="get" id="form-sort-chats-archived" class="d-inline-block col-12 col-md-auto">
+                                    <label for="" class="text-right" dir="rtl">مرتب سازی بر اساس :</label>
+                                    <select name="sorted-chat-archived-by" class="form-select font-14 text-right">
+                                        <option value="latest" {% if sorted_chats_archived_by == 'latest' %}selected{% endif %}>
+                                            جدید ترین ها
+                                        </option>
+                                        <option value="oldest" {% if sorted_chats_archived_by == 'oldest' %}selected{% endif %}>
+                                            قدیمی ترین ها
+                                        </option>
+                                        <option value="most-messages" {% if sorted_chats_archived_by == 'most-messages' %}selected{% endif %}>
+                                            بیشترین پیام
+                                        </option>
+                                        <option value="least-messages" {% if sorted_chats_archived_by == 'least-messages' %}selected{% endif %}>
+                                            کمترین پیام
+                                        </option>
+                                    </select>
+                                    <input type="hidden" name="page-chats-archived" value="{{ page_chats_archived }}">
+                                </form>
+                            </div>
+                            <div id="chats-list-archived" class="chats-list" style="height: 520px !important;">
+                                <!-- Chat list Archived -->
+                                {% for chat in chats_archived %}
+                                    {% include 'SupChat/Admin/components/chat-list-archived.html' with chat=chat %}
+                                {% empty %}
+                                    <div class="d-flex-force flex-column justify-content-center align-items-center">
+                                        <img src="{% static 'supchat/images/default/chat-not-found.png' %}"
+                                             alt="Chat not found" class="mx-auto" style="width: 400px;max-width: 100%">
+                                        <p class="text-gray font-20">گفت و گویی یافت نشد</p>
+                                    </div>
+                                {% endfor %}
+                                {% if pagination_chats_archived.num_pages > 1 %}
+                                    <div class="pagination">
+                                        {% for page in pagination_chats_archived.page_range %}
+                                            <a class="pagination-item {% if page|to_string == page_chats_archived|to_string %}pagination-item-active{% endif %}" href="?sorted-chat-archived-by={{ sorted_chats_archived_by }}&page-chats-archived={{ page }}">
+                                                {{ page }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- ============================================================== -->
             <!-- End Container fluid  -->
@@ -206,6 +244,7 @@
 
 {% block Js %}
     <script>
+        show_message_notif_server_supchat()
         // ======================
         //      Init Charts
         let all_section = document.querySelectorAll('.section-chat')
@@ -214,15 +253,14 @@
             create_chart_section_rate_chats(`${section.getAttribute('section-id')}`, section.getAttribute('data-chart-rate-chats'))
         }
         //=======================
+        //       Form sort chats archived
+        let form_sort_chats_archived = document.getElementById('form-sort-chats-archived')
+        form_sort_chats_archived.addEventListener('change',function () {
+            form_sort_chats_archived.submit()
+        })
     </script>
     <script>
-        const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'
-        {#const URL_BACKEND_SUPCHAT = 'http://192.168.1.142:8002'#}
-        {#const ROOT_URL_ASSETS_SUPCHAT = '/assets/'#}
-        {#let _supchat_json = JSON.parse('{{ supchat|escapejs  }}')#}
-        {#let _chat_json = JSON.parse('{{ chat|escapejs  }}')#}
-        {#const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)#}
-        {#SUP_CHAT.run()#}
+        const URL_BACKEND_SUPCHAT = '{{ request.supchat.config.config_core.URL_BACKEND_SUPCHAT }}'
         const SUP_CHAT_LIST = new ChatList('{{ section.id }}')
     </script>
 {% endblock %}

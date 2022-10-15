@@ -1,19 +1,23 @@
 from django.shortcuts import redirect
+from django.http import Http404
 from django.core.exceptions import PermissionDenied
-from SupChat.models import Admin, User
+from SupChat.models import SupChat, Admin, User
 from SupChat.core import tools
 from SupChat import config
 
 
 def supchat(func):
     def wrapper(request, *args, **kwargs):
-        supchat_data = {
-            'config': {
-                'URL_BACKEND_SUPCHAT': config.URL_BACKEND_SUPCHAT
+        supchat_obj = SupChat.objects.first()
+        if supchat_obj:
+            supchat_config_core = {
+                'URL_BACKEND_SUPCHAT': config.URL_BACKEND_SUPCHAT,
+                'ROOT_URL_ASSETS_SUPCHAT': config.ROOT_URL_ASSETS_SUPCHAT
             }
-        }
-        setattr(request,'supchat', supchat_data)
-        return func(request, *args, **kwargs)
+            setattr(supchat_obj.config,'config_core',supchat_config_core)
+            setattr(request, 'supchat', supchat_obj)
+            return func(request, *args, **kwargs)
+        raise Http404
 
     return wrapper
 

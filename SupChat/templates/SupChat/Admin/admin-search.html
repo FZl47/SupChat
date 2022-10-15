@@ -75,31 +75,27 @@
         }
 
         .pagination {
-            background: #f5f5f5;
-            border-radius: 20px;
             padding: 10px;
-            width: 300px;
+            width: 90%;
             margin: auto;
-            margin-top: 15px;
             max-width: 100%;
             white-space: nowrap;
             overflow: auto;
             direction: ltr;
-            text-align: center;
-            display: block;
+            text-align: left;
+            border-bottom: 1px solid #eee;
         }
 
         .pagination-item {
-            padding: 4px;
-            margin: 3px 5px;
-            color: #444;
+            padding: 8px 12px;
+            color: #888;
         }
 
         .pagination-item-active {
-            color: #00cb8e;
-            font-weight: bold;
-            font-size: 110%;
+            background: #00e6bb;
+            color: #fff;
         }
+
 
         #btn-delete-histories {
             border-radius: 5px;
@@ -225,7 +221,7 @@
                     <div class="col-12 col-md-8">
                         <div class="card card-body mailbox">
                             <h5 class="card-title text-right"></h5>
-                            <div class="search-results">
+                            <div id="search-results" class="search-results">
                                 <div class="search-items" count-result="{{ search_messages.count }}">
                                     <h3>
                                         پیام ها
@@ -250,11 +246,13 @@
                                         </div>
                                     {% endfor %}
                                     {% if not pagination_messages.object_list|length_is:0 and pagination_messages.num_pages > 1 %}
-                                        <div class="pagination">
-                                            {% for page in pagination_messages.page_range %}
-                                                <a href="?q={{ search_query }}&page-messages={{ page }}"
-                                                   class="pagination-item {% if page|to_string == page_actvie_messages|to_string %}pagination-item-active{% endif %}">{{ page }}</a>
-                                            {% endfor %}
+                                        <div class="text-left">
+                                            <div class="pagination">
+                                                {% for page in pagination_messages.page_range %}
+                                                    <a href="?q={{ search_query }}&page-messages={{ page }}"
+                                                       class="pagination-item {% if page|to_string == page_actvie_messages|to_string %}pagination-item-active{% endif %}">{{ page }}</a>
+                                                {% endfor %}
+                                            </div>
                                         </div>
                                     {% endif %}
                                 </div>
@@ -282,11 +280,13 @@
                                         </div>
                                     {% endfor %}
                                     {% if not pagination_chats.object_list|length_is:0 and pagination_chats.num_pages > 1 %}
-                                        <div class="pagination">
-                                            {% for page in pagination_chats.page_range %}
-                                                <a href="?q={{ search_query }}&page-chat={{ page }}"
-                                                   class="pagination-item {% if page|to_string == page_actvie_messages|to_string %}pagination-item-active{% endif %}">{{ page }}</a>
-                                            {% endfor %}
+                                        <div class="text-left">
+                                            <div class="pagination">
+                                                {% for page in pagination_chats.page_range %}
+                                                    <a href="?q={{ search_query }}&page-chat={{ page }}"
+                                                       class="pagination-item {% if page|to_string == page_actvie_messages|to_string %}pagination-item-active{% endif %}">{{ page }}</a>
+                                                {% endfor %}
+                                            </div>
                                         </div>
                                     {% endif %}
                                 </div>
@@ -357,8 +357,8 @@
         let search_histories = document.getElementById('search-histories')
         btn_delete_history.addEventListener('click', function () {
             add_loading_effect(search_histories)
-            SendAjaxSupChat('admin/search/delete-all',{},'POST',function (response) {
-                if (response.status_code == 200){
+            SendAjaxSupChat('admin/search/delete-all', {}, 'POST', function (response) {
+                if (response.status_code == 200) {
                     $('.search-history').remove()
                     btn_delete_history.remove()
                     document.getElementById('container-not-found-history').classList.remove('d-none')
@@ -366,6 +366,26 @@
                 }
             })
         })
+
+        function sort_search_items_by_most_result() {
+            let $search_results = $('#search-results'),
+                $search_items = $search_results.children('.search-items');
+            $search_items.sort(function (a, b) {
+                let an = a.getAttribute('count-result'),
+                    bn = b.getAttribute('count-result');
+
+                if (an < bn) {
+                    return 1;
+                }
+                if (an > bn) {
+                    return -1;
+                }
+                return 0;
+            });
+            $search_items.detach().appendTo($search_results);
+        }
+
+        sort_search_items_by_most_result()
 
     </script>
 {% endblock %}

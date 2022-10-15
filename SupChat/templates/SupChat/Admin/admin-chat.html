@@ -73,7 +73,7 @@
                                         <div class="loading-circle-supchat"></div>
                                     </div>
                                 </div>
-                                {% for chat in chat.section.get_chats_active %}
+                                {% for chat in chats_active %}
                                     {% include 'SupChat/Admin/components/chat-list.html' with chat=chat %}
                                 {% empty %}
                                     <div class="d-flex-force flex-column justify-content-center align-items-center">
@@ -128,14 +128,14 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" async></script>
     <script>
-        const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'
-        {#    const URL_BACKEND_SUPCHAT = 'http://192.168.1.142:8002'#}
-        const ROOT_URL_ASSETS_SUPCHAT = '/assets/'
+        const URL_BACKEND_SUPCHAT = '{{ request.supchat.config.config_core.URL_BACKEND_SUPCHAT }}'
+        const ROOT_URL_ASSETS_SUPCHAT = '{{ request.supchat.config.config_core.ROOT_URL_ASSETS_SUPCHAT }}'
         let _supchat_json = JSON.parse('{{ supchat_json|escapejs  }}')
         let _chat_json = JSON.parse('{{ chat_json|escapejs  }}')
         const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)
         SUP_CHAT.run()
         const SUP_CHAT_LIST = new ChatList('{{ chat.section.id }}')
+        action_url_supchat()
     </script>
 {% endblock %}
 

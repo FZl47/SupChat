@@ -1,3 +1,170 @@
+let LIST_ALL_NOTIFICATIONS_INSTANCE_SUPCHAT = []
+let COUNTER_CREATE_NOTIFICATIONS_SUPCHAT = 0
+
+class ShowNotificationMessage_Model_SUPCHAT {
+    constructor(Text, Type, Timer = 5000, LevelOfNecessity = 3) {
+        COUNTER_CREATE_NOTIFICATIONS_SUPCHAT += 1
+        LIST_ALL_NOTIFICATIONS_INSTANCE_SUPCHAT.push(this)
+        this.ID_Notification = COUNTER_CREATE_NOTIFICATIONS_SUPCHAT
+        this.Index_Notification = LIST_ALL_NOTIFICATIONS_INSTANCE_SUPCHAT.length - 1
+
+        let ContainerNotifications = document.getElementById('ContainerNotificationsMessage')
+        if (ContainerNotifications == undefined) {
+            ContainerNotifications = document.createElement('div')
+            ContainerNotifications.id = 'ContainerNotificationsMessage'
+        }
+        let ContainerMessage = document.createElement('div')
+        let Message = document.createElement('p')
+        let BtnClose = document.createElement('i')
+        let Icon = document.createElement('i')
+
+        ContainerMessage.setAttribute('ID_Notification', this.ID_Notification)
+        BtnClose.setAttribute('Index_Notification', this.Index_Notification)
+
+        ContainerMessage.classList.add('NotificationMessage')
+        ContainerMessage.classList.add(`LevelOfNecessity_${LevelOfNecessity}`)
+        ContainerMessage.classList.add(`Notification${Type}`)
+        Message.innerText = Text
+        BtnClose.className = 'fa fa-times BtnCloseNotification'
+        if (Type == 'Success') {
+            Icon.className = 'fa fa-check-circle IconNotification IconNotification_Success'
+        } else if (Type == 'Error') {
+            Icon.className = 'fa fa-times-hexagon IconNotification IconNotification_Error '
+        } else if (Type == 'Warning') {
+            Icon.className = 'fa fa-exclamation-triangle IconNotification IconNotification_Warning'
+        }
+        ContainerMessage.appendChild(Icon)
+        ContainerMessage.appendChild(BtnClose)
+        ContainerMessage.appendChild(Message)
+        ContainerNotifications.appendChild(ContainerMessage)
+        document.body.appendChild(ContainerNotifications)
+        this.ContainerMessage = ContainerMessage
+        let Index_Notification = this.Index_Notification
+        setTimeout(function () {
+            remove_notification_supchat(Index_Notification)
+        }, Timer)
+
+        BtnClose.onclick = function (e) {
+            let Index_Notification = e.target.getAttribute('Index_Notification')
+            remove_notification_supchat(Index_Notification)
+        }
+    }
+
+}
+
+function remove_notification_supchat(Index) {
+    let Instance = LIST_ALL_NOTIFICATIONS_INSTANCE_SUPCHAT[Index]
+    Instance.ContainerMessage.classList.add('Notification_Removed')
+    setTimeout(function () {
+        Instance.ContainerMessage.remove()
+        delete Instance
+    }, 300)
+}
+
+function show_notification_message_supchat(Text, Type, Timer = 5000, LevelOfNecessity = 3) {
+    new ShowNotificationMessage_Model_SUPCHAT(Text, Type, Timer, LevelOfNecessity)
+}
+
+
+function show_message_notif_server_supchat() {
+    setTimeout(function () {
+        let AllCookies = document.cookie.split(';')
+        let Cookie_Key
+        let Cookie_Val
+        for (let Co of AllCookies) {
+            let Key = Co.split('=')[0]
+            let Value = Co.split('=')[1]
+            if (Key == 'Functionality_N' || Key == ' Functionality_N' || Key == ' Functionality_N ') {
+                Cookie_Key = Key
+                Cookie_Val = Value
+            }
+        }
+        let Text
+        let Type
+        let Timer
+        let LevelOfNecessity
+        try {
+            Text = Cookie_Val.split('~')[0] || 'نا مشخص'
+            Text = Text.replace('"', '')
+            Text = Text.replace("'", '')
+            Type = Cookie_Val.split('~')[1] || 'Warning'
+            Timer = Cookie_Val.split('~')[2] || 8000
+            LevelOfNecessity = Cookie_Val.split('~')[3] || 2
+        } catch (e) {
+        }
+        if (Cookie_Key == 'Functionality_N' || Cookie_Key == ' Functionality_N' || Cookie_Key == ' Functionality_N ') {
+            let TextResult = ConvertCharEnglishToPersianDecode(Text)
+            show_notification_message_supchat(TextResult, Type, Timer, LevelOfNecessity)
+        }
+        document.cookie = `${Cookie_Key}=Closed; expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`
+    })
+}
+
+function ConvertCharEnglishToPersianDecode(Text) {
+    let Dict_Char_Persian_English = {
+        'ا': 'a1',
+        'آ': 'a2',
+        'ب': 'b1',
+        'پ': 'p1',
+        'ت': 't1',
+        'ث': 'c1',
+        'ج': 'j1',
+        'چ': 'ch',
+        'ح': 'h1',
+        'خ': 'kh',
+        'د': 'd1',
+        'ذ': 'z1',
+        'ر': 'r1',
+        'ز': 'z2',
+        'ژ': 'zh',
+        'س': 'c2',
+        'ش': 'sh',
+        'ص': 'c3',
+        'ض': 'z3',
+        'ط': 't2',
+        'ظ': 'z4',
+        'ع': 'a3',
+        'غ': 'g_',
+        'ف': 'f1',
+        'ق': 'g5',
+        'ک': 'k1',
+        'گ': 'k2',
+        'ل': 'l1',
+        'م': 'm1',
+        'ن': 'n1',
+        'و': 'v1',
+        'ه': 'h2',
+        'ی': 'e2',
+        ' ': '11',
+        '': '22',
+    }
+    let CharEn = Object.keys(Dict_Char_Persian_English)
+    let TextResult = ''
+    for (let Index = 0; Index < Text.length; Index++) {
+        if (Index % 2 == 0) {
+            TextResult += GetKeyByValue(Dict_Char_Persian_English, Text[Index] + Text[Index + 1])
+        }
+    }
+    return TextResult
+}
+
+function ConvertCharPersianToEnglishDecode(Text) {
+    let Res = ''
+    for (let i of Text) {
+        try {
+            Res += Dict_Char_Persian_English[i]
+        } catch (e) {
+        }
+    }
+    return Res
+}
+
+
+function GetKeyByValue(Obj, Val) {
+    return Object.keys(Obj).find(K => Obj[K] === Val);
+}
+
+
 function get_cookie(Name) {
     let Res = null
     let Cookie = document.cookie
@@ -228,7 +395,7 @@ function mark_text(element, key) {
     element.innerHTML = element.textContent.replaceAll(key, marked_key)
 }
 
-function add_loading_effect(el,size=1) {
+function add_loading_effect(el, size = 1) {
     let loading_el = document.createElement('div')
     loading_el.classList.add('loading-effect-supchat')
     loading_el.style.transform = `scale(${size})`
@@ -238,3 +405,28 @@ function add_loading_effect(el,size=1) {
 function remove_loading_effect(el) {
     el.querySelector('.loading-effect-supchat').remove()
 }
+
+function action_url_supchat() {
+    let search_list = location.search.replace('?', '').split('&')
+    // convert to dict
+    let search_dict = {}
+    for (let i of search_list) {
+        let [k, v] = i.split('=')
+        search_dict[k] = v
+    }
+    if (search_dict['focus-on-message']) {
+        focus_on_message_supchat(search_dict['focus-on-message'])
+    }
+}
+
+function focus_on_message_supchat(id) {
+    let message = document.querySelector(`[message-id="${id}"]`)
+    message.classList.remove('message-focused-supchat')
+    message.classList.add('message-focused-supchat')
+    setTimeout(function () {
+        message.scrollIntoView({
+            'behavior': 'smooth'
+        })
+    },400)
+}
+

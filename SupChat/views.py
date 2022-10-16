@@ -199,7 +199,7 @@ def view_admin_search(request):
 
         # Search in chat
         lookup_chats = Q(user__ip__icontains=search_query) | Q(user__phone_or_email__icontains=search_query)
-        chats = admin.get_chats_actvie().filter(lookup_chats).distinct()
+        chats = admin.get_all_chats().filter(lookup_chats).distinct()
 
         # Use Pagination
         pagination_chats = Paginator(chats, 25)
@@ -233,7 +233,7 @@ def view_admin_search_delete_all(request):
 @decorators.supchat
 def view_section_admin(request, section_id):
     context = {}
-    section = Section.objects.filter(id=section_id, admin=request.admin).first()
+    section = get_object_or_404(Section,id=section_id,admin=request.admin)
     context['supchat'] = request.supchat
     context['section'] = section
     context['chats_active'] = section.get_chats_active(request.admin)
@@ -250,8 +250,6 @@ def view_section_admin(request, section_id):
     context['sorted_chats_archived_by'] = sorted_chats_archived_by
     context['page_chats_archived'] = page_chats_archived
 
-    if not section:
-        raise Http404
     return render(request, 'SupChat/Admin/admin-section.html', context)
 
 
@@ -266,6 +264,7 @@ def view_chat_admin(request, chat_id):
     chat_serializer = serializers.Serializer_chat(chat)
     supchat_serialized = serializers.Serializer_supchat(supchat)
     context['chat'] = chat
+    context['chats_active'] = chat.section.get_chats_active(request.admin)
     context['supchat'] = supchat
     context['chat_json'] = json.dumps(chat_serializer)
     context['supchat_json'] = json.dumps(supchat_serialized)

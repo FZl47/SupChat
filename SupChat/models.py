@@ -6,7 +6,7 @@ from django.templatetags.static import static
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 from model_utils.managers import InheritanceManager
-from SupChat.core.tools import RandomString, GetDifferenceTime
+from SupChat.core.tools import RandomString, GetDifferenceTime, GetDifferenceTimeString
 from SupChat.config import USER, get_datetime
 import json
 
@@ -48,13 +48,12 @@ class SupChatStyle(models.Model):
         except:
             return 'SupChat Style'
 
-
     def get_all_theme(self):
         themes = []
         for theme in self.THEME_OPTIONS:
             themes.append({
-                'src':theme[0],
-                'name':theme[1],
+                'src': theme[0],
+                'name': theme[1],
             })
         return themes
 
@@ -100,22 +99,59 @@ class Section(models.Model):
     def __str__(self):
         return self.title
 
-
-    def get_group_name_by_admin(self,admin):
+    def get_group_name_by_admin(self, admin):
         return f"GroupName_SectionID_{self.id}_{admin.group_name}"
 
-
-
-    def get_chats_active(self):
+    def get_chats_active(self, admin=None):
         # Chat active with minimum 1 message
         # and
         # Order by last message
-        return self.chatgroup_set.filter(is_active=True).annotate(count_message=Count('message')).filter(
+        lookup = ''
+        if admin:
+            lookup = Q(admin=admin)
+        return self.chatgroup_set.filter(lookup, is_active=True).annotate(count_message=Count('message')).filter(
             count_message__gt=0).annotate(last_message=Max('message')).order_by('-last_message')
 
-    def get_all_chats(self):
-        # Order by last message
-        return self.chatgroup_set.all().annotate(last_message=Max('message')).order_by('-last_message')
+    def get_chats_archived(self, admin=None, sort_by='latest'):
+        # Chat archived
+        lookup = ''
+        if admin:
+            lookup = Q(admin=admin)
+        chats = self.chatgroup_set.filter(lookup, is_active=False)
+        if sort_by == 'latest':
+            chats = chats.order_by('-id')
+        elif sort_by == 'oldest':
+            chats = chats.order_by('id')
+        elif sort_by == 'most-messages':
+            chats = chats.annotate(count_message=Count('message')).order_by('-count_message')
+        elif sort_by == 'least-messages':
+            chats = chats.annotate(count_message=Count('message')).order_by('count_message')
+
+        return chats
+
+    # def get_all_chats(self):
+    #     # Order by last message
+    #     return self.chatgroup_set.all().annotate(last_message=Max('message')).order_by('-last_message')
+
+    def get_count_chats(self,admin=None):
+        lookup = ''
+        if admin:
+            lookup = Q(admin=admin)
+        return self.chatgroup_set.filter(lookup).count()
+
+    def get_count_messages(self,admin=None):
+        lookup = ''
+        if admin:
+            lookup = Q(admin=admin)
+        return self.chatgroup_set.filter(lookup).aggregate(count_messages=Count('message'))['count_messages']
+
+
+    def get_last_activity(self,admin=None):
+        lookup = ''
+        if admin:
+            lookup = Q(admin=admin)
+        x = self.chatgroup_set.filter(lookup).aggregate(last_message=Max('message__date_time_send'))['last_message']
+        return GetDifferenceTimeString(x)
 
     def get_admin_less_busy(self):
         return self.admin_set.order_by('-chatgroup__is_active').first()
@@ -185,14 +221,15 @@ class Admin(models.Model):
     def get_chats_actvie(self):
         return self.chatgroup_set.filter(is_active=True)
 
+    def get_all_chats(self):
+        return self.chatgroup_set.all()
+
     def get_search_histoies(self):
         return self.searchhistoryadmin_set.all()
 
     def get_last_search_histories(self):
         # Geted 10 latest obj
         return self.get_search_histoies()[:10]
-
-
 
 
 class User(models.Model):
@@ -266,7 +303,7 @@ class ChatGroup(models.Model):
         if self.is_active:
             return reverse('SupChat:view_chat_admin', args=(self.id,))
         else:
-            return ''
+            return reverse('SupChat:view_chat_archived_admin',args=(self.id,))
 
     def get_messages(self):
         return self.message_set.filter(deleted=False).select_subclasses().all()
@@ -287,14 +324,13 @@ class ChatGroup(models.Model):
         return self.message_set.select_subclasses().filter(audiomessage__type='audio').count()
 
     def get_count_unread_message_by_admin(self):
-        return self.message_set.filter(seen=False,sender='user').count()
+        return self.message_set.filter(seen=False, sender='user').count()
 
     def seen_messages_user(self):
         self.message_set.filter(sender='user', seen=False).update(seen=True)
 
     def seen_messages_admin(self):
         self.message_set.filter(sender='admin', seen=False).update(seen=True)
-
 
     def get_group_name(self):
         """
@@ -352,7 +388,7 @@ class MessageBase(models.Model):
 
     def get_absolute_url(self):
         # Get url chat and set id message in url and focus on message
-        return self.chat.get_absolute_url() + f'#focus-on-message={self.id}'
+        return self.chat.get_absolute_url() + f'?focus-on-message={self.id}'
 
 
 class Message(MessageBase):
@@ -409,7 +445,7 @@ class LogMessageAdmin(models.Model):
 
 class SearchHistoryAdmin(models.Model):
     search_query = models.CharField(max_length=100)
-    admin = models.ForeignKey('Admin',on_delete=models.CASCADE)
+    admin = models.ForeignKey('Admin', on_delete=models.CASCADE)
     date_time_submit = models.DateTimeField(auto_now_add=True)
 
     class Meta:

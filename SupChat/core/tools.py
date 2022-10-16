@@ -107,23 +107,35 @@ def GetDifferenceTime(Time):
                                                                             Time.minute)
 
     DifferenceTimeSecond = DifferenceTime.total_seconds()
-    # Second = DifferenceTimeSecond % 60
-    # Minute = DifferenceTimeSecond // 60 % 60
-    # Hour = DifferenceTimeSecond // 3600
-    # Day = DifferenceTime.days
-    # Str = ''
-    # if Minute > 0:
-    #     Str = f'{Minute} Minutes'
-    # else:
-    #     Str = f'Now'
-    #
-    # if Hour > 0:
-    #     Str = f'{Hour} Hour'
-    #
-    # if Day > 0:
-    #     Str = f'{Day} Days'
-
     return DifferenceTimeSecond
+
+
+def GetDifferenceTimeString(Time):
+    TimeZone = settings.TIME_ZONE or 'UTC'
+    TimeZone = pytz.timezone(TimeZone)
+    TimeServer = datetime.datetime.now(TimeZone)
+    DifferenceTime = datetime.datetime(TimeServer.year, TimeServer.month, TimeServer.day, TimeServer.hour,
+                                       TimeServer.minute) - datetime.datetime(Time.year, Time.month, Time.day, Time.hour,
+                                                                            Time.minute)
+
+    DifferenceTimeSecond = DifferenceTime.total_seconds()
+    Second = DifferenceTimeSecond % 60
+    Minute = int(DifferenceTimeSecond // 60 % 60)
+    Hour = int(DifferenceTimeSecond // 3600)
+    Day = DifferenceTime.days
+    Str = ''
+    if Minute > 0:
+        Str = f'{Minute} دقیقه پیش'
+    else:
+        Str = f'لحظاتی پیش'
+
+    if Hour > 0:
+        Str = f'{Hour} ساعت پیش'
+
+    if Day > 0:
+        Str = f'{Day}  روز پیش'
+
+    return Str
 
 
 

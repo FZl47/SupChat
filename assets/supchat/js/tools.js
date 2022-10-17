@@ -412,10 +412,16 @@ function action_url_supchat() {
     let search_dict = {}
     for (let i of search_list) {
         let [k, v] = i.split('=')
-        search_dict[k] = v
+        search_dict[k] = v || true
     }
     if (search_dict['focus-on-message']) {
         focus_on_message_supchat(search_dict['focus-on-message'])
+    } else if (search_dict['notification']) {
+        try {
+            document.getElementById('notification').scrollIntoView({
+            'behavior':'smooth'
+        })
+        }catch (e) {}
     }
 }
 
@@ -427,6 +433,6 @@ function focus_on_message_supchat(id) {
         message.scrollIntoView({
             'behavior': 'smooth'
         })
-    },400)
+    }, 400)
 }
 

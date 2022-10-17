@@ -1115,7 +1115,9 @@ class ChatAdmin extends SupChat {
 
         if (elements.btn_transfer_chat_supchat) {
             elements.btn_transfer_chat_supchat.addEventListener('click', function () {
-
+                // OutSide SupChat class
+                // Show contianer admins for transfer chat
+                open_contianer_admins_transfer()
             })
         }
     }

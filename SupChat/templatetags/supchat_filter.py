@@ -16,6 +16,29 @@ def get_data_chart_section_rate_chats(section,admin):
     return section.get_data_chart_rate_chats(admin)
 
 
+@register.filter
+@register.simple_tag
+def get_count_chats(section,admin):
+    return section.get_count_chats(admin)
+
+
+@register.filter
+@register.simple_tag
+def get_count_messages(section,admin):
+    return section.get_count_messages(admin)
+
+
+@register.filter
+@register.simple_tag
+def get_last_activity(section,admin):
+    return section.get_last_activity(admin)
+
+
+@register.filter
+@register.simple_tag
+def paramet_in_url(url,parametr):
+    return parametr in url
+
 
 @register.filter
 @register.simple_tag

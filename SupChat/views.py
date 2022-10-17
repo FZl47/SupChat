@@ -25,20 +25,21 @@ from SupChat.core.decorators import view as decorators
 from SupChat.models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin, SearchHistoryAdmin, \
     Message
 
-
-def get_supchat():
-    return SupChat.objects.first()
+#
+# def get_supchat():
+#     return SupChat.objects.first()
 
 
 @csrf_exempt
 @decorators.require_post_and_ajax
 @decorators.get_user
+@decorators.supchat
 def sup_chat_run_user(request):
     context = {}
-    supchat = get_supchat()
+    supchat = request.supchat
     sections = Section.objects.annotate(admin_count=Count('admin')).filter(is_active=True, admin_count__gt=0)
     user = request.user_supchat
-    if supchat and sections:
+    if sections:
         chat = ChatGroup.objects.filter(user=user, is_active=True).first()
         supchat_serialized = serializers.Serializer_supchat(supchat)
         section_serialized = serializers.Serializer_section(sections, True)
@@ -86,23 +87,27 @@ def get_user_by_request_or_phone_email(request, phone_or_email):
 @csrf_exempt
 @decorators.require_post_and_ajax
 @decorators.get_user
+@decorators.supchat
 def start_chat(request):
     context = {}
 
     def create_chat(user, admin, section):
         return ChatGroup.objects.create(user=user, admin=admin, section=section)
 
-    def get_chat(user, admin, section):
-        return ChatGroup.objects.filter(user=user, admin=admin, section=section, is_active=True).first()
+    # def get_chat(user, admin, section):
+    #     return ChatGroup.objects.filter(user=user, admin=admin, section=section, is_active=True).first()
+
+    def get_chat(user):
+        return ChatGroup.objects.filter(user=user, is_active=True).first()
 
     data = json.loads(request.body)
     phone_or_email = data.get('phone_or_email') or ''
     section_id = data.get('section_id') or 0
     section = Section.objects.filter(id=section_id).first()
-    supchat = get_supchat()
-    admin = section.get_admin_less_busy()
+    supchat = request.supchat
 
-    if supchat and section:
+    if section:
+        admin = section.get_admin_less_busy()
         phone_or_email_is_valid = False
         if supchat.config.get_phone_or_email:
             if tools.ValidationEmail(phone_or_email, 3, 100) or (
@@ -116,7 +121,8 @@ def start_chat(request):
                     context['user_created'] = True
                 else:
                     context['user_created'] = False
-                chat = get_chat(user, admin, section)
+                # chat = get_chat(user, admin, section)
+                chat = get_chat(user)
                 if chat == None:
                     chat = create_chat(user, admin, section)
                 context['chat'] = serializers.Serializer_chat(chat)
@@ -167,18 +173,15 @@ def send_voice_message(request):
 @decorators.admin_authenticated
 @decorators.supchat
 def view_admin(request):
-    context = {}
-    supchat = get_supchat()
-    context['supcaht'] = supchat
-    return render(request, 'SupChat/Admin/admin-panel.html', context)
+    return render(request, 'SupChat/Admin/admin-panel.html')
 
 
 @decorators.admin_authenticated
 @decorators.supchat
 def view_admin_search(request):
     search_query = request.GET.get('q', None)
+    # Check no spam
     if search_query and len(search_query) < 100:
-        # Check no spam
         context = {}
         admin = request.admin
 
@@ -189,7 +192,7 @@ def view_admin_search(request):
         lookup_message = Q(sender=search_query) | Q(textmessage__text__icontains=search_query)
         messages = Message.objects.select_subclasses().filter(lookup_message, deleted=False,
                                                               chat__admin=admin).order_by('-chat__is_active').distinct()
-        # Use Pagination
+        # use pagination
         pagination_messages = Paginator(messages, 25)
         page_actvie_messages = request.GET.get('page-messages', 1)
         messages = pagination_messages.get_page(page_actvie_messages).object_list
@@ -201,7 +204,7 @@ def view_admin_search(request):
         lookup_chats = Q(user__ip__icontains=search_query) | Q(user__phone_or_email__icontains=search_query)
         chats = admin.get_all_chats().filter(lookup_chats).distinct()
 
-        # Use Pagination
+        # use pagination
         pagination_chats = Paginator(chats, 25)
         chats = pagination_chats.get_page(request.GET.get('page-chats', 1)).object_list
         context['search_chats'] = chats

@@ -167,6 +167,10 @@ h6 {
     font-size: 36px;
 }
 
+.VazirMatn{
+    font-family: VazirMatn!important;
+}
+
 .box {
     border-radius: 4px;
     padding: 10px;
@@ -6724,6 +6728,17 @@ File: scss
     left: 7px;
 }
 
+.message-focused-supchat {
+    border-radius: 5px;
+    transition: all .2s;
+    animation: animation-message-focused-supchat 7s backwards;
+}
+
+@keyframes animation-message-focused-supchat {
+    40% {
+        background: #dddddd;
+    }
+}
 
 .chat-list {
     position: relative;
@@ -7134,4 +7149,197 @@ File: scss
 .radio-custom-active {
     background: #00ebd5;
     color: #fff;
+}
+
+.chat-list-archived:nth-of-type(odd) {
+    background: #fafafa;
+}
+
+
+.pagination-item {
+    color: #888;
+}
+
+.pagination-item-active {
+    background: rgb(0, 230, 187);
+    color: #fff;
+}
+
+
+#ContainerNotificationsMessage {
+    position: fixed;
+    top: 1%;
+    right: 1%;
+    z-index: 9999999;
+    max-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.NotificationMessage {
+    position: relative;
+    padding: 7px;
+    margin: 15px 10px;
+    width: 300px;
+    box-shadow: 0 5px 8px rgba(148, 148, 148, 0.1);
+    direction: rtl;
+    text-align: center;
+    border-radius: 4px;
+    transition: all 1s;
+    background: #ffffff;
+    animation: ShowNotification_Animation_1 .3s;
+}
+
+.Notification_Removed {
+    animation: Animation_Notification_Removed .25s forwards;
+}
+
+@keyframes Animation_Notification_Removed {
+    100% {
+        transform: translateX(-300px);
+        opacity: 0;
+    }
+}
+
+@keyframes ShowNotification_Animation_1 {
+    0% {
+        transform: translateX(100px);
+    }
+    100% {
+        transform: translateX(0) translateY(0);
+    }
+}
+
+.LevelOfNecessity_1 {
+    width: 250px;
+}
+
+.LevelOfNecessity_1 p {
+    font-size: 90%;
+}
+
+.LevelOfNecessity_2 {
+    width: 280px;
+}
+
+.LevelOfNecessity_2 p {
+    font-size: 95%;
+}
+
+.LevelOfNecessity_3 {
+    width: 330px;
+}
+
+.LevelOfNecessity_3 p {
+    font-size: 100%;
+}
+
+.LevelOfNecessity_4 {
+    width: 350px;
+}
+
+.LevelOfNecessity_4 p {
+    font-size: 110%;
+}
+
+.LevelOfNecessity_5 {
+    width: 400px;
+}
+
+.LevelOfNecessity_5 p {
+    font-size: 120%;
+}
+
+
+.NotificationMessage p {
+    margin: 0;
+    margin-top: 2px;
+    padding-bottom: 20px;
+}
+
+.IconNotification {
+    position: absolute;
+    left: 7px;
+    top: 7px;
+    font-size: 110%;
+}
+
+.IconNotification_Success {
+    color: #1af196;
+}
+
+.IconNotification_Error {
+    color: #f15368;
+}
+
+.IconNotification_Warning {
+    color: #ffaf07;
+}
+
+.BtnCloseNotification {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    text-align: right;
+    display: block !important;
+    font-size: 95%;
+    cursor: pointer;
+    transform: rotate(0) !important;
+    color: #ff7e79;
+}
+
+.BtnCloseNotification:hover {
+    color: #ff0c00;
+}
+
+.NotificationSuccess {
+    box-shadow: 0 3px 1px #1af196;
+}
+
+.NotificationSuccess p {
+    color: #17c3b2;
+}
+
+.NotificationError {
+    box-shadow: 0 3px 1px #f15368;
+}
+
+.NotificationError p {
+    color: #ff4558;
+}
+
+.NotificationWarning {
+    border: 1px solid rgba(255, 209, 51, 0.35);
+    box-shadow: 0 3px 1px #ffaf07;
+}
+
+.NotificationWarning p {
+    color: #ffaf07;
+}
+
+.Success {
+    box-shadow: 0 0 3px #17c3b2;
+    color: #17c3b2;
+}
+
+.Success p {
+    color: #17c3b2;
+}
+
+.Alert {
+    box-shadow: 0 0 3px #ff4558;
+    color: #ff4558;
+}
+
+.Alert p {
+    color: #ff4558;
+}
+
+.Warning {
+    box-shadow: 0 0 3px #ffd070;
+}
+
+.Warning p {
+    color: #e0bc5e;
 }

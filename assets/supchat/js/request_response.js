@@ -140,6 +140,24 @@ new ResponseSupChat('CHAT_ENDED', function (data) {
 })
 
 
+// response chat transferred
+new ResponseSupChat('CHAT_TRANSFERRED', function (data) {
+    // Init Chat with new admin
+    SUP_CHAT.CHAT = data.chat
+    SUP_CHAT.init_chat()
+    let socket_open_callback = SUP_CHAT.socket_open
+    SUP_CHAT.socket_open = function (e) {
+        // Send request chat created
+        RequestSupChat.chat_created.send()
+        // Send status user
+        RequestSupChat.send_status.send()
+        // Set past callback
+        SUP_CHAT.socket_open = socket_open_callback
+        SUP_CHAT.socket_open(e)
+    }
+})
+
+
 // response user baned
 new ResponseSupChat('USER_BANED', function (data) {
     if (SUP_CHAT.TYPE_USER == 'USER') {
@@ -169,14 +187,21 @@ new ResponseSupChat('USER_BANED', function (data) {
 // response text message
 new ResponseSupChat('CHAT_LIST_TEXT_MESSAGE', function (data) {
     SUP_CHAT_LIST.new_message(data.message)
-    SUP_CHAT_LIST.show_notification(data.message)
+    let sender_state = data.message.sender
+    if (response_is_for_section(sender_state)) {
+        SUP_CHAT_LIST.show_notification(data.message)
+    }
+
 })
 
 
 // response audio message
 new ResponseSupChat('CHAT_LIST_AUDIO_MESSAGE', function (data) {
     SUP_CHAT_LIST.new_message(data.message)
-    SUP_CHAT_LIST.show_notification(data.message)
+    let sender_state = data.message.sender
+    if (response_is_for_section(sender_state)) {
+        SUP_CHAT_LIST.show_notification(data.message)
+    }
 })
 
 
@@ -383,6 +408,19 @@ class RequestChatCreatedSupChat extends _RequestBaseSupChat {
     }
 }
 
+class RequestChatTransferredSupChat extends _RequestBaseSupChat {
+    constructor() {
+        super('CHAT_TRANSFERRED');
+    }
+
+    send(chat) {
+        let data = {
+            'chat': chat
+        }
+        this.send_to_socket(data)
+    }
+}
+
 class RequestUserBanedSupChat extends _RequestBaseSupChat {
     constructor() {
         super('USER_BANED');
@@ -417,6 +455,7 @@ const RequestSupChat = {
     'seen_message': new RequestSeenMessageSupChat(),
     'chat_end': new RequestChatEndSupChat(),
     'chat_created': new RequestChatCreatedSupChat(),
+    'chat_transferred': new RequestChatTransferredSupChat(),
     'user_baned': new RequestUserBanedSupChat(),
     'user_unbaned': new RequestUserUnBanedSupChat(),
 }

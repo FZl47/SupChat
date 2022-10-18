@@ -34,4 +34,6 @@ urlpatterns = [
     path('admin/login',views.view_login_admin,name='view_login_admin'),
     # Delete Chat
     path('admin/delete-chat', views.delete_chat_admin,name='delete_chat_admin'),
+    # Transfer Chat
+    path('admin/transfer-chat', views.transfer_chat,name='transfer_chat_admin'),
 ]

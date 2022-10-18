@@ -29,6 +29,9 @@ class SupChat(models.Model):
     def __str__(self):
         return self.title
 
+    def get_all_active_section(self):
+        return Section.objects.filter(is_active=True)
+
 
 class SupChatStyle(models.Model):
     THEME_OPTIONS = (
@@ -133,28 +136,35 @@ class Section(models.Model):
     #     # Order by last message
     #     return self.chatgroup_set.all().annotate(last_message=Max('message')).order_by('-last_message')
 
-    def get_count_chats(self,admin=None):
+    def get_count_chats(self, admin=None):
         lookup = ''
         if admin:
             lookup = Q(admin=admin)
         return self.chatgroup_set.filter(lookup).count()
 
-    def get_count_messages(self,admin=None):
+    def get_count_messages(self, admin=None):
         lookup = ''
         if admin:
             lookup = Q(admin=admin)
         return self.chatgroup_set.filter(lookup).aggregate(count_messages=Count('message'))['count_messages']
 
-
-    def get_last_activity(self,admin=None):
+    def get_last_activity(self, admin=None):
         lookup = ''
         if admin:
             lookup = Q(admin=admin)
         x = self.chatgroup_set.filter(lookup).aggregate(last_message=Max('message__date_time_send'))['last_message']
-        return GetDifferenceTimeString(x)
+        if x:
+            return GetDifferenceTimeString(x)
+        return 'بدون فعالیت'
+
+    def get_all_admin(self):
+        return self.admin_set.all()
+
+    def get_all_admin_except(self, admin):
+        return self.get_all_admin().exclude(id=admin.id)
 
     def get_admin_less_busy(self):
-        return self.admin_set.order_by('-chatgroup__is_active').first()
+        return self.admin_set.all().annotate(count_chat_active=Count('chatgroup__is_active')).order_by('count_chat_active').first()
 
     def get_absolute_url(self):
         return reverse('SupChat:view_section_admin', args=(self.id,))
@@ -303,7 +313,7 @@ class ChatGroup(models.Model):
         if self.is_active:
             return reverse('SupChat:view_chat_admin', args=(self.id,))
         else:
-            return reverse('SupChat:view_chat_archived_admin',args=(self.id,))
+            return reverse('SupChat:view_chat_archived_admin', args=(self.id,))
 
     def get_messages(self):
         return self.message_set.filter(deleted=False).select_subclasses().all()
@@ -456,3 +466,16 @@ class SearchHistoryAdmin(models.Model):
 
     def get_absolute_url(self):
         return reverse('SupChat:view_admin_search') + f'?q={self.search_query}'
+
+
+class NotificationAdmin(models.Model):
+    admin = models.ForeignKey('Admin', on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    date_time_submited = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-id',)
+
+    def __str__(self):
+        return str(self.admin.__str__()) + self.title[:30]

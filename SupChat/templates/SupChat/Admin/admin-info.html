@@ -1,0 +1,157 @@
+{% extends 'SupChat/Base/BaseTemplateSupChat.html' %}
+{% load static %}
+{% load supchat_filter %}
+
+
+{% block Title %}
+    <title>SupChat Admin - اطلاعات شخصی</title>
+{% endblock %}
+
+{% block Tags %}
+    <meta name="robots" content="noindex,nofollow">
+{% endblock %}
+
+
+
+{% block Content %}
+    {% with request.admin as admin %}
+        <body class="fix-header fix-sidebar card-no-border">
+        <!-- ============================================================== -->
+        <!-- Preloader - style you can find in spinners.css -->
+        <!-- ============================================================== -->
+        <div class="preloader">
+            <div class="loader">
+                <div class="loader__figure"></div>
+                <p class="loader__label">SupChat</p>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- Main wrapper - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <div id="main-wrapper">
+            <!-- ============================================================== -->
+            <!-- Topbar header - style you can find in pages.scss -->
+            <!-- ============================================================== -->
+            {% include 'SupChat/Admin/components/header.html' %}
+            <!-- ============================================================== -->
+            <!-- End Topbar header -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Left Sidebar - style you can find in sidebar.scss  -->
+            <!-- ============================================================== -->
+            {% include 'SupChat/Admin/components/menu.html' with type_page_included='view_admin_info' %}
+            <!-- ============================================================== -->
+            <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Page wrapper  -->
+            <!-- ============================================================== -->
+            <div class="page-wrapper">
+                <!-- ============================================================== -->
+                <!-- Container fluid  -->
+                <!-- ============================================================== -->
+                <div class="container-fluid">
+
+                    <div class="row page-titles text-right" dir="rtl">
+                        <div class="col-12 align-self-center">
+                            <h1 class="text-themecolor">اطلاعات شخصی</h1>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url 'SupChat:view_admin' %}">صفحه اصلی</a></li>
+                                <li class="breadcrumb-item active"><a
+                                        href="#">اطلاعات شخصی</a></li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="row" dir="rtl">
+                        <div class="col-lg-8 col-xlg-9 col-md-7">
+                            <div class="card">
+                                <!-- Tab panes -->
+                                <div class="card-body">
+                                    <form method="post" class="form-horizontal form-material mx-2" enctype="multipart/form-data" >
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label class="col-md-12">نام :</label>
+                                            <div class="col-md-12">
+                                                <input type="text" placeholder="فاضل" name="first_name"
+                                                       class="form-control form-control-line"
+                                                       value="{{ admin.first_name|default_if_none:'' }}" required maxlength="100">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">نام خانوادگی :</label>
+                                            <div class="col-md-12">
+                                                <input type="text" placeholder="مومنی" name="last_name"
+                                                       class="form-control form-control-line"
+                                                       value="{{ admin.last_name|default_if_none:'' }}" required maxlength="100">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">زمان اخرین فعالیت :</label>
+                                            <div class="col-md-12">
+                                                <input type="text" disabled placeholder="زمان اخرین فعالیت"
+                                                       class="form-control form-control-line font-14"
+                                                       value="{{ admin.get_last_activity }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">عکس پروفایل :</label>
+                                            <div class="col-md-12 mt-3">
+                                                <input type="file"  placeholder="عکس پروفایل" name="image"
+                                                       class="form-control form-control-line font-14" accept="image/png, image/gif, image/jpeg">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12 text-left">
+                                                <button class="btn btn-primary" style="width: 150px">ثبت و بروزرسانی
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-xlg-3 col-md-5">
+                            <div class="card">
+                                <div class="card-body">
+                                    <center class="mt-4">
+                                        <img src="{{ admin.get_image }}" class="img-circle" style="width: 200px;height: 200px">
+                                        <h4 class="card-title mt-2">{{ admin.get_full_name }}</h4>
+                                        <div class="row text-center justify-content-md-center">
+                                            <div class="col-12">
+                                                <span class="font-12 text-gray"> زمان ایجاد حساب :</span>
+                                                <span>{{ admin.get_date_time_created }}</span>
+                                            </div>
+                                        </div>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- End Notification And Feeds -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- End Page Content -->
+                    <!-- ============================================================== -->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Container fluid  -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- footer -->
+                <!-- ============================================================== -->
+                {% include 'SupChat/Admin/components/footer.html' %}
+                <!-- ============================================================== -->
+                <!-- End footer -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Page wrapper  -->
+            <!-- ============================================================== -->
+        </div>
+        </body>
+    {% endwith %}
+{% endblock %}
+
+
+

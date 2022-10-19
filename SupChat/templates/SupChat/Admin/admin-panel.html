@@ -10,6 +10,14 @@
     <meta name="robots" content="noindex,nofollow">
 {% endblock %}
 
+{% block Css %}
+    <style>
+        #accordion-notifications .accordion-item {
+            background: #f9f9f9;
+        }
+    </style>
+{% endblock %}
+
 {% block Content %}
     <body class="fix-header fix-sidebar card-no-border">
     <!-- ============================================================== -->
@@ -81,7 +89,7 @@
                                         </div>
                                         <div class="last-activity">
                                             <span>اخرین فعالیت شما :</span>
-                                            <p> 3 روز پیش</p>
+                                            <p>{{ section|get_last_activity:request.admin }}</p>
                                         </div>
                                     </div>
                                     <div class="card-body">
@@ -116,61 +124,38 @@
                 <div class="row">
                     <!-- Start Notification -->
                     <div class="col-lg-12 col-md-12">
-                        <div class="card card-body mailbox">
-                            <h5 class="card-title">Notification</h5>
-                            <div class="message-center" style="height: 420px !important;">
-                                <!-- Message -->
-                                <a href="#">
-                                    <div class="btn btn-danger btn-circle"><i class="fa fa-link"></i></div>
-                                    <div class="mail-contnet">
-                                        <h6 class="text-dark font-medium mb-0">Luanch Admin</h6> <span
-                                            class="mail-desc">Just see the my new admin!</span>
-                                        <span class="time">9:30 AM</span>
-                                    </div>
-                                </a>
-                                <!-- Message -->
-                                <a href="#">
-                                    <div class="btn btn-success btn-circle"><i class="fa fa-calendar-check-o"></i></div>
-                                    <div class="mail-contnet">
-                                        <h6 class="text-dark font-medium mb-0">Event today</h6> <span class="mail-desc">Just a reminder that you have
-                                            event</span> <span class="time">9:10 AM</span>
-                                    </div>
-                                </a>
-                                <!-- Message -->
-                                <a href="#">
-                                    <div class="btn btn-info btn-circle"><i class="fa fa-cog text-white"></i></div>
-                                    <div class="mail-contnet">
-                                        <h6 class="text-dark font-medium mb-0">Settings</h6> <span class="mail-desc">You can customize this template as you
-                                            want</span> <span class="time">9:08 AM</span>
-                                    </div>
-                                </a>
-                                <!-- Message -->
-                                <a href="#">
-                                    <div class="btn btn-primary btn-circle"><i class="fa fa-user"></i></div>
-                                    <div class="mail-contnet">
-                                        <h6 class="text-dark font-medium mb-0">Pavan kumar</h6> <span class="mail-desc">Just see the my admin!</span>
-                                        <span
-                                                class="time">9:02 AM</span>
-                                    </div>
-                                </a>
-                                <!-- Message -->
-                                <a href="#">
-                                    <div class="btn btn-info btn-circle"><i class="fa fa-cog text-white"></i></div>
-                                    <div class="mail-contnet">
-                                        <h6 class="text-dark font-medium mb-0">Customize Themes</h6> <span
-                                            class="mail-desc">You can customize this template as you
-                                            want</span> <span class="time">9:08 AM</span>
-                                    </div>
-                                </a>
-                                <!-- Message -->
-                                <a href="#">
-                                    <div class="btn btn-primary btn-circle"><i class="fa fa-user"></i></div>
-                                    <div class="mail-contnet">
-                                        <h6 class="text-dark font-medium mb-0">Pavan kumar</h6> <span class="mail-desc">Just see the my admin!</span>
-                                        <span
-                                                class="time">9:02 AM</span>
-                                    </div>
-                                </a>
+                        <div class="card card-body mailbox" dir="rtl">
+                            <h3 class="card-title">اعلانات</h3>
+                            <div class="mt-4" style="height: 420px !important;overflow: auto">
+                                <div class="accordion" id="accordion-notifications">
+                                    {% for notification in request.admin.get_notifications %}
+                                        <div class="accordion-item mb-2">
+                                            <h2 class="accordion-header"
+                                                id="heading-notification-{{ forloop.counter }}">
+                                                <button class="accordion-button collapsed VazirMatn font-14 d-flex justify-content-between align-items-center"
+                                                        type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#collapse-notification-{{ forloop.counter }}"
+                                                        aria-expanded="false"
+                                                        aria-controls="collapse-notification-{{ forloop.counter }}">
+                                                    <p class="m-0">{{ notification.title }}</p>
+                                                    <div class="ml-5 font-12 text-gray">
+                                                        <span>{{ notification.get_date_time_submited }}</span>
+                                                        <i class="fal fa-clock"></i>
+                                                    </div>
+                                                </button>
+
+                                            </h2>
+                                            <div id="collapse-notification-{{ forloop.counter }}"
+                                                 class="accordion-collapse collapse "
+                                                 aria-labelledby="heading-notification-{{ forloop.counter }}"
+                                                 data-bs-parent="#accordion-notifications">
+                                                <div class="accordion-body">
+                                                    {{ notification.description }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -206,6 +191,7 @@
 
 {% block Js %}
     <script>
+        show_message_notif_server_supchat()
         // ======================
         //      Init Charts
         let all_section = document.querySelectorAll('.section-chat')
@@ -213,15 +199,6 @@
             create_chart_section_count_chats(`${section.getAttribute('section-id')}`, section.getAttribute('data-chart-count-chats'))
         }
         //=======================
-    </script>
-    <script>
-        {#const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'#}
-        {#const URL_BACKEND_SUPCHAT = 'http://192.168.1.142:8002'#}
-        {#const ROOT_URL_ASSETS_SUPCHAT = '/assets/'#}
-        {#let _supchat_json = JSON.parse('{{ supchat|escapejs  }}')#}
-        {#let _chat_json = JSON.parse('{{ chat|escapejs  }}')#}
-        {#const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)#}
-        {#SUP_CHAT.run()#}
     </script>
 {% endblock %}
 

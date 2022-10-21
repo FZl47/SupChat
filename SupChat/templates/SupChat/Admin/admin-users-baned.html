@@ -1,0 +1,188 @@
+{% extends 'SupChat/Base/BaseTemplateSupChat.html' %}
+{% load static %}
+{% load supchat_filter %}
+
+
+{% block Title %}
+    <title>SupChat Admin - مسدود شده ها</title>
+{% endblock %}
+
+{% block Tags %}
+    <meta name="robots" content="noindex,nofollow">
+{% endblock %}
+
+{% block Css %}
+    <style>
+        .user-baned {
+            position: relative;
+            direction: rtl;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            border-radius: 4px;
+            padding: 15px 13px;
+        }
+
+        .user-baned:nth-of-type(odd) {
+            background: #f5f5f5;
+        }
+
+        button {
+            border: none;
+            outline: none;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 90%;
+        }
+
+        .btn-unban-user {
+            background: #6fde9b;
+            color: #fff;
+        }
+
+        .btn-ban-user {
+            background: #de5b54;
+            color: #fff;
+        }
+
+    </style>
+{% endblock %}
+
+{% block Content %}
+    <body class="fix-header fix-sidebar card-no-border">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">SupChat</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/header.html' %}
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/menu.html' with type_page_included='view_admin_users_baned' %}
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <div class="row page-titles text-right" dir="rtl">
+                    <div class="col-12 align-self-center">
+                        <h1 class="text-themecolor">کاربران مسدود شده</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'SupChat:view_admin' %}">صفحه اصلی</a></li>
+                            <li class="breadcrumb-item active">کاربران مسدود شده</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-9 col-lg-8 mx-auto">
+                        <div class="card card-body mailbox text-center">
+                            {% for user_baned in request.admin.get_users_baned_by_self %}
+                                <div class="user-baned">
+                                    <p class="m-0">{{ user_baned.user }}</p>
+                                    <div>
+                                        <button class="btn-unban-user" user-id="{{ user_baned.user.id }}">
+                                            خارج کردن از لیست سیاه
+                                            <i class="fal fa-door-open"></i>
+                                        </button>
+                                        <button class="btn-ban-user d-none" user-id="{{ user_baned.user.id }}">
+                                            افزودن به لیست سیاه
+                                            <i class="fal fa-ban"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                    <div class="p-3">
+                                        <img src="{% static 'supchat/images/default/image-not-found-1.png' %}" class="col-12 col-md-10 col-lg-8 col-xl-7 mx-auto" alt="List users baned is empty">
+                                        <h2 class="mt-3">
+                                            لیست مسدودی ها خالی است
+                                        </h2>
+                                    </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Notification And Feeds -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- End Page Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            {% include 'SupChat/Admin/components/footer.html' %}
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+
+    </body>
+{% endblock %}
+
+{% block Js %}
+    <script>
+        const URL_BACKEND_SUPCHAT = '{{ request.supchat.config.config_core.URL_BACKEND_SUPCHAT }}'
+    </script>
+    <script>
+        let all_user_baned = document.querySelectorAll('.user-baned')
+        for (let user of all_user_baned) {
+            let btn_unban = user.querySelector('.btn-unban-user')
+            let btn_ban = user.querySelector('.btn-ban-user')
+            btn_unban.addEventListener('click', function () {
+                add_loading_effect(user)
+                btn_ban.classList.remove('d-none')
+                btn_unban.classList.add('d-none')
+                SendAjaxSupChat('admin/users-baned', {
+                    'user-id': this.getAttribute('user-id')
+                }, 'DELETE', function (response) {
+                    remove_loading_effect(user)
+                })
+            })
+            btn_ban.addEventListener('click', function () {
+                add_loading_effect(user)
+                btn_ban.classList.add('d-none')
+                btn_unban.classList.remove('d-none')
+                SendAjaxSupChat('admin/users-baned', {
+                    'user-id': this.getAttribute('user-id')
+                }, 'POST', function (response) {
+                    remove_loading_effect(user)
+                })
+            })
+        }
+    </script>
+{% endblock %}
+

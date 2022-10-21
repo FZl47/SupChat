@@ -15,7 +15,24 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
     <!--===============================================================================================-->
     <style>
-        p{
+
+
+        @font-face {
+            font-family: Poppins-Regular;
+            src: url("{% static 'supchat/admin/login/fonts/poppins/Poppins-Regular.ttf' %}");
+        }
+
+        @font-face {
+            font-family: Poppins-Medium;
+            src: url("{% static 'supchat/admin/login/fonts/poppins/Poppins-Medium.ttf' %}");
+        }
+
+        @font-face {
+            font-family: Poppins-Bold;
+            src: url("{% static 'supchat/admin/login/fonts/poppins/Poppins-Bold.ttf' %}");
+        }
+
+        p {
             font-family: VazirMatn;
         }
     </style>
@@ -27,7 +44,7 @@
         <div class="wrap-login100">
             <form method="post" class="login100-form validate-form">
                 {% csrf_token %}
-					<span class="login100-form-title p-b-26">
+                <span class="login100-form-title p-b-26">
 						Welcome
 					</span>
                 <span class="login100-form-title p-b-48">
@@ -35,7 +52,7 @@
 					</span>
                 <br>
 
-                <div class="wrap-input100 validate-input text-right" >
+                <div class="wrap-input100 validate-input text-right">
                     <input class="input100" type="text" name="username">
                     <span class="focus-input100" data-placeholder="نام کاربری"></span>
                 </div>

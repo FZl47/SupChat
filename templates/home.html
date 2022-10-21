@@ -5,52 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0 , user-scalable=no">
     <title>SupChat V3</title>
 
-    {#    <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro@4cac1a6/css/all.css" rel="stylesheet"#}
-    {#          type="text/css"/>#}
-    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">#}
-    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">#}
-    <link rel="stylesheet" href="/assets/supchat/font_awesome/css/all.css">
-    <link rel="stylesheet" href="/assets/supchat/bootstrap/css/bootstrap.min.css">
-    <style>
-        @font-face {
-            src: url("/assets/supchat/font/Vazir-Regular.woff");
-            font-family: 'VazirMatn';
-        }
+{#        <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro@4cac1a6/css/all.css" rel="stylesheet" type="text/css"/>#}
+{#        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">#}
+{#        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">#}
 
-        @font-face {
-            src: url("/assets/supchat/font/Kalameh-Black.woff");
-            font-family: 'KalameBlack';
-        }
-    </style>
+{#    <link rel="stylesheet" href="/assets/supchat/font_awesome/css/all.css">#}
+{#    <link rel="stylesheet" href="/assets/supchat/bootstrap/css/bootstrap.min.css">#}
+{#    <style>#}
+{#        @font-face {#}
+{#            src: url("/assets/supchat/font/Vazir-Regular.woff");#}
+{#            font-family: 'VazirMatn';#}
+{#        }#}
+{##}
+{#        @font-face {#}
+{#            src: url("/assets/supchat/font/Kalameh-Black.woff");#}
+{#            font-family: 'KalameBlack';#}
+{#        }#}
+{#    </style>#}
 
 
-    <link rel="stylesheet" href="/assets/supchat/css/supchat.css">
-    <link rel="stylesheet" href="/assets/supchat/css/tools.css">
-    <link rel="stylesheet" href="/assets/supchat/audio_simple/style.css">
-    <script src="/assets/supchat/audio_simple/js.js"></script>
+{#    <link rel="stylesheet" href="/assets/supchat/css/supchat.css">#}
+{#    <link rel="stylesheet" href="/assets/supchat/css/tools.css">#}
+{#    <link rel="stylesheet" href="/assets/supchat/audio_simple/style.css">#}
+{#    <script src="/assets/supchat/audio_simple/js.js"></script>#}
 
 </head>
 <body>
 
 
 {#<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>#}
-<script src="/assets/supchat/jq/jquery.min.js"></script>
+{#<script src="/assets/supchat/jq/jquery.min.js"></script>#}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" async></script>
-
-<script src="/assets/supchat/js/elements.js"></script>
-<script src="/assets/supchat/js/tools.js"></script>
-<script src="/assets/supchat/js/request_response.js"></script>
-<script src="/assets/supchat/js/mixins.js"></script>
-<script src="/assets/supchat/js/index.js"></script>
-
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" async></script>#}
+{##}
+{#<script src="/assets/supchat/js/elements.js"></script>#}
+{#<script src="/assets/supchat/js/tools.js"></script>#}
+{#<script src="/assets/supchat/js/request_response.js"></script>#}
+{#<script src="/assets/supchat/js/mixins.js"></script>#}
+{#<script src="/assets/supchat/js/index.js"></script>#}
 <script>
     const URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'
-    {#const URL_BACKEND_SUPCHAT = 'http://192.168.1.142:8002'#}
     const ROOT_URL_ASSETS_SUPCHAT = '/assets/'
-    const SUP_CHAT = new ChatUser('USER')
-    SUP_CHAT.run()
+    const AUTO_RUN_SUPCHAT = true // Default is true
 </script>
-
+<script src="/assets/supchat/js/easy_supchat.js"></script>
 </body>
 </html>

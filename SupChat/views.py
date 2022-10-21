@@ -1,33 +1,24 @@
-# import json
-# import random
-# from django.shortcuts import render, get_object_or_404, redirect, reverse
-
-# from django.core.exceptions import PermissionDenied
-# from django.views.decorators.http import require_POST
-# from django.contrib.auth import logout, authenticate, login
-# from django.utils import timezone
-# from SupChat.core.tools import Send_Message_Notif
-
 
 import json
-from django.http import HttpResponse, JsonResponse, Http404
+from django.http import HttpResponse, JsonResponse, Http404, HttpResponseBadRequest
+from django.views.generic import View
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404, redirect
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.db.models import Count, Q
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
+from django.urls import reverse
 from SupChat.core.auth.view import create_user
 from SupChat.core import serializers
 from SupChat.core import tools
 from SupChat.core.decorators import view as decorators
+from SupChat import forms
 from SupChat.models import Section, ChatGroup, SupChat, User, Admin, AudioMessage, LogMessageAdmin, SearchHistoryAdmin, \
-    Message
+    Message, NotificationAdmin, SystemMessage, BlackList
 
-#
-# def get_supchat():
-#     return SupChat.objects.first()
 
 
 @csrf_exempt
@@ -94,11 +85,8 @@ def start_chat(request):
     def create_chat(user, admin, section):
         return ChatGroup.objects.create(user=user, admin=admin, section=section)
 
-    # def get_chat(user, admin, section):
-    #     return ChatGroup.objects.filter(user=user, admin=admin, section=section, is_active=True).first()
-
-    def get_chat(user):
-        return ChatGroup.objects.filter(user=user, is_active=True).first()
+    def get_chat(user, admin, section):
+        return ChatGroup.objects.filter(user=user, admin=admin, section=section, is_active=True).first()
 
     data = json.loads(request.body)
     phone_or_email = data.get('phone_or_email') or ''
@@ -108,6 +96,7 @@ def start_chat(request):
 
     if section:
         admin = section.get_admin_less_busy()
+
         phone_or_email_is_valid = False
         if supchat.config.get_phone_or_email:
             if tools.ValidationEmail(phone_or_email, 3, 100) or (
@@ -121,8 +110,7 @@ def start_chat(request):
                     context['user_created'] = True
                 else:
                     context['user_created'] = False
-                # chat = get_chat(user, admin, section)
-                chat = get_chat(user)
+                chat = get_chat(user, admin, section)
                 if chat == None:
                     chat = create_chat(user, admin, section)
                 context['chat'] = serializers.Serializer_chat(chat)
@@ -236,7 +224,7 @@ def view_admin_search_delete_all(request):
 @decorators.supchat
 def view_section_admin(request, section_id):
     context = {}
-    section = get_object_or_404(Section,id=section_id,admin=request.admin)
+    section = get_object_or_404(Section, id=section_id, admin=request.admin)
     context['supchat'] = request.supchat
     context['section'] = section
     context['chats_active'] = section.get_chats_active(request.admin)
@@ -288,16 +276,128 @@ def view_chat_archived_admin(request, chat_id):
     return render(request, 'SupChat/Admin/admin-chat-archived.html', context)
 
 
-@decorators.supchat
-def view_login_admin(request):
-    return HttpResponse('Login Page Admin')
-
 
 @decorators.admin_authenticated
 @require_POST
 def delete_chat_admin(request):
     chat_id = request.POST.get('chat_id')
-    chat = get_object_or_404(ChatGroup,id=chat_id,admin=request.admin)
+    chat = get_object_or_404(ChatGroup, id=chat_id, admin=request.admin)
     url_section = chat.section.get_absolute_url()
     chat.delete()
-    return tools.Send_Message_Notif('گفت و گو با موفقیت حذف شد','Success',RedirectTo=url_section)
+    return tools.Send_Message_Notif('گفت و گو با موفقیت حذف شد', 'Success', RedirectTo=url_section)
+
+
+@csrf_exempt
+@decorators.require_post_and_ajax
+@decorators.admin_authenticated
+def transfer_chat(request):
+    data = json.loads(request.body)
+    chat_id = data.get('chat-id') or 0
+    section_id = data.get('section-id') or 0
+    admin_transfer_id = data.get('admin-transfer-id') or 0
+
+    chat = get_object_or_404(ChatGroup, id=chat_id, admin=request.admin)
+    admin_transfer = get_object_or_404(Admin, id=admin_transfer_id, sections__in=[section_id], sections__is_active=True)
+    # Transferring ..
+    chat.admin = admin_transfer
+    chat.save()
+    # Create notification
+    # create for past admin
+    description_notif_past_admin = "گفت و گویی از طرف شما با ایدی {chat_id} به بخش {section_title} و ادمین با ایدی {admin_id} انتقال یافت ".format(
+        chat_id=chat_id, section_title=chat.section.title, admin_id=admin_transfer_id)
+    NotificationAdmin.objects.create(admin=request.admin, title='انتقال گفت و گو',
+                                     description=description_notif_past_admin)
+    # create for new admin
+    description_notif_new_admin = "گفت و گویی با ایدی {chat_id} و بخش {section_title} از طرف ادمین با ایدی {admin_id} به شما انتقال پیدا کرد ".format(
+        chat_id=chat_id, section_title=chat.section.title, admin_id=request.admin.id)
+    NotificationAdmin.objects.create(admin=admin_transfer, title='دریافت گفت و گو',
+                                     description=description_notif_new_admin)
+    # Create Systeme Message for chat
+    text_system_message = " کاربر گرامی گفت و گوی شما از ادمین <b>{admin_name}</b> به ادمین <b>{admin_transfered_name}</b> انتقال یافت".format(
+        admin_name=request.admin.get_full_name(), admin_transfered_name=admin_transfer.get_full_name())
+    SystemMessage.objects.create(chat=chat, sender='system', text=text_system_message)
+
+    # Success
+    context = {
+        'chat': serializers.Serializer_chat(chat),
+        # For redirect after chat transferred in admin
+        'section_url': chat.section.get_absolute_url(),
+    }
+    return JsonResponse(context)
+
+
+def view_logout_admin(request):
+    logout(request)
+    return redirect('SupChat:view_login_admin')
+
+class view_login_admin(View):
+
+    def get(self,request):
+        return render(request, 'SupChat/Admin/login.html')
+
+    def post(self,request):
+        data = request.POST
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user != None:
+            admin = Admin.objects.filter(user=user).first()
+            if admin != None:
+                login(request, user)
+                return redirect('SupChat:view_admin')
+        return tools.Send_Message_Notif('ادمینی با این مشخصات یافت نشد', 'Error')
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class view_users_baned(View):
+
+    @method_decorator(decorators.admin_authenticated)
+    def get(self, request):
+        return render(request, 'SupChat/Admin/admin-users-baned.html')
+
+    @method_decorator(decorators.require_ajax)
+    @method_decorator(decorators.admin_authenticated)
+    def post(self, request):
+        # For ban user
+        data = json.loads(request.body)
+        user_id = data.get('user-id')
+        blacklist = BlackList.objects.filter(user_id=user_id,admin=request.admin).first()
+        if blacklist == None:
+            blacklist = BlackList.objects.create(user_id=user_id,admin=request.admin)
+            return JsonResponse({
+                'status_code':200
+            })
+        raise HttpResponseBadRequest
+
+    @method_decorator(decorators.require_ajax)
+    @method_decorator(decorators.admin_authenticated)
+    def delete(self, request):
+        # For unban user
+        data = json.loads(request.body)
+        user_id = data.get('user-id')
+        blacklist = get_object_or_404(BlackList,user_id=user_id,admin=request.admin)
+        blacklist.delete()
+        return JsonResponse({
+            'status_code':200
+        })
+
+
+class view_info_admin(View):
+    @method_decorator(decorators.admin_authenticated)
+    def get(self, request):
+        context = {}
+        return render(request, 'SupChat/Admin/admin-info.html', context)
+
+    @method_decorator(decorators.admin_authenticated)
+    def post(self, request):
+        form = forms.FormInformationAdmin(request.POST, request.FILES)
+        if form.is_valid():
+            admin = request.admin
+            admin.first_name = form.cleaned_data['first_name']
+            admin.last_name = form.cleaned_data['last_name']
+            image = form.cleaned_data['image']
+            if image:
+                admin.image = image
+            admin.save()
+        return tools.Send_Message_Notif('اطلاعات شما با موفقیت بروزرسانی شدند', 'Success',
+                                        RedirectTo=reverse('SupChat:view_admin'))

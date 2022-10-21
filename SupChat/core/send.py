@@ -18,6 +18,7 @@ class Response:
         'SEEN_MESSAGE': 'seen_message',
         'CHAT_END': 'chat_end',
         'CHAT_CREATED': 'chat_created',
+        'CHAT_TRANSFERRED': 'chat_transferred',
         'SEND_STATUS': 'send_status',
         'USER_BANED': 'user_baned',
         'USER_UNBANED': 'user_unbaned',
@@ -159,11 +160,16 @@ class Response:
             self.chat.get_group_name()
         ])
 
+    def chat_transferred(self, data_request):
+        self.send_to_group('CHAT_TRANSFERRED', {
+            **data_request
+        })
+
     def user_baned(self, data_request):
         try:
-            BlackList.objects.create(user=self.chat.user)
+            BlackList.objects.create(user=self.chat.user,admin=self.admin_supchat)
         except:
-            pass  # From before in blacklist
+            pass  # Already blacklisted
         self.chat.is_active = False
         self.chat.save()
         self.send_to_group('USER_BANED')

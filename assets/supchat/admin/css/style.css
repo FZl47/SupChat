@@ -46,13 +46,12 @@ File: scss
  *  7. Widgets
  *  8. Custom Templates
  */
-@import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700");
+/*@import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700");*/
 /******************* 
 Global Styles 
 *******************/
-@import '../scss/icons/font-awesome/css/font-awesome.min.css';
-@import '../css/spinners.css';
-@import '../css/animate.css';
+/*@import '../css/spinners.css';*/
+/*@import '../css/animate.css';*/
 
 :root {
     --base-color-admin: #00ebd5 !important;

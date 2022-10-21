@@ -1,0 +1,220 @@
+{% extends 'SupChat/Base/BaseTemplateSupChat.html' %}
+{% load static %}
+{% load supchat_filter %}
+
+
+{% block Title %}
+    <title>SupChat Admin - #گفت و گو {{ chat.id }}</title>
+{% endblock %}
+
+{% block Tags %}
+    <meta name="robots" content="noindex,nofollow">
+{% endblock %}
+
+{% block Css %}
+    <style>
+        #SupChat {
+            box-shadow: none !important;
+        }
+
+        #SupChatContent > main {
+            height: calc(100% - 95px) !important;
+        }
+
+        #SupChatContent > footer {
+            display: none;
+        }
+
+        #btn-more-option-chat-supchat {
+            display: none;
+        }
+
+        #status-online-info-chat-supchat {
+            display: none;
+        }
+
+        #btn-download-chat {
+            display: block;
+            padding: 10px;
+            width: 200px;
+            margin-bottom: 10px;
+            border-radius: 7px;
+            border: none;
+            outline: none;
+            background: #00e6bb;
+            color: #fff;
+            transition: all .3s;
+        }
+
+        #btn-download-chat i {
+            margin-right: 7px;
+        }
+
+        #btn-download-chat:hover i {
+            font-weight: bold;
+        }
+
+        #btn-delete-chat {
+            display: block;
+            padding: 10px;
+            width: 200px;
+            margin-bottom: 10px;
+            border-radius: 7px;
+            border: none;
+            outline: none;
+            background: #e66a62;
+            color: #fff;
+            transition: all .3s;
+        }
+
+        #btn-delete-chat i {
+            margin-right: 7px;
+        }
+
+        #btn-delete-chat:hover i {
+            font-weight: bold;
+        }
+
+        .btn-show-more-options-message-supchat {
+            display: none;
+        }
+
+        #btn-scroll-down-chat-supchat {
+            bottom: 30px;
+            left: 30px;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block Content %}
+    <body class="fix-header fix-sidebar card-no-border">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">SupChat</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/header.html' %}
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        {% include 'SupChat/Admin/components/menu.html' with type_page_included='view_admin_chats' %}
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+
+                <div class="row page-titles text-right" dir="rtl">
+                    <div class="col-12 align-self-center">
+                        <h1 class="text-themecolor"> گفت و گو آرشیو شده</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'SupChat:view_admin' %}">گفت و گو ها</a></li>
+                            <li class="breadcrumb-item"><a
+                                    href="{{ chat.section.get_absolute_url }}">بخش {{ chat.section.title }}</a></li>
+                            <li class="breadcrumb-item">آرشیو شده ها</li>
+                            <li class="breadcrumb-item active"> گفت و گو {{ chat.id }}#</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-body mailbox text-center d-flex justify-content-center flex-row">
+                            <div class="mr-0 mr-md-3">
+                                <button id="btn-download-chat">
+                                    <i class="fal fa-file-pdf"></i>
+                                    دانلود گفت و گو
+                                </button>
+                                <button id="btn-delete-chat">
+                                    <i class="fal fa-trash"></i>
+                                    حذف گفت و گو
+                                </button>
+                            </div>
+                            <div class="col-12 col-md-12 col-lg-6 mx-auto mx-md-0 p-0">
+                                <div id="SupChat" state="open">
+                                    <!-- SupChat elements -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Notification And Feeds -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- End Page Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            {% include 'SupChat/Admin/components/footer.html' %}
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <form id="form-delete-chat" method="post" style="display:none;" action="{% url 'SupChat:delete_chat_admin' %}">
+        {% csrf_token %}
+        <input type="hidden" name="chat_id" value="{{ chat.id }}">
+    </form>
+    </body>
+{% endblock %}
+
+
+{% block Js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" async></script>
+    <script>
+        let btn_download_chat = document.getElementById('btn-download-chat')
+        let btn_delete_chat = document.getElementById('btn-delete-chat')
+
+        btn_download_chat.addEventListener('click', function () {
+            SUP_CHAT.download_chat()
+        })
+
+        btn_delete_chat.addEventListener('click', function () {
+            let form = document.getElementById('form-delete-chat')
+            form.submit()
+        })
+
+        const URL_BACKEND_SUPCHAT = '{{ request.supchat.config.config_core.URL_BACKEND_SUPCHAT }}'
+        const ROOT_URL_ASSETS_SUPCHAT = '{{ request.supchat.config.config_core.ROOT_URL_ASSETS_SUPCHAT }}'
+        let _supchat_json = JSON.parse('{{ supchat_json|escapejs  }}')
+        let _chat_json = JSON.parse('{{ chat_json|escapejs  }}')
+        const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)
+        SUP_CHAT.run_archive()
+        action_url_supchat()
+    </script>
+{% endblock %}
+

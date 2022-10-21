@@ -28,7 +28,7 @@
                         class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i
                         class="fal fa-search"></i></a>
                     <form method="get" class="app-search" action="{% url 'SupChat:view_admin_search' %}?{{ request.GET.q }}">
-                        <input type="text" value="{{ request.GET.q }}" class="form-control" name="q" placeholder="Search & enter"> <a
+                        <input type="text" value="{{ request.GET.q }}" maxlength="100" class="form-control" name="q" placeholder="Search & enter"> <a
                             class="srh-btn"><i class="fal fa-times"></i></a></form>
                 </li>
             </ul>
@@ -63,7 +63,7 @@
                                 <span class="toggle-label">غیرفعال</span>
                             </label>
                         </li>
-                        {% if supchat.style.get_all_theme %}
+                        {% if supchat.style.get_all_theme and chat %}
                             <li>
                                 <p class="dropdown-lable">
                                     تم گفت و گو

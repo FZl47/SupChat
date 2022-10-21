@@ -8,6 +8,7 @@ from django.urls import reverse
 from model_utils.managers import InheritanceManager
 from SupChat.core.tools import RandomString, GetDifferenceTime, GetDifferenceTimeString
 from SupChat.config import USER, get_datetime
+from SupChat.core import mixins
 import json
 
 
@@ -18,7 +19,8 @@ def upload_image_background_chat(instance, path):
 
 def upload_image_admin_chat(instance, path):
     path = str(path).split('.')[-1]
-    return f"supchat/images/admins/chat/{RandomString(20)}.{path}"
+    return f"supchat/images/admins/{RandomString(20)}.{path}"
+
 
 
 class SupChat(models.Model):
@@ -185,18 +187,25 @@ class Section(models.Model):
         return json.dumps(list(chats))
 
 
-class Admin(models.Model):
+class Admin(mixins.RemovePastFileWhenChangedMixin,models.Model):
     STATUS_ONLINE = (
         ('online', 'Online'),
         ('offline', 'Offline'),
     )
 
+    # Mixin required
+    FIELDS_REMOVE_FILES = ('image',)
+    # MODEL_REMOVE_FIELDS = Admin
+
     user = models.OneToOneField(USER, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100,null=True,blank=True)
+    last_name = models.CharField(max_length=100,null=True,blank=True)
     # You can remove field image and get this from user model
-    image = models.ImageField(upload_to=upload_image_admin_chat)
+    image = models.ImageField(upload_to=upload_image_admin_chat,null=True,blank=True)
     sections = models.ManyToManyField('Section')
     last_seen = models.DateTimeField(default=timezone.now)
     status_online = models.CharField(max_length=10, choices=STATUS_ONLINE, default='offline')
+    date_time_created = models.DateTimeField(auto_now_add=True)
     group_name = models.CharField(max_length=40, default=RandomString, editable=False)
 
     def __str__(self):
@@ -207,13 +216,24 @@ class Admin(models.Model):
         return self.status_online == 'online'
 
     def get_image(self):
-        return self.image.url
+        try:
+            return self.image.url
+        except:
+            return static('/supchat/images/default/iconAdmin.png')
 
     def get_full_name(self):
-        try:
-            return self.user.get_full_name() or 'Unknown'
-        except:
-            return 'Unknown'
+        first_name = self.first_name or ''
+        last_name = self.last_name or ''
+        return (first_name + ' ' + last_name).strip() or (self.user.get_full_name() or 'Unknown')
+
+    def get_last_activity(self):
+        x = self.chatgroup_set.aggregate(last_message=Max('message__date_time_send'))['last_message']
+        if x:
+            return GetDifferenceTimeString(x)
+        return 'بدون فعالیت'
+
+    def get_date_time_created(self):
+        return GetDifferenceTimeString(self.date_time_created)
 
     def get_last_seen(self):
         diff_sec = GetDifferenceTime(self.last_seen)
@@ -240,6 +260,12 @@ class Admin(models.Model):
     def get_last_search_histories(self):
         # Geted 10 latest obj
         return self.get_search_histoies()[:10]
+
+    def get_notifications(self):
+        return self.notificationadmin_set.all()
+
+    def get_users_baned_by_self(self):
+        return self.blacklist_set.all()
 
 
 class User(models.Model):
@@ -363,6 +389,7 @@ class ChatGroup(models.Model):
 
 class BlackList(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE)
+    admin = models.ForeignKey('Admin',on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.get_full_name()
@@ -479,3 +506,6 @@ class NotificationAdmin(models.Model):
 
     def __str__(self):
         return str(self.admin.__str__()) + self.title[:30]
+
+    def get_date_time_submited(self):
+        return GetDifferenceTimeString(self.date_time_submited)

@@ -37,7 +37,7 @@
         <!-- ============================================================== -->
         <!-- Left Sidebar - style you can find in sidebar.scss  -->
         <!-- ============================================================== -->
-        {% include 'SupChat/Admin/components/menu.html' %}
+        {% include 'SupChat/Admin/components/menu.html' with type_page_included='view_admin_chats' %}
         <!-- ============================================================== -->
         <!-- End Left Sidebar - style you can find in sidebar.scss  -->
         <!-- ============================================================== -->
@@ -84,7 +84,7 @@
                                     <div>
                                         <span class="font-18">
                                              <i class="fal fa-user-friends"></i>
-                                             12
+                                             {{ section|get_count_chats:request.admin }}
                                         </span>
                                         <span class="d-inline-block font-12 text-gray" style="width: 100px">
                                             : تعداد گفت و گو ها
@@ -93,7 +93,7 @@
                                     <div>
                                         <span class="font-18">
                                              <i class="fal fa-comments"></i>
-                                             12
+                                             {{ section|get_count_messages:request.admin }}
                                         </span>
                                         <span class="d-inline-block font-12 text-gray" style="width: 100px">
                                             : تعداد پیام ها

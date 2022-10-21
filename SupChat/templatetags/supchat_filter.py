@@ -36,7 +36,13 @@ def get_last_activity(section,admin):
 
 @register.filter
 @register.simple_tag
-def paramet_in_url(url,parametr):
+def get_all_admin_except(section,admin):
+    return section.get_all_admin_except(admin)
+
+
+@register.filter
+@register.simple_tag
+def parametr_in_url(url,parametr):
     return parametr in url
 
 

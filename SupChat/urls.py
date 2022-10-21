@@ -31,7 +31,10 @@ urlpatterns = [
     path('admin/section/<int:section_id>',views.view_section_admin,name='view_section_admin'),
     path('admin/chat/<int:chat_id>',views.view_chat_admin,name='view_chat_admin'),
     path('admin/chat/archived/<int:chat_id>',views.view_chat_archived_admin,name='view_chat_archived_admin'),
-    path('admin/login',views.view_login_admin,name='view_login_admin'),
+    path('admin/info',views.view_info_admin.as_view(),name='view_info_admin'),
+    path('admin/users-baned',views.view_users_baned.as_view(),name='view_users_baned_admin'),
+    path('admin/login',views.view_login_admin.as_view(),name='view_login_admin'),
+    path('admin/logout',views.view_logout_admin,name='view_logout_admin'),
     # Delete Chat
     path('admin/delete-chat', views.delete_chat_admin,name='delete_chat_admin'),
     # Transfer Chat

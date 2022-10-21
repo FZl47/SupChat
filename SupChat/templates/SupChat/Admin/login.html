@@ -1,66 +1,80 @@
-{% extends 'Chat/Base/BaseTemplateSupChat.html' %}
 {% load static %}
-{% block Title %}
-    Login admin - SupChat
-{% endblock %}
-{% block Link %}
-    <link rel="stylesheet" href="{% static 'supchat/admin/vendors/mdi/css/materialdesignicons.min.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/admin/vendors/css/vendor.bundle.base.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/admin/css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'supchat/css/base.css' %}">
-    <link rel="icon" href="{% static 'supchat/logo/favicon.png' %}">
-{% endblock %}
-{% block Content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login Admin SupChat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="{% static 'supchat/logo/logo.png' %}"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'supchat/admin/login/css/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'supchat/admin/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <!--===============================================================================================-->
+    <style>
+        p{
+            font-family: VazirMatn;
+        }
+    </style>
+</head>
+<body>
 
-    <body>
-    <div class="container-scroller">
-        <div class="container-fluid page-body-wrapper full-page-wrapper">
-            <div class="row w-100 m-0">
-                <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg"
-                     style="background-image: url('{% static 'supchat/admin/images/auth/Login_bg.jpg' %}')">
-                    <div class="card col-lg-4 mx-auto text-right" dir="rtl">
-                        <div class="card-body px-1 px-md-5 py-5">
-                            <h3 class="card-title text-left mb-5 text-muted text-center Kala">ورود به پنل ادمین</h3>
-                            <form method="post" action="{% url 'SupChat:admin_login' %}">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <label>نام کاربری یا ایمیل *</label>
-                                    <input type="text" required minlength="2" maxlength="100" name="username"
-                                           class="form-control p_input" dir="ltr">
-                                </div>
-                                <div class="form-group">
-                                    <label>گذرواژه *</label>
-                                    <input type="password" minlength="2" maxlength="100" name="password"
-                                           class="form-control p_input" dir="ltr">
-                                </div>
-                                <div class="text-center mt-5">
-                                    <button type="submit" class="btn btn-primary btn-block enter-btn">Login</button>
-                                </div>
-                                <div class="d-flex">
-                                    <button class="btn btn-facebook mr-2 col">
-                                        <i class="mdi mdi-facebook"></i> Facebook
-                                    </button>
-                                    <button class="btn btn-google col">
-                                        <i class="mdi mdi-google-plus"></i> Google plus
-                                    </button>
-                                </div>
-                                <div class="text-center mt-5">
-                                    <h4 class="text-muted">SupChat</h4>
-                                </div>
-                            </form>
-                        </div>
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <form method="post" class="login100-form validate-form">
+                {% csrf_token %}
+					<span class="login100-form-title p-b-26">
+						Welcome
+					</span>
+                <span class="login100-form-title p-b-48">
+						<img src="{% static 'supchat/logo/logo.png' %}" alt="SupChat logo" style="width: 110px">
+					</span>
+                <br>
+
+                <div class="wrap-input100 validate-input text-right" >
+                    <input class="input100" type="text" name="username">
+                    <span class="focus-input100" data-placeholder="نام کاربری"></span>
+                </div>
+
+                <div class="wrap-input100 validate-input text-right" data-validate="Enter password">
+						<span class="btn-show-pass">
+							<i class="zmdi zmdi-eye"></i>
+						</span>
+                    <input class="input100" type="password" name="password">
+                    <span class="focus-input100" data-placeholder="رمز عبور"></span>
+                </div>
+
+                <div class="container-login100-form-btn">
+                    <div class="wrap-login100-form-btn">
+                        <div class="login100-form-bgbtn"></div>
+                        <button class="login100-form-btn">
+                            Login
+                        </button>
                     </div>
                 </div>
-                <!-- content-wrapper ends -->
-            </div>
-            <!-- row ends -->
+                <br>
+                <br>
+                <br>
+                <div class="text-center">
+                    <a href="https://github.com/FZl47/SupChat" class="font-weight-bold"
+                       style="color: #00ebd5;font-size: 110%">SupChat</a>
+                </div>
+            </form>
         </div>
-        <!-- page-body-wrapper ends -->
     </div>
-    </body>
-{% endblock %}
-{% block Js %}
-    <script>
-        GetCookieFunctionality_ShowNotification()
-    </script>
-{% endblock %}
+</div>
+
+
+<div id="dropDownSelect1"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static 'supchat/admin/login/js/main.js' %}"></script>
+<script src="{% static 'supchat/js/tools.js' %}"></script>
+<script>
+    show_message_notif_server_supchat()
+</script>
+</body>
+</html>

@@ -167,8 +167,8 @@ h6 {
     font-size: 36px;
 }
 
-.VazirMatn{
-    font-family: VazirMatn!important;
+.VazirMatn {
+    font-family: VazirMatn !important;
 }
 
 .box {
@@ -1432,8 +1432,8 @@ File: scss
 }
 
 .topbar .profile-pic img {
-    width: 38px;
-    border-radius: 100%;
+    width: 58px;
+    height: 58px;
 }
 
 .topbar .profile-pic span {
@@ -7342,4 +7342,35 @@ File: scss
 
 .Warning p {
     color: #e0bc5e;
+}
+
+
+::placeholder {
+    color: #bbb !important;
+}
+
+img {
+    object-fit: contain;
+}
+
+.accordion-button:after {
+    order: -1;
+    margin-left: 15px;
+    position: absolute;
+    left: 0;
+}
+
+
+@media screen and (max-width: 650px) {
+    #accordion-notifications button div {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .options-dashboard {
+        right: -260% !important;
+        width: 200px !important;
+        font-size: 95%;
+    }
 }

@@ -11,7 +11,64 @@
     <meta name="robots" content="noindex,nofollow">
 {% endblock %}
 
+{% block Css %}
+    <style>
 
+
+        .admin-transfer {
+            text-align: left;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .admin-transfer img {
+            width: 50px;
+            height: 50px;
+            padding: 3px;
+            margin-right: 10px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid #eee;
+        }
+
+        #accordion-transfer-admins .radio-custom {
+            width: 100%;
+            margin: 0;
+            text-align: left;
+            background: none;
+        }
+
+        .accordion-body .admin-transfer:nth-of-type(odd) {
+            background: #f5f5f5 !important;
+        }
+
+        #accordion-transfer-admins .radio-custom .label-radio-custom-selected {
+            visibility: hidden;
+            transition: all .2s;
+        }
+
+        #accordion-transfer-admins .radio-custom-active .label-radio-custom-selected {
+            visibility: visible;
+        }
+
+        #accordion-transfer-admins .radio-custom-active {
+            color: #222;
+            border: 2px solid #00cb9e;
+        }
+
+        .label-radio-custom-selected {
+            color: #148571;
+        }
+
+        .label-radio-custom-selected i {
+            font-size: 130%;
+            margin-right: 5px;
+        }
+
+
+    </style>
+{% endblock %}
 
 {% block Content %}
     <body class="fix-header fix-sidebar card-no-border">
@@ -38,7 +95,7 @@
         <!-- ============================================================== -->
         <!-- Left Sidebar - style you can find in sidebar.scss  -->
         <!-- ============================================================== -->
-        {% include 'SupChat/Admin/components/menu.html' %}
+        {% include 'SupChat/Admin/components/menu.html' with type_page_included='view_admin_chats' %}
         <!-- ============================================================== -->
         <!-- End Left Sidebar - style you can find in sidebar.scss  -->
         <!-- ============================================================== -->
@@ -120,6 +177,86 @@
     <!-- ============================================================== -->
     <!-- ============================================================== -->
 
+    <!-- Modal Admin Transfer Chat-->
+    <div class="modal fade" id="container-admins-transfer" tabindex="-1" aria-labelledby="container-admins-transfer"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+            <form id="form-transfer-admin"
+                  class="col-12">
+                <input type="hidden" name="section-id" value="0" id="input-section-id">
+                <input type="hidden" name="chat-id" value="{{ chat.id }}">
+                <div class="modal-content">
+                    <div class="modal-header" dir="ltr">
+                        <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fal fa-times"></i>
+                        </button>
+                        <h5 class="modal-title">انتقال گفت و گو</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p class="modal-title text-center font-16">
+                            ادمین مورد نظر را انتخاب کنید
+                        </p>
+                        <div class="mt-3">
+                            <div class="accordion" id="accordion-transfer-admins" dir="rtl">
+                                {% for section in request.supchat.get_all_active_section %}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header VazirMatn" id="heading-{{ forloop.counter }}">
+                                            <button class="accordion-button collapsed" type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#collapse-{{ forloop.counter }}"
+                                                    aria-expanded="false"
+                                                    aria-controls="collapse-{{ forloop.counter }}">
+                                                {{ section.title }}
+                                                ({{ section|get_all_admin_except:request.admin|length }})
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-{{ forloop.counter }}" class="accordion-collapse collapse "
+                                             aria-labelledby="heading-{{ forloop.counter }}"
+                                             data-bs-parent="#accordion-transfer-admins">
+                                            <div class="accordion-body section-transfer" section-id="{{ section.id }}">
+                                                {% for admin in section|get_all_admin_except:request.admin %}
+                                                    <div class="admin-transfer radio-custom" admin-id="{{ admin.id }}">
+                                                        <label class="d-flex-force justify-content-between align-items-center">
+                                                            <div class="col-auto">
+                                                                <input type="radio" name="admin-transfer-id"
+                                                                       section-id="{{ section.id }}"
+                                                                       value="{{ admin.id }}">
+                                                                <span class="label-radio-custom-selected">
+                                                                    انتخاب شده
+                                                                    <i class="fal fa-check-circle"></i>
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-9">
+                                                                    <span class="font-16 text-gray"
+                                                                          title="تعداد گفت و گو ها">
+                                                                        ({{ admin.get_chats_actvie.count }}
+                                                                             <i class="fal fa-comments"></i>)
+                                                                    </span>
+                                                                <p class="d-inline-block font-16">{{ admin.get_full_name }}</p>
+
+                                                                <img src="{{ admin.get_image }}"
+                                                                     alt="{{ admin.get_full_name }}">
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" dir="rtl">
+                        <button type="button" id="btn-transfer-admin" class="btn btn-primary disabled"
+                                style="width: 100px">
+                            انتقال
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     </body>
 {% endblock %}
 
@@ -128,6 +265,56 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" async></script>
     <script>
+        let func_after_transferred = undefined
+
+        function open_contianer_admins_transfer(after_transferred) {
+            $('#container-admins-transfer').modal('show')
+            func_after_transferred = after_transferred
+        }
+
+        let chat_id_transferred = document.querySelector('[name="chat-id"]').value
+        let admin_id_transferred = 0
+        let section_id_transferred = 0
+        let form_transfer_admin = document.getElementById('form-transfer-admin')
+        let btn_submit_admin = document.getElementById('btn-transfer-admin')
+        form_transfer_admin.addEventListener('change', function () {
+            let input = this.querySelector('input[name=admin-transfer-id]:checked')
+            let admin_id = input.value
+            admin_id_transferred = admin_id
+            let section_id = input.getAttribute('section-id')
+            section_id_transferred = section_id
+            this.querySelector('#input-section-id').value = section_id
+            let radio_cont = document.querySelector(`.section-transfer[section-id="${section_id}"] .admin-transfer[admin-id="${admin_id}"]`)
+            reset_all_radio_selected_admin_transfer()
+            radio_cont.classList.add('radio-custom-active')
+            btn_submit_admin.classList.remove('disabled')
+            btn_submit_admin.setAttribute('state', 'active')
+        })
+
+        btn_submit_admin.addEventListener('click', function () {
+            let state = this.getAttribute('state') || 'disabled'
+            if (state == 'active') {
+                SendAjaxSupChat('admin/transfer-chat', {
+                    'section-id': section_id_transferred,
+                    'admin-transfer-id': admin_id_transferred,
+                    'chat-id': chat_id_transferred,
+                }, 'POST', function (response) {
+                    func_after_transferred(response)
+                }, function (response) {
+                    alert('مشکلی در انتقال گفت و گو وجود دارد')
+                })
+            }
+        })
+
+        function reset_all_radio_selected_admin_transfer() {
+            let all = document.querySelectorAll('#container-admins-transfer .radio-custom')
+            for (let i of all) {
+                i.classList.remove('radio-custom-active')
+            }
+        }
+
+    </script>
+    <script>
         const URL_BACKEND_SUPCHAT = '{{ request.supchat.config.config_core.URL_BACKEND_SUPCHAT }}'
         const ROOT_URL_ASSETS_SUPCHAT = '{{ request.supchat.config.config_core.ROOT_URL_ASSETS_SUPCHAT }}'
         let _supchat_json = JSON.parse('{{ supchat_json|escapejs  }}')
@@ -135,7 +322,6 @@
         const SUP_CHAT = new ChatAdmin(_supchat_json, _chat_json)
         SUP_CHAT.run()
         const SUP_CHAT_LIST = new ChatList('{{ chat.section.id }}')
-        action_url_supchat()
     </script>
 {% endblock %}
 

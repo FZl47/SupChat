@@ -73,16 +73,6 @@ let SUPCHAT_SCRIPTS = [
     {
         'src': 'js/index.js',
         'external': false,
-        'onloaded': function () {
-            SUP_CHAT = new ChatUser('USER');
-            let _AUTO_RUN_SUPCHAT = false
-            if (typeof AUTO_RUN_SUPCHAT == 'undefined' || AUTO_RUN_SUPCHAT){
-                _AUTO_RUN_SUPCHAT = true
-            }
-            if (_AUTO_RUN_SUPCHAT == true){
-                SUP_CHAT.run()
-            }
-        }
     },
 ]
 
@@ -100,7 +90,7 @@ for (let css of SUPCHAT_STYLE) {
 }
 
 for (let js of SUPCHAT_SCRIPTS) {
-    _add_js_link(get_link_assets_supchat(js.src, js.external), js.onloaded)
+    _add_js_link(get_link_assets_supchat(js.src, js.external))
 }
 
 
@@ -117,14 +107,9 @@ function _add_css_link(src) {
     css.href = String(src)
 }
 
-function _add_js_link(src, onloaded = undefined) {
+function _add_js_link(src) {
     let js = document.createElement('script')
     document.body.appendChild(js)
-    if (onloaded) {
-        js.onload = function (e) {
-            onloaded(e)
-        }
-    }
     js.src = String(src)
 }
 
@@ -143,3 +128,15 @@ function get_link_assets_supchat(src, external = false, append_supchat_url = tru
     }
 }
 
+
+window.addEventListener('load', function () {
+    // Execute SupChat
+    SUP_CHAT = new ChatUser('USER');
+    let _AUTO_RUN_SUPCHAT = false
+    if (typeof AUTO_RUN_SUPCHAT == 'undefined' || AUTO_RUN_SUPCHAT) {
+        _AUTO_RUN_SUPCHAT = true
+    }
+    if (_AUTO_RUN_SUPCHAT == true) {
+        SUP_CHAT.run()
+    }
+})

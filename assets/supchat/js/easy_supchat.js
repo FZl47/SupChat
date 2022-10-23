@@ -40,7 +40,6 @@ let SUPCHAT_STYLE = [
 ]
 
 let SUPCHAT_SCRIPTS = [
-    // Order is important
     {
         'src': 'jq/jquery.min.js',
         'external': false
@@ -65,11 +64,10 @@ let SUPCHAT_SCRIPTS = [
         'src': 'js/request_response.js',
         'external': false
     },
-    {
-        'src': 'js/mixins.js',
-        'external': false
-    },
-    // Must be last
+    // {
+    //     'src': 'js/mixins.js',
+    //     'external': false
+    // },
     {
         'src': 'js/index.js',
         'external': false,

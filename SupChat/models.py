@@ -274,7 +274,7 @@ class User(models.Model):
         ('offline', 'Offline'),
     )
 
-    ip = models.CharField(max_length=20)
+    ip = models.CharField(max_length=60)
     session_key = models.CharField(max_length=50, default=RandomString)
     phone_or_email = models.CharField(max_length=150, null=True, blank=True)
     last_seen = models.DateTimeField(null=True, blank=True, default=timezone.now)

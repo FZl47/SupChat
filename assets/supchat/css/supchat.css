@@ -251,6 +251,7 @@ button {
     height: 55px;
     border-radius: 50%;
     background: #ffffff;
+    object-fit: contain;
 }
 
 .info-chat-supchat {

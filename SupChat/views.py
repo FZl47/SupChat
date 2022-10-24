@@ -1,4 +1,3 @@
-
 import json
 from django.http import HttpResponse, JsonResponse, Http404, HttpResponseBadRequest
 from django.views.generic import View
@@ -43,9 +42,10 @@ def sup_chat_run_user(request):
             if user.in_blacklist():
                 # in blacklist
                 context['status_code'] = 403
+        return JsonResponse(context)
     else:
-        context['status_code'] = 404
-    return JsonResponse(context)
+        raise Http404
+
 
 
 @csrf_exempt

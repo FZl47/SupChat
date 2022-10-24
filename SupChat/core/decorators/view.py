@@ -81,7 +81,9 @@ def get_user(func):
 def get_admin(func):
     def wrapper(request, *args, **kwargs):
         user = request.user
-        admin = Admin.objects.filter(user=user).first()
+        admin = None
+        if user.is_authenticated:
+            admin = Admin.objects.filter(user=user).first()
         setattr(request, 'admin_supchat', admin)
         return func(request, *args, **kwargs)
 

@@ -1,4 +1,5 @@
 from channels.generic.websocket import WebsocketConsumer
+from channels.exceptions import StopConsumer
 from asgiref.sync import async_to_sync
 from SupChat.core.auth import consumer as auth
 from SupChat.core.decorators import consumer as decorators
@@ -21,11 +22,10 @@ class SupChat(WebsocketConsumer):
         if handler_response:
             handler_response(text_data)
 
-    def disconnect(self, code):
-        super().disconnect(code)
-        # Left at Chat Group
-        async_to_sync(self.channel_layer.group_discard)(self.chat.get_group_name(), self.channel_name)
-
+    # def disconnect(self, code):
+    #     # Left at Chat Group
+    #     async_to_sync(self.channel_layer.group_discard)(self.chat.get_group_name(), self.channel_name)
+    #     raise StopConsumer
 
 class ChatUser(SupChat, send.Response):
     """
@@ -58,7 +58,8 @@ class ChatUser(SupChat, send.Response):
         # Send and Set Status
         self._set_status('offline')
         self._send_status()
-        super().disconnect(code)
+        async_to_sync(self.channel_layer.group_discard)(self.chat.get_group_name(), self.channel_name)
+        raise StopConsumer
 
 
 class AdminUser(SupChat, send.Response):
@@ -92,7 +93,8 @@ class AdminUser(SupChat, send.Response):
         # Send and Set Status
         self._set_status('offline')
         self._send_status()
-        super().disconnect(code)
+        async_to_sync(self.channel_layer.group_discard)(self.chat.get_group_name(), self.channel_name)
+        raise StopConsumer
 
 
 class ChatList(SupChat, send.ResponseSection):
@@ -146,3 +148,4 @@ class ChatList(SupChat, send.ResponseSection):
 
         # Left at self group
         async_to_sync(self.channel_layer.group_discard)(self.group_name_section, self.channel_name)
+        raise StopConsumer

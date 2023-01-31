@@ -19,7 +19,7 @@ function create_chart_section_count_chats(id, data) {
             data: data_num,
             fill: {
                 target: 'origin',
-                above: 'rgba(231,255,248,0.2)',
+                above: 'rgba(231,255,248,0.5)',
             },
             borderColor: 'rgb(78,213,213)',
             tension: 0.3

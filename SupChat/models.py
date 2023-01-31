@@ -1,3 +1,5 @@
+import json
+import emoji
 from django.db import models
 from django.db.models import F, Max, Count, Sum, Q, Value
 from django.db.models.functions import ExtractDay
@@ -9,7 +11,7 @@ from model_utils.managers import InheritanceManager
 from SupChat.core.tools import RandomString, GetDifferenceTime, GetDifferenceTimeString
 from SupChat.config import USER, get_datetime
 from SupChat.core import mixins
-import json
+
 
 
 def upload_image_background_chat(instance, path):
@@ -437,7 +439,9 @@ class TextMessage(Message):
     text = models.TextField()
 
     def get_text_label(self):
-        return self.text
+        # convert string emoji to char
+        text = emoji.emojize(self.text)
+        return text
 
 
 def upload_audio_message(instance, path):

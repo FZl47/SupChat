@@ -100,7 +100,7 @@
                         <div class="card card-body mailbox text-center">
                             {% for user_baned in request.admin.get_users_baned_by_self %}
                                 <div class="user-baned">
-                                    <p class="m-0">{{ user_baned.user }}</p>
+                                    <p class="m-0">{{ user_baned.user }}({{ user_baned.user.ip }})</p>
                                     <div>
                                         <button class="btn-unban-user" user-id="{{ user_baned.user.id }}">
                                             خارج کردن از لیست سیاه

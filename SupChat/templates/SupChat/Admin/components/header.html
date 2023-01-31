@@ -14,22 +14,20 @@
         <!-- ============================================================== -->
         <!-- End Logo -->
         <!-- ============================================================== -->
-        <div class="navbar-collapse">
+        <div class="navbar-collapse" dir="rtl">
             <!-- ============================================================== -->
             <!-- toggle and nav items -->
             <!-- ============================================================== -->
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark"
-                                        href="javascript:void(0)"><i class="fal fa-bars"></i></a></li>
+            <ul class="navbar-nav my-lg-0">
                 <!-- ============================================================== -->
-                <!-- Search -->
+                <!-- Profile -->
                 <!-- ============================================================== -->
-                <li class="nav-item hidden-xs-down search-box"><a
-                        class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i
-                        class="fal fa-search"></i></a>
-                    <form method="get" class="app-search" action="{% url 'SupChat:view_admin_search' %}?{{ request.GET.q }}">
-                        <input type="text" value="{{ request.GET.q }}" maxlength="100" class="form-control" name="q" placeholder="Search & enter"> <a
-                            class="srh-btn"><i class="fal fa-times"></i></a></form>
+                <li class="nav-item dropdown u-pro">
+                    <a class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" href="#"
+                       id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img
+                            src="{{ request.admin.get_image }}" alt="user" class=""/> <span
+                            class="hidden-md-down">{{ request.admin.get_full_name }}</span> </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown"></ul>
                 </li>
             </ul>
             <ul class="navbar-nav">
@@ -84,19 +82,20 @@
                     </ul>
                 </div>
             </ul>
-            <!-- ============================================================== -->
-            <!-- User profile and search -->
-            <!-- ============================================================== -->
-            <ul class="navbar-nav my-lg-0">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark"
+                                        href="javascript:void(0)"><i class="fal fa-bars"></i></a></li>
                 <!-- ============================================================== -->
-                <!-- Profile -->
+                <!-- Search -->
                 <!-- ============================================================== -->
-                <li class="nav-item dropdown u-pro">
-                    <a class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" href="#"
-                       id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img
-                            src="{{ request.admin.get_image }}" alt="user" class=""/> <span
-                            class="hidden-md-down">{{ request.admin.get_full_name }}</span> </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown"></ul>
+                <li class="nav-item hidden-xs-down search-box"><a
+                        class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i
+                        class="fal fa-search"></i></a>
+                    <form method="get" class="app-search"
+                          action="{% url 'SupChat:view_admin_search' %}?{{ request.GET.q }}">
+                        <input type="text" value="{{ request.GET.q }}" maxlength="100" class="form-control" name="q"
+                               placeholder="Search & enter"> <a
+                            class="srh-btn"><i class="fal fa-times"></i></a></form>
                 </li>
             </ul>
         </div>

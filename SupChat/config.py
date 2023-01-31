@@ -1,7 +1,7 @@
 """ Config SupChat """
 import datetime
 import pytz
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.utils import timezone
 """  Note!  """
@@ -13,7 +13,7 @@ ROOT_URL_ASSETS_SUPCHAT = settings.STATIC_URL
 URL_BACKEND_SUPCHAT = 'http://127.0.0.1:8000'
 
 # User Default is Django User
-USER = User
+USER = get_user_model()
 
 def get_datetime():
     # tz_str = settings.TIME_ZONE or 'UTC'

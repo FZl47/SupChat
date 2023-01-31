@@ -10,20 +10,20 @@ let SUPCHAT_FONTS = [
 
 let SUPCHAT_CSS_FONTS = [
     {
-        'src': 'https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css',
-        'external': true
+        'src': 'font/vazir/Vazirmatn-font-face.css',
+        'external': false
     },
     {
-        'src': 'https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro@4cac1a6/css/all.css',
-        'external': true
+        'src': 'fontawesome/css/all.css',
+        'external': false
     },
 ]
 
 
 let SUPCHAT_STYLE = [
     {
-        'src': 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css',
-        'external': true
+        'src': 'bootstrap/css/bootstrap.css',
+        'external': false
     },
     {
         'src': 'css/supchat.css',
@@ -45,8 +45,8 @@ let SUPCHAT_SCRIPTS = [
         'external': false
     },
     {
-        'src': 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js',
-        'external': true
+        'src': 'js/html2pdf.js',
+        'external': false
     },
     {
         'src': 'audio_simple/js.js',
@@ -107,8 +107,10 @@ function _add_css_link(src) {
 
 function _add_js_link(src) {
     let js = document.createElement('script')
-    document.body.appendChild(js)
     js.src = String(src)
+    js.type = "text/javascript"
+    js.async = false
+    document.body.appendChild(js)
 }
 
 
@@ -129,7 +131,7 @@ function get_link_assets_supchat(src, external = false, append_supchat_url = tru
 
 window.addEventListener('load', function () {
     // Execute SupChat
-    SUP_CHAT = new ChatUser('USER');
+    SUP_CHAT = new ChatUser();
     let _AUTO_RUN_SUPCHAT = false
     if (typeof AUTO_RUN_SUPCHAT == 'undefined' || AUTO_RUN_SUPCHAT) {
         _AUTO_RUN_SUPCHAT = true

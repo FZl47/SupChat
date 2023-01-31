@@ -1,3 +1,5 @@
+import emoji
+
 def Serializer_supchat_style(style):
     return {
         "theme_type": style.get_theme_display(),
@@ -100,8 +102,11 @@ def Serializer_admin_chat(admin):
 
 def Serializer_message(message, many=False):
     def Serializer_text_messagae(text_message):
+        text = text_message.text
+        # convert string emoji to char
+        text = emoji.emojize(text)
         return {
-            "text": text_message.text,
+            "text": text,
         }
 
     def Serializer_audio_messagae(audio_message):

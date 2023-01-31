@@ -385,8 +385,8 @@ function is_secure() {
 }
 
 
-function slice_text(text, len) {
-    return String(text).slice(0, len) + text.length > length ? '...' : ''
+function slice_text(text, len=10) {
+    return (String(text).slice(0, len)) + (text.length > len ? '...' : '')
 }
 
 

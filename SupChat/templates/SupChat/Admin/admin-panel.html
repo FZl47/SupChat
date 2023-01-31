@@ -154,6 +154,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    {% empty %}
+                                        <div id="container-not-found" class="mb-4 text-center">
+                                            <img src="{% static 'supchat/images/default/search.webp' %}" alt="Not found"
+                                                 class="mx-auto" style="width: 300px;max-width: 100%">
+                                            <p class="text-gray font-20">هیچ اعلانی یافت نشد</p>
+                                        </div>
                                     {% endfor %}
                                 </div>
                             </div>

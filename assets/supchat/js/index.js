@@ -1,7 +1,7 @@
 const STYLE_CONSOLE_SUPCHAT = "color:#fff; background:#00DDC7; font-size: 11pt;border-radius:5px;padding:3px"
 
 function get_theme_admin() {
-    return get_cookie('theme-src-chat-admin-supchat') || '/assets/css/theme/default.css'
+    return get_cookie('theme-src-chat-admin-supchat') || `supchat/css/theme/default.css`
 }
 
 class TranslateSupChat {
@@ -1227,8 +1227,8 @@ class ChatList extends WebSockectSupChatMixin {
         var $container_chats = $('#chats-list'),
             $chats = $container_chats.children('.chat-list');
         $chats.sort(function (a, b) {
-            var an = a.getAttribute('last-message-id'),
-                bn = b.getAttribute('last-message-id');
+            var bn = a.getAttribute('last-message-id'),
+                an = b.getAttribute('last-message-id');
 
             if (an < bn) {
                 return 1;

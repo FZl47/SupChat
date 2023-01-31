@@ -124,7 +124,7 @@ class NotificationSupChatMixin {
 
     _send_notification_handler(name, image, text, url) {
         let NOTIFICATION_OBJECT = new Notification(name, {
-            body: slice_text(text, 50),
+            body: slice_text(text, 30),
             icon: image,
             data: {
                 'url': url

@@ -12,7 +12,7 @@
                     <li><a class="waves-effect waves-dark  {% if type_page_included == 'view_admin_users_baned' %} active {% endif %}" href="{% url 'SupChat:view_users_baned_admin' %}" aria-expanded="false"><i
                             class="fal fa-ban"></i><span class="hide-menu">مسدود شده ها</span></a>
                     </li>
-                    <li><a class="waves-effect waves-dark  {% if request.build_absolute_uri|parametr_in_url:'notification' %} active {% endif %}" href="{% url 'SupChat:view_admin' %}?notifications" aria-expanded="false"><i
+                    <li><a class="waves-effect waves-dark  {% if request.build_absolute_uri|parametr_in_url:'notification' %} active {% endif %}" href="{% url 'SupChat:view_admin' %}#notifications" aria-expanded="false"><i
                             class="fal fa-bell"></i><span class="hide-menu">اعلانات</span></a>
                     </li>
                     <li><a class="waves-effect waves-dark  {% if type_page_included == 'view_admin_info' %} active {% endif %}" href="{% url 'SupChat:view_info_admin' %}" aria-expanded="false"><i

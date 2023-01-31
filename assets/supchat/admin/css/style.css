@@ -1550,10 +1550,11 @@ File: scss
     top: 23px;
     cursor: pointer;
     background: #ffffff;
+    color: #fa3f3b;
     width: 15px;
     height: 15px;
-    right: 20px;
-    font-size: 14px;
+    left: 20px;
+    font-size: 18px;
 }
 
 .mini-sidebar .top-navbar .navbar-header {
@@ -1685,10 +1686,11 @@ Notify
 
 .page-titles .breadcrumb .breadcrumb-item + .breadcrumb-item::before {
     content: "";
-    font-family: FontAwesome;
+    font-family: "Font Awesome 5 Pro";
     color: #a6b7bf;
     font-size: 11px;
     padding-left: 5px;
+    float: none!important;
 }
 
 .page-titles .breadcrumb .breadcrumb-item.active {
@@ -6699,6 +6701,10 @@ File: scss
     font-size: 110%;
 }
 
+#SupChat[state='open']{
+    z-index: 5;
+}
+
 #SupChatEnded[container-show] {
     display: flex;
 }
@@ -7372,4 +7378,8 @@ img {
         width: 200px !important;
         font-size: 95%;
     }
+}
+
+.accordion-body{
+    text-align: right;
 }

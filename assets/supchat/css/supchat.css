@@ -16,7 +16,6 @@ button {
     border: 1px solid #e4eeeb;
     box-shadow: 0 3px 15px rgba(191, 191, 191, 0.5);
     background: #fff;
-    z-index: 10;
     transition: all .3s;
     font-size: 98%;
 }
@@ -29,6 +28,7 @@ button {
     width: 370px;
     height: 600px;
     overflow: auto;
+    z-index: 9999999;
 }
 
 #SupChat > div {

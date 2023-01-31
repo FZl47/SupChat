@@ -9,10 +9,10 @@
     <!--===============================================================================================-->
     <link rel="icon" type="image/png" href="{% static 'supchat/logo/logo.png' %}"/>
     <!--===============================================================================================-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'supchat/bootstrap/css/bootstrap.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'supchat/admin/login/css/main.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'supchat/admin/css/style.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <link rel="stylesheet" href="{% static 'supchat/font/vazir/Vazirmatn-font-face.css' %}">
     <!--===============================================================================================-->
     <style>
 
@@ -76,7 +76,7 @@
                 <br>
                 <br>
                 <br>
-                <div class="text-center">
+                <div class="text-left">
                     <a href="https://github.com/FZl47/SupChat" class="font-weight-bold"
                        style="color: #00ebd5;font-size: 110%">SupChat</a>
                 </div>
@@ -87,7 +87,7 @@
 
 
 <div id="dropDownSelect1"></div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static 'supchat/jq/jquery.min.js' %}"></script>
 <script src="{% static 'supchat/admin/login/js/main.js' %}"></script>
 <script src="{% static 'supchat/js/tools.js' %}"></script>
 <script>

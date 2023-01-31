@@ -1,4 +1,5 @@
 import json
+import emoji
 from asgiref.sync import async_to_sync
 from SupChat.core import serializers
 from SupChat.models import Message, TextMessage, BlackList, SystemMessage
@@ -63,6 +64,9 @@ class Response:
     def send_text_message(self, data_request):
         text_message = data_request.get('message')
         if text_message:
+            # handle emojis
+            # convert emoji char to string
+            text_message = emoji.demojize(text_message)
             message_object = TextMessage.objects.create(chat=self.chat, sender=self.type_user,
                                                         text=text_message)
             self.send_to_group('TEXT_MESSAGE', {
@@ -96,6 +100,8 @@ class Response:
                                                     sender=self.type_user).select_subclasses().first()
             if message_object:
                 message_object.edited = True
+                # convert emoji char to string
+                new_message = emoji.demojize(new_message)
                 message_object.text = new_message
                 message_object.save()
                 self.send_to_group('EDIT_MESSAGE', {
